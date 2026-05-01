@@ -1,0 +1,445 @@
+{
+  "lessons": [
+    {
+      "id": "tour-058",
+      "title": "Урок 58: Методы",
+      "theory_html": "<h2>Урок 58: Методы</h2><p>В Go нет классов.\nОднако вы можете определять методы для типов.</p><p>Метод — это функция со специальным аргументом _receiver_.</p><p>Получатель появляется в своем собственном списке аргументов между ключевым словом func и\nимя метода.</p><p>В этом примере метод Abs имеет получатель типа Vertex с именем v.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v Vertex) Abs() float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tfmt.Println(v.Abs())\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 58: Методы»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 1
+    },
+    {
+      "id": "tour-059",
+      "title": "Урок 59: Методы — это функции",
+      "theory_html": "<h2>Урок 59: Методы — это функции</h2><p>Помните: метод — это просто функция с аргументом-получателем.</p><p>Вот `Abs`, написанная как обычная функция без изменений в функциональности.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc Abs(v Vertex) float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tfmt.Println(Abs(v))\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 59: Методы — это функции»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 2
+    },
+    {
+      "id": "tour-060",
+      "title": "Урок 60: Методы, продолжение",
+      "theory_html": "<h2>Урок 60: Методы, продолжение</h2><p>Вы также можете объявить метод для неструктурных типов.</p><p>В этом примере мы видим числовой тип MyFloat с методом Abs.</p><p>Вы можете объявить метод только с получателем, тип которого определен в том же файле.\npackage в качестве метода.\nВы не можете объявить метод с получателем, тип которого определен в другом\nпакет (который включает встроенные типы, такие как `int`).</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype MyFloat float64\n\nfunc (f MyFloat) Abs() float64 {\n\tif f < 0 {\n\t\treturn float64(-f)\n\t}\n\treturn float64(f)\n}\n\nfunc main() {\n\tf := MyFloat(-math.Sqrt2)\n\tfmt.Println(f.Abs())\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 60: Методы, продолжение»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 3
+    },
+    {
+      "id": "tour-061",
+      "title": "Урок 61: Получатели-указатели",
+      "theory_html": "<h2>Урок 61: Получатели-указатели</h2><p>Вы можете объявлять методы с помощью приемников указателей.</p><p>Это означает, что тип получателя имеет буквальный синтаксис `*T` для некоторого типа `T`.\n(Кроме того, `T` сам по себе не может быть указателем, например `*int`.)</p><p>Например, здесь метод Scale определен для *Vertex.</p><p>Методы с получателями указателей могут изменять значение, на которое получатель\nточек (как здесь это делает Scale).\nПоскольку методам часто требуется модифицировать свой получатель, приемники указателей более удобны.\nраспространены, чем получатели ценностей.</p><p>Попробуйте удалить `*` из объявления функции Scale в строке 16.\nи наблюдать, как меняется поведение программы.</p><p>При использовании приемника значений метод Scale работает с копией оригинала.\nЗначение `Vertex`.\n(Это такое же поведение, как и для любого другого аргумента функции.)\nМетод Scale должен иметь приемник указателя для изменения значения Vertex.\nобъявлено в функции `main`.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v Vertex) Abs() float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X = v.X * f\n\tv.Y = v.Y * f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tv.Scale(10)\n\tfmt.Println(v.Abs())\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 61: Получатели-указатели»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 4
+    },
+    {
+      "id": "tour-062",
+      "title": "Урок 62: Указатели и функции",
+      "theory_html": "<h2>Урок 62: Указатели и функции</h2><p>Здесь мы видим методы Abs и Scale, переписанные в функции.</p><p>Опять же, попробуйте удалить `*` из строки 16.\nВы понимаете, почему поведение меняется?\nЧто еще нужно было изменить, чтобы пример скомпилировался?</p><p>(Если вы не уверены, перейдите на следующую страницу.)</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc Abs(v Vertex) float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc Scale(v *Vertex, f float64) {\n\tv.X = v.X * f\n\tv.Y = v.Y * f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tScale(&v, 10)\n\tfmt.Println(Abs(v))\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 62: Указатели и функции»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 5
+    },
+    {
+      "id": "tour-063",
+      "title": "Урок 63: Методы и косвенность указателей",
+      "theory_html": "<h2>Урок 63: Методы и косвенность указателей</h2><p>Сравнивая предыдущие две программы, вы можете заметить, что\nфункции с аргументом-указателем должны принимать указатель:</p><p>вар v вершина\n\tScaleFunc(v, 5) // Ошибка компиляции!\n\tScaleFunc(&amp;v, 5) // ОК</p><p>в то время как методы с приемниками указателей принимают либо значение, либо указатель в качестве\nприемник, когда они вызываются:</p><p>вар v вершина\n\tv.Scale(5) // ОК\n\tп := &amp;v\n\tp.Scale(10) // ОК</p><p>Для оператора `v.Scale(5)`, хотя `v` является значением, а не указателем,\nметод с приемником указателя вызывается автоматически.\nТо есть для удобства Go интерпретирует оператор `v.Scale(5)` как\n`(&amp;v).Scale(5)`, поскольку метод Scale` имеет приемник указателя.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X = v.X * f\n\tv.Y = v.Y * f\n}\n\nfunc ScaleFunc(v *Vertex, f float64) {\n\tv.X = v.X * f\n\tv.Y = v.Y * f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tv.Scale(2)\n\tScaleFunc(&v, 10)\n\n\tp := &Vertex{4, 3}\n\tp.Scale(3)\n\tScaleFunc(p, 8)\n\n\tfmt.Println(v, p)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 63: Методы и косвенность указателей»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 6
+    },
+    {
+      "id": "tour-064",
+      "title": "Урок 64: Выбор получателя",
+      "theory_html": "<h2>Урок 64: Выбор получателя</h2><p>Есть две причины использовать приемник указателя.</p><p>Во-первых, метод может изменять значение, на которое указывает его получатель.</p><p>Второй — избежать копирования значения при каждом вызове метода.\nЭто может быть более эффективно, например, если получателем является большая структура.</p><p>В этом примере и Scale, и Abs являются методами с типом приемника *Vertex.\nдаже несмотря на то, что метод Abs не требует модификации своего получателя.</p><p>В общем, все методы данного типа должны иметь либо значение, либо указатель.\nприемники, но не смесь того и другого.\n(На следующих нескольких страницах мы увидим, почему.)</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X = v.X * f\n\tv.Y = v.Y * f\n}\n\nfunc (v *Vertex) Abs() float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc main() {\n\tv := &Vertex{3, 4}\n\tfmt.Printf(\"Before scaling: %+v, Abs: %v\\n\", v, v.Abs())\n\tv.Scale(5)\n\tfmt.Printf(\"After scaling: %+v, Abs: %v\\n\", v, v.Abs())\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 64: Выбор получателя»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 7
+    },
+    {
+      "id": "tour-065",
+      "title": "Урок 65: Интерфейсы",
+      "theory_html": "<h2>Урок 65: Интерфейсы</h2><p>_interface_type_ определяется как набор сигнатур метода.</p><p>Значение типа интерфейса может содержать любое значение, реализующее эти методы.</p><p>*Примечание:* В примере кода в строке 22 имеется ошибка.\n`Vertex` (тип значения) не реализует `Abser`, потому что\nметод Abs определен только для *Vertex (тип указателя).</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "//go:build nobuild || OMIT\n\npackage main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Abser interface {\n\tAbs() float64\n}\n\nfunc main() {\n\tvar a Abser\n\tf := MyFloat(-math.Sqrt2)\n\tv := Vertex{3, 4}\n\n\ta = f  // a MyFloat implements Abser\n\ta = &v // a *Vertex implements Abser\n\n\t// In the following line, v is a Vertex (not *Vertex)\n\t// and does NOT implement Abser.\n\ta = v\n\n\tfmt.Println(a.Abs())\n}\n\ntype MyFloat float64\n\nfunc (f MyFloat) Abs() float64 {\n\tif f < 0 {\n\t\treturn float64(-f)\n\t}\n\treturn float64(f)\n}\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Abs() float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 65: Интерфейсы»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 8
+    },
+    {
+      "id": "tour-066",
+      "title": "Урок 66: Неявная реализация интерфейсов",
+      "theory_html": "<h2>Урок 66: Неявная реализация интерфейсов</h2><p>Тип реализует интерфейс, реализуя его методы.\nНет ни явного заявления о намерениях, ни ключевого слова «реализует».</p><p>Неявные интерфейсы отделяют определение интерфейса от его описания.\nреализацию, которая затем могла бы появиться в любом пакете без предварительной договоренности.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\ntype T struct {\n\tS string\n}\n\n// This method means type T implements the interface I,\n// but we don't need to explicitly declare that it does so.\nfunc (t T) M() {\n\tfmt.Println(t.S)\n}\n\nfunc main() {\n\tvar i I = T{\"hello\"}\n\ti.M()\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 66: Неявная реализация интерфейсов»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 9
+    },
+    {
+      "id": "tour-067",
+      "title": "Урок 67: Значения интерфейса",
+      "theory_html": "<h2>Урок 67: Значения интерфейса</h2><p>На самом деле значения интерфейса можно рассматривать как кортеж значения и\nтип бетона:</p><p>(значение, тип)</p><p>Значение интерфейса содержит значение определенного базового конкретного типа.</p><p>Вызов метода для значения интерфейса выполняет одноименный метод для значения интерфейса.\nего основной тип.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype I interface {\n\tM()\n}\n\ntype T struct {\n\tS string\n}\n\nfunc (t *T) M() {\n\tfmt.Println(t.S)\n}\n\ntype F float64\n\nfunc (f F) M() {\n\tfmt.Println(f)\n}\n\nfunc main() {\n\tvar i I\n\n\ti = &T{\"Hello\"}\n\tdescribe(i)\n\ti.M()\n\n\ti = F(math.Pi)\n\tdescribe(i)\n\ti.M()\n}\n\nfunc describe(i I) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 67: Значения интерфейса»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 10
+    },
+    {
+      "id": "tour-068",
+      "title": "Урок 68: Интерфейсы с nil-значениями",
+      "theory_html": "<h2>Урок 68: Интерфейсы с nil-значениями</h2><p>Если конкретное значение внутри самого интерфейса равно нулю,\nметод будет вызываться с нулевым получателем.</p><p>В некоторых языках это может вызвать исключение нулевого указателя.\nно в Go принято писать методы, которые корректно обрабатывают вызовы.\nс нулевым получателем (как в случае с методом «M» в этом примере.)</p><p>Обратите внимание, что значение интерфейса, которое содержит нулевое конкретное значение, само по себе не является нулевым.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\ntype T struct {\n\tS string\n}\n\nfunc (t *T) M() {\n\tif t == nil {\n\t\tfmt.Println(\"<nil>\")\n\t\treturn\n\t}\n\tfmt.Println(t.S)\n}\n\nfunc main() {\n\tvar i I\n\n\tvar t *T\n\ti = t\n\tdescribe(i)\n\ti.M()\n\n\ti = &T{\"hello\"}\n\tdescribe(i)\n\ti.M()\n}\n\nfunc describe(i I) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 68: Интерфейсы с nil-значениями»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 11
+    },
+    {
+      "id": "tour-069",
+      "title": "Урок 69: Нулевые значения интерфейса",
+      "theory_html": "<h2>Урок 69: Нулевые значения интерфейса</h2><p>Значение nil интерфейса не содержит ни значения, ни конкретного типа.</p><p>Вызов метода на нулевом интерфейсе является ошибкой времени выполнения, поскольку нет\nвведите в кортеж интерфейса, чтобы указать, какой _конкретный_ метод вызывать.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "//go:build norun || OMIT\n\npackage main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\nfunc main() {\n\tvar i I\n\tdescribe(i)\n\ti.M()\n}\n\nfunc describe(i I) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 69: Нулевые значения интерфейса»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 12
+    },
+    {
+      "id": "tour-070",
+      "title": "Урок 70: Пустой интерфейс",
+      "theory_html": "<h2>Урок 70: Пустой интерфейс</h2><p>Тип интерфейса, который определяет ноль методов, известен как _empty_interface_:</p><p>интерфейс{}</p><p>Пустой интерфейс может содержать значения любого типа.\n(Каждый тип реализует как минимум ноль методов.)</p><p>Пустые интерфейсы используются кодом, обрабатывающим значения неизвестного типа.\nНапример, `fmt.Print` принимает любое количество аргументов типа `interface{}`.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i interface{}\n\tdescribe(i)\n\n\ti = 42\n\tdescribe(i)\n\n\ti = \"hello\"\n\tdescribe(i)\n}\n\nfunc describe(i interface{}) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 70: Пустой интерфейс»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 13
+    },
+    {
+      "id": "tour-071",
+      "title": "Урок 71: Утверждение типа",
+      "theory_html": "<h2>Урок 71: Утверждение типа</h2><p>_type_assertion_ обеспечивает доступ к базовому конкретному значению значения интерфейса.</p><p>т := i.(Т)</p><p>Этот оператор утверждает, что значение интерфейса «i» содержит конкретный тип «T».\nи присваивает базовое значение «T» переменной «t».</p><p>Если `i` не содержит `T`, утверждение вызовет панику.</p><p>Чтобы _проверить_, имеет ли значение интерфейса определенный тип,\nутверждение типа может возвращать два значения: базовое значение\nи логическое значение, сообщающее, удалось ли утверждение.</p><p>т, ок := i.(T)</p><p>Если `i` содержит `T`, тогда `t` будет базовым значением, а `ok` будет истиной.</p><p>В противном случае `ok` будет ложным, а `t` будет нулевым значением типа `T`.\nи никакой паники не возникает.</p><p>Обратите внимание на сходство этого синтаксиса с синтаксисом чтения с карты.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "//go:build norun || OMIT\n\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i interface{} = \"hello\"\n\n\ts := i.(string)\n\tfmt.Println(s)\n\n\ts, ok := i.(string)\n\tfmt.Println(s, ok)\n\n\tf, ok := i.(float64)\n\tfmt.Println(f, ok)\n\n\tf = i.(float64) // panic\n\tfmt.Println(f)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 71: Утверждение типа»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 14
+    },
+    {
+      "id": "tour-072",
+      "title": "Урок 72: Переключатели типа",
+      "theory_html": "<h2>Урок 72: Переключатели типа</h2><p>_type_switch_ — это конструкция, которая допускает последовательное утверждение нескольких типов.</p><p>Переключение типа похоже на обычный оператор переключения, но случаи в типе\nпереключатель указывает типы (не значения), и эти значения сравниваются с\nтип значения, содержащегося в данном значении интерфейса.</p><p>переключатель v := i.(тип) {\n\tслучай Т:\n\t\t// здесь v имеет тип T\n\tслучай С:\n\t\t// здесь v имеет тип S\n\tпо умолчанию:\n\t\t// нет совпадений; здесь v имеет тот же тип, что и i\n\t}</p><p>Объявление в переключателе типа имеет тот же синтаксис, что и утверждение типа `i.(T)`,\nно конкретный тип «T» заменяется ключевым словом «type».</p><p>Этот оператор переключения проверяет, является ли значение интерфейса `i`\nсодержит значение типа «T» или «S».\nВ каждом из случаев `T` и `S` переменная `v` будет иметь тип\n`T` или `S` соответственно и сохраняют значение, хранящееся в `i`.\nВ случае по умолчанию (когда совпадений нет), переменная `v` имеет значение\nтого же типа интерфейса и значения, что и `i`.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc do(i interface{}) {\n\tswitch v := i.(type) {\n\tcase int:\n\t\tfmt.Printf(\"Twice %v is %v\\n\", v, v*2)\n\tcase string:\n\t\tfmt.Printf(\"%q is %v bytes long\\n\", v, len(v))\n\tdefault:\n\t\tfmt.Printf(\"I don't know about type %T!\\n\", v)\n\t}\n}\n\nfunc main() {\n\tdo(21)\n\tdo(\"hello\")\n\tdo(true)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 72: Переключатели типа»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 15
+    },
+    {
+      "id": "tour-073",
+      "title": "Урок 73: Интерфейс Stringer",
+      "theory_html": "<h2>Урок 73: Интерфейс Stringer</h2><p>Одним из наиболее распространенных интерфейсов является [[/pkg/fmt/#Stringer][`Stringer`]], определенный пакетом [[/pkg/fmt/][`fmt`]].</p><p>тип Стрингерный интерфейс {\n\t\tСтрока() строка\n\t}</p><p>«Стрингер» — это тип, который может описывать себя как строка. Пакет `fmt`\n(и многие другие) ищут этот интерфейс для печати значений.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Person struct {\n\tName string\n\tAge  int\n}\n\nfunc (p Person) String() string {\n\treturn fmt.Sprintf(\"%v (%v years)\", p.Name, p.Age)\n}\n\nfunc main() {\n\ta := Person{\"Arthur Dent\", 42}\n\tz := Person{\"Zaphod Beeblebrox\", 9001}\n\tfmt.Println(a, z)\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 73: Интерфейс Stringer»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 16
+    },
+    {
+      "id": "tour-074",
+      "title": "Урок 74: Упражнение: Stringers",
+      "theory_html": "<h2>Урок 74: Упражнение: Stringers</h2><p>Сделайте тип `IPAddr` реализующим `fmt.Stringer` для печати адреса как\nпунктирный четырехугольник.</p><p>Например, IPAddr{1,`2,`3,`4}` должен печататься как `&quot;1.2.3.4&quot;`.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype IPAddr [4]byte\n\n// TODO: Add a \"String() string\" method to IPAddr.\n\nfunc main() {\n\thosts := map[string]IPAddr{\n\t\t\"loopback\":  {127, 0, 0, 1},\n\t\t\"googleDNS\": {8, 8, 8, 8},\n\t}\n\tfor name, ip := range hosts {\n\t\tfmt.Printf(\"%v: %v\\n\", name, ip)\n\t}\n}\n",
+      "task": {
+        "description": "Сделай `IPAddr` реализацией `fmt.Stringer`, чтобы адрес печатался в dotted-формате `a.b.c.d`.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype IPAddr [4]byte\n\nfunc (ip IPAddr) String() string {\n\t// TODO: реализуй String()\n\treturn \"\"\n}\n\nfunc main() {\n\tloopback := IPAddr{127, 0, 0, 1}\n\tdns := IPAddr{8, 8, 8, 8}\n\tfmt.Println(loopback)\n\tfmt.Println(dns)\n}\n",
+        "check": {
+          "type": "combined",
+          "expected_output": "127.0.0.1\n8.8.8.8",
+          "required_code": [
+            "func (ip IPAddr) String() string"
+          ],
+          "forbidden_substr": [
+            "TODO: реализуй String()",
+            "return \"\""
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 17
+    },
+    {
+      "id": "tour-075",
+      "title": "Урок 75: Ошибки",
+      "theory_html": "<h2>Урок 75: Ошибки</h2><p>Программы Go выражают состояние ошибки с помощью значений error.</p><p>Тип error — это встроенный интерфейс, аналогичный fmt.Stringer:</p><p>тип ошибки интерфейса {\n\t\tСтрока ошибки()\n\t}</p><p>(Как и в случае с fmt.Stringer, пакет fmt ищет интерфейс error при\nпечать значений.)</p><p>Функции часто возвращают значение ошибки, а вызывающий код должен обрабатывать ошибки.\nпроверяя, равна ли ошибка `nil`.</p><p>я, ошибка:= strconv.Atoi(&quot;42&quot;)\n\tесли ошибка != ноль {\n\t\tfmt.Printf(&quot;не удалось преобразовать число: %v\\n&quot;, ошибка)\n\t\tвозвращение\n\t}\n\tfmt.Println(&quot;Преобразованное целое число:&quot;, i)</p><p>Нулевая ошибка означает успех; ненулевая `ошибка` означает неудачу.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\ntype MyError struct {\n\tWhen time.Time\n\tWhat string\n}\n\nfunc (e *MyError) Error() string {\n\treturn fmt.Sprintf(\"at %v, %s\",\n\t\te.When, e.What)\n}\n\nfunc run() error {\n\treturn &MyError{\n\t\ttime.Now(),\n\t\t\"it didn't work\",\n\t}\n}\n\nfunc main() {\n\tif err := run(); err != nil {\n\t\tfmt.Println(err)\n\t}\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 75: Ошибки»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 18
+    },
+    {
+      "id": "tour-076",
+      "title": "Урок 76: Упражнение: Ошибки",
+      "theory_html": "<h2>Урок 76: Упражнение: Ошибки</h2><p>Скопируйте функцию `Sqrt` из [[/tour/flowcontrol/8][предыдущего упражнения]] и измените ее так, чтобы она возвращала значение `error`.</p><p>`Sqrt` должен возвращать значение ошибки, отличное от нуля, если задано отрицательное число, поскольку он не поддерживает комплексные числа.</p><p>Создать новый тип</p><p>введите ErrNegativeSqrt float64</p><p>и сделать это «ошибкой», присвоив ему</p><p>func (e ErrNegativeSqrt) Error() строка</p><p>такой метод, что ErrNegativeSqrt(-2).Error() возвращает `&quot;cannot`Sqrt`negative`number:`-2&quot;`.</p><p>*Примечание:* Вызов `fmt.Sprint(e)` внутри метода `Error` отправит программу в бесконечный цикл. Вы можете избежать этого, сначала преобразуя `e`: `fmt.Sprint(float64(e))`. Почему?</p><p>Измените функцию Sqrt так, чтобы она возвращала значение ErrNegativeSqrt при отрицательном числе.</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n)\n\nfunc Sqrt(x float64) (float64, error) {\n\treturn 0, nil\n}\n\nfunc main() {\n\tfmt.Println(Sqrt(2))\n\tfmt.Println(Sqrt(-2))\n}\n",
+      "task": {
+        "description": "Добавь пользовательскую ошибку `ErrNegativeSqrt` и возвращай её из `Sqrt` для отрицательных значений.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype ErrNegativeSqrt float64\n\nfunc (e ErrNegativeSqrt) Error() string {\n\t// TODO: верни строку: cannot Sqrt negative number: <x>\n\treturn \"\"\n}\n\nfunc Sqrt(x float64) (float64, error) {\n\t// TODO: при x < 0 верни ошибку ErrNegativeSqrt(x)\n\treturn 0, nil\n}\n\nfunc main() {\n\tv, err := Sqrt(2)\n\tfmt.Printf(\"%.6f\\n\", v)\n\tif err2 := func() error { _, e := Sqrt(-2); return e }(); err2 != nil {\n\t\tfmt.Println(err2.Error())\n\t}\n}\n",
+        "check": {
+          "type": "combined",
+          "output_contains": [
+            "1.41421",
+            "cannot Sqrt negative number: -2"
+          ],
+          "required_code": [
+            "type ErrNegativeSqrt float64",
+            "func (e ErrNegativeSqrt) Error() string"
+          ],
+          "forbidden_substr": [
+            "TODO: верни строку: cannot Sqrt negative number: <x>",
+            "TODO: при x < 0 верни ошибку ErrNegativeSqrt(x)"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 19
+    },
+    {
+      "id": "tour-077",
+      "title": "Урок 77: Интерфейс Reader",
+      "theory_html": "<h2>Урок 77: Интерфейс Reader</h2><p>Пакет `io` определяет интерфейс `io.Reader`,\nкоторый представляет конец чтения потока данных.</p><p>Стандартная библиотека Go содержит [[https://cs.opensource.google/search?q=Read%5C(%5Cw%2B%5Cs%5C%5B%5C%5Dbyte%5C)&amp;ss=go%2Fgo][множество реализаций]] этого интерфейса, включая файлы, сетевые подключения, компрессоры, шифры и другие.</p><p>Интерфейс `io.Reader` имеет метод `Read`:</p><p>func (T) Read(b []byte) (n int, ошибка ошибки)</p><p>`Read` заполняет заданный байтовый фрагмент данными и возвращает количество байтов.\nзаполнено и значение ошибки. Он возвращает ошибку `io.EOF`, когда поток\nзаканчивается.</p><p>В примере кода создается\n[[/pkg/strings/#Reader][`strings.Reader`]]\nи потребляет свои выходные данные по 8 байтов за раз.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"io\"\n\t\"strings\"\n)\n\nfunc main() {\n\tr := strings.NewReader(\"Hello, Reader!\")\n\n\tb := make([]byte, 8)\n\tfor {\n\t\tn, err := r.Read(b)\n\t\tfmt.Printf(\"n = %v err = %v b = %v\\n\", n, err, b)\n\t\tfmt.Printf(\"b[:n] = %q\\n\", b[:n])\n\t\tif err == io.EOF {\n\t\t\tbreak\n\t\t}\n\t}\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 77: Интерфейс Reader»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 20
+    },
+    {
+      "id": "tour-078",
+      "title": "Урок 78: Упражнение: Readers",
+      "theory_html": "<h2>Урок 78: Упражнение: Readers</h2><p>Реализуйте тип Reader, который генерирует бесконечный поток символов ASCII.\n`&#x27;А&#x27;`.</p><p><strong>Пример для подростков:</strong> Интерфейс — как универсальный порт зарядки: важно, чтобы устройство поддерживало нужный разъём.</p><p><strong>Немного юмора:</strong> Go не требует слова implements: если методы совпали, тип уже в команде.</p>",
+      "demo_code": "//go:build nobuild || OMIT\n\npackage main\n\nimport \"golang.org/x/tour/reader\"\n\ntype MyReader struct{}\n\n// TODO: Add a Read([]byte) (int, error) method to MyReader.\n\nfunc main() {\n\treader.Validate(MyReader{})\n}\n",
+      "task": {
+        "description": "Реализуй `Reader`, который заполняет буфер байтом `A` (ASCII 65), как в оригинальном упражнении Readers.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype MyReader struct{}\n\nfunc (r MyReader) Read(b []byte) (int, error) {\n\t// TODO: заполни b символом 'A'\n\treturn len(b), nil\n}\n\nfunc main() {\n\tvar r MyReader\n\tbuf := make([]byte, 5)\n\tn, _ := r.Read(buf)\n\tfmt.Println(n, buf)\n}\n",
+        "check": {
+          "type": "combined",
+          "expected_output": "5 [65 65 65 65 65]",
+          "required_code": [
+            "func (r MyReader) Read(b []byte) (int, error)"
+          ],
+          "forbidden_substr": [
+            "TODO: заполни b символом 'A'"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 21
+    },
+    {
+      "id": "tour-079",
+      "title": "Урок 79: Интерфейс Image",
+      "theory_html": "<h2>Урок 79: Интерфейс Image</h2><p>[[/pkg/image/#Image][Package image]] определяет интерфейс `Image`:</p><p>изображение упаковки</p><p>тип Интерфейс изображения {\n\t\tColorModel() цвет.Модель\n\t\tГраницы() Прямоугольник\n\t\tAt(x, y int) color.Color\n\t}</p><p>*Примечание*: возвращаемое значение Rectangle метода Bounds на самом деле является\n[[/pkg/image/#Rectangle][`image.Rectangle`]], как\nдекларация находится внутри пакета `image`.</p><p>(Все подробности см. в [[/pkg/image/#Image][документации]].</p><p>Типы color.Color и color.Model также являются интерфейсами, но мы проигнорируем это, используя предопределенные реализации color.RGBA и color.RGBAModel. Эти интерфейсы и типы определяются пакетом [[/pkg/image/color/][image/color package]].</p><p><strong>Пример для подростков:</strong> Представь, что объясняешь тему другу на перемене: если можешь просто рассказать, ты понял материал.</p><p><strong>Немного юмора:</strong> Маленькие шаги в Go работают лучше всего: запустил, проверил, улучшил — и без паники.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n)\n\nfunc main() {\n\tm := image.NewRGBA(image.Rect(0, 0, 100, 100))\n\tfmt.Println(m.Bounds())\n\tfmt.Println(m.At(0, 0).RGBA())\n}\n",
+      "task": {
+        "description": "По мотивам урока «Урок 79: Интерфейс Image»: измени стартовый код, чтобы продемонстрировать ключевую идею темы и получить вывод без ошибок.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: покажи идею урока в коротком примере\n\tfmt.Println(\"ok\")\n}\n",
+        "check": {
+          "type": "forbidden",
+          "forbidden_substr": [
+            "TODO"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 22
+    },
+    {
+      "id": "tour-080",
+      "title": "Урок 80: Упражнение: Изображения",
+      "theory_html": "<h2>Урок 80: Упражнение: Изображения</h2><p>Помните [[/tour/moretypes/18][генератор изображений]], который вы написали ранее? Давайте напишем еще один, но на этот раз он будет возвращать реализацию image.Image вместо фрагмента данных.</p><p>Определите свой собственный тип `Image`, реализуйте [[/pkg/image/#Image][необходимые методы]] и вызовите `pic.ShowImage`.</p><p>`Bounds` должен возвращать `image.Rectangle`, например `image.Rect(0,`0,`w,`h)`.</p><p>ColorModel должен возвращать color.RGBAModel.</p><p>`At` должен возвращать цвет; значение `v` в последнем генераторе изображений соответствует `color.RGBA{v,`v,`255,`255}` в этом.</p><p><strong>Пример для подростков:</strong> Обобщения — это один и тот же шаблон для разных типов, как универсальный чехол с регулировкой.</p><p><strong>Немного юмора:</strong> Пишешь функцию один раз, а она работает для int и string — экономия нервов и клавиш.</p>",
+      "demo_code": "//go:build nobuild || OMIT\n\npackage main\n\nimport \"golang.org/x/tour/pic\"\n\ntype Image struct{}\n\nfunc main() {\n\tm := Image{}\n\tpic.ShowImage(m)\n}\n",
+      "task": {
+        "description": "Создай тип `Image`, реализующий интерфейс `image.Image` (`Bounds`, `ColorModel`, `At`).",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n\t\"image/color\"\n)\n\ntype Image struct{}\n\nfunc (Image) ColorModel() color.Model {\n\t// TODO: верни color.RGBAModel\n\treturn color.RGBAModel\n}\nfunc (Image) Bounds() image.Rectangle {\n\t// TODO: задай прямоугольник 0,0,4,4\n\treturn image.Rect(0, 0, 1, 1)\n}\nfunc (Image) At(x, y int) color.Color {\n\t// TODO: верни цвет на основе x и y\n\treturn color.RGBA{0, 0, 0, 255}\n}\n\nfunc main() {\n\tvar img Image\n\tb := img.Bounds()\n\tc := img.At(2, 3).(color.RGBA)\n\tfmt.Println(b.Dx(), b.Dy(), c.R, c.G, c.B, c.A)\n}\n",
+        "check": {
+          "type": "combined",
+          "output_contains": [
+            "4 4",
+            "255"
+          ],
+          "required_code": [
+            "func (Image) Bounds() image.Rectangle",
+            "func (Image) At(x, y int) color.Color"
+          ],
+          "forbidden_substr": [
+            "TODO: задай прямоугольник 0,0,4,4",
+            "TODO: верни цвет на основе x и y"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 23
+    }
+  ]
+}

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Page</title>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <style id="sections-styles">
+/* CSS for section section:DashboardApp */
+#section-dashboard-app {
+  width: 100%;
+  background-color: #ffffff;
+}
+.app-container {
+  display: flex;
+  max-width: 1920px;
+  margin: 0 auto;
+  height: 100vh;
+  min-height: 900px;
+  overflow: hidden;
+}
+.sidebar {
+  width: 213px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #b7cce5 0%, rgba(217, 239, 255, 0.57) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 150px;
+  height: 100%;
+  overflow-y: auto;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+}
+.nav-item {
+  width: 179px;
+  height: 86px;
+  background-color: rgba(255, 255, 255, 0.81);
+  border-radius: 21px;
+  box-shadow: 0px 4px 11.1px 3px rgba(122, 180, 213, 0.36);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.nav-item:hover {
+  transform: translateY(-3px);
+}
+.nav-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+.nav-text {
+  color: #5b2330;
+  font-size: 14px;
+  font-weight: 700;
+}
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.top-header {
+  height: 106px;
+  background-color: rgba(247, 247, 247, 0.42);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  flex-shrink: 0;
+}
+.logo {
+  height: 42px;
+  width: auto;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.btn-achievements {
+  padding: 0 25px;
+  height: 60px;
+  background-color: rgba(255, 254, 245, 0.81);
+  border-radius: 21px;
+  box-shadow: 0px 4px 11.1px 3px rgba(122, 180, 213, 0.36);
+  border: none;
+  color: #5b2330;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-achievements:hover {
+  background-color: #ffffff;
+}
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.avatar {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 4px 4px 11.7px 0px rgba(217, 239, 255, 0.57);
+  background-color: #f0f0f0;
+}
+.username {
+  color: #5b2330;
+  font-size: 24px;
+  font-weight: 700;
+}
+.dashboard-grid {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 60px;
+  overflow-y: auto;
+  gap: 40px;
+}
+.col-character {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 400px;
+  max-width: 700px;
+}
+.character-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: -40px;
+}
+.character-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+}
+.character-shadow {
+  position: absolute;
+  bottom: 12%;
+  width: 60%;
+  height: auto;
+  z-index: 1;
+  filter: blur(30px);
+}
+.character-role {
+  font-size: 72px;
+  color: #5b2330;
+  margin: -30px 0 20px 0;
+  z-index: 3;
+  position: relative;
+  font-weight: 700;
+  text-align: center;
+}
+.character-message {
+  background-color: rgba(217, 239, 255, 0.57);
+  border-radius: 53px;
+  box-shadow: inset 0px 4px 12.6px 0px rgba(122, 180, 213, 0.36);
+  padding: 30px 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+.character-message p {
+  margin: 0;
+  color: #000000;
+  font-size: 22px;
+  line-height: 1.4;
+}
+.col-level {
+  width: 339px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.column-title {
+  font-size: 32px;
+  color: #000000;
+  text-align: center;
+  margin: 0 0 30px 0;
+  font-weight: 400;
+}
+.level-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 31px;
+  width: 100%;
+}
+.level-slot {
+  width: 100%;
+  height: 107px;
+  background-color: rgba(217, 239, 255, 0.57);
+  border-radius: 53px;
+  box-shadow: inset 0px 4px 11.1px 3px rgba(122, 180, 213, 0.36);
+}
+.col-achievements {
+  width: 407px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.achievements-panel {
+  width: 100%;
+  flex: 1;
+  min-height: 600px;
+  background-color: rgba(141, 27, 53, 0.18);
+  border-radius: 53px;
+  box-shadow: inset 0px 4px 10.3px 0px rgba(0, 0, 0, 0.15);
+  padding: 38px 40px;
+}
+.achievement-item {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.81);
+  border: 1px solid rgba(0, 0, 0, 0.53);
+  border-radius: 53px;
+}
+
+/* Responsive Design */
+@media (max-width: 1600px) {
+  .dashboard-grid {
+    padding: 30px;
+    gap: 30px;
+  }
+  .col-level {
+    width: 280px;
+  }
+  .col-achievements {
+    width: 340px;
+  }
+  .character-role {
+    font-size: 56px;
+  }
+  .character-message p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .col-character {
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+  .col-level, .col-achievements {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+  .achievements-panel {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    padding: 20px;
+    overflow-x: auto;
+    align-items: flex-start;
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 15px;
+  }
+  .nav-item {
+    flex-shrink: 0;
+  }
+  .top-header {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+    gap: 20px;
+  }
+  .main-content {
+    overflow: visible;
+  }
+  .dashboard-grid {
+    overflow: visible;
+  }
+}
+  </style>
+  <script src="global.js" defer></script>
+</head>
+<body>
+<section id="section-dashboard-app">
+  <div class="app-container">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 1" class="nav-icon">
+          <span class="nav-text">1 модуль</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 2" class="nav-icon">
+          <span class="nav-text">2 модуль</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 3" class="nav-icon">
+          <span class="nav-text">3 модуль</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 4" class="nav-icon">
+          <span class="nav-text">4 модуль</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 5" class="nav-icon">
+          <span class="nav-text">5 модуль</span>
+        </a>
+        <a href="#" class="nav-item">
+          <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" alt="Module 6" class="nav-icon">
+          <span class="nav-text">6 модуль</span>
+        </a>
+      </nav>
+    </aside>
+    
+    <main class="main-content">
+      <header class="top-header">
+        <div class="logo-container">
+          <img src="images/23_189.svg" alt="Голандия" class="logo">
+        </div>
+        <div class="header-actions">
+          <button class="btn-achievements">мои достижения</button>
+          <div class="user-profile">
+            <img src="images/34_487.svg" alt="Avatar" class="avatar">
+            <span class="username">Иван</span>
+          </div>
+        </div>
+      </header>
+      
+      <div class="dashboard-grid">
+        <div class="col-character">
+          <div class="character-image-wrapper">
+            <img src="images/59a07bced51f57bc406823c1897b15a615aaf2d6.png" alt="Character" class="character-img">
+            <img src="images/34_411.svg" alt="Shadow" class="character-shadow">
+          </div>
+          <h1 class="character-role">Стажёр</h1>
+          <div class="character-message">
+            <p>У тебя всё получится,<br>потому что я в тебя очень верю!</p>
+          </div>
+        </div>
+        
+        <div class="col-level">
+          <h2 class="column-title">Мой уровень</h2>
+          <div class="level-slots">
+            <div class="level-slot"></div>
+            <div class="level-slot"></div>
+            <div class="level-slot"></div>
+            <div class="level-slot"></div>
+            <div class="level-slot"></div>
+            <div class="level-slot"></div>
+          </div>
+        </div>
+        
+        <div class="col-achievements">
+          <h2 class="column-title">Мои достижения</h2>
+          <div class="achievements-panel">
+            <div class="achievement-item"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+</body>
+</html>

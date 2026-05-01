@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import type { AuthChangeEvent } from '@supabase/supabase-js';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
@@ -6,9 +7,12 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  passwordRecoveryPending: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  sendPasswordResetEmail: (email: string) => Promise<{ error: string | null }>;
+  updatePasswordAfterRecovery: (newPassword: string) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -17,17 +21,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [passwordRecoveryPending, setPasswordRecoveryPending] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    async function bootstrapAuth() {
+      const hashIndicatesRecovery =
+        typeof window !== 'undefined' && /[#&](?:[^#&]*[&])?type=recovery(?:&|$)/.test(window.location.hash);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+      const [{ data: sessionData }, { data: userData }] = await Promise.all([
+        supabase.auth.getSession(),
+        supabase.auth.getUser(),
+      ]);
+      setSession(sessionData.session);
+      setUser(userData.user ?? null);
+      if (hashIndicatesRecovery && sessionData.session) {
+        setPasswordRecoveryPending(true);
+      }
+      setLoading(false);
+    }
+
+    bootstrapAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, nextSession) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setPasswordRecoveryPending(true);
+      }
+      setSession(nextSession);
+      if (!nextSession) {
+        setUser(null);
+        setPasswordRecoveryPending(false);
+        return;
+      }
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user ?? nextSession.user ?? null);
     });
 
     return () => subscription.unsubscribe();
@@ -44,11 +72,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signOut() {
+    setPasswordRecoveryPending(false);
     await supabase.auth.signOut();
   }
 
+  async function sendPasswordResetEmail(email: string) {
+    const trimmed = email.trim();
+    const origin =
+      typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
+    const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
+      redirectTo: origin ? `${origin}/` : undefined,
+    });
+    return { error: error?.message ?? null };
+  }
+
+  async function updatePasswordAfterRecovery(newPassword: string) {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (!error) {
+      setPasswordRecoveryPending(false);
+    }
+    return { error: error?.message ?? null };
+  }
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        session,
+        loading,
+        passwordRecoveryPending,
+        signIn,
+        signUp,
+        signOut,
+        sendPasswordResetEmail,
+        updatePasswordAfterRecovery,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

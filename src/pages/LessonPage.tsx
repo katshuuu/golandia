@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Play, CheckSquare, BookOpen, Code2, ChevronRight, Lightbulb, X, CheckCircle2, MessageSquare, ChevronLeft } from 'lucide-react';
-import { Lesson, Task, Solution } from '../lib/types';
+import { Lesson, Solution, TaskCheck } from '../lib/types';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import MarkdownRenderer from '../components/lesson/MarkdownRenderer';
 import CodeEditor from '../components/lesson/CodeEditor';
 import OutputPanel from '../components/lesson/OutputPanel';
 import ChatPanel from '../components/chat/ChatPanel';
+import { checkBackendTask, fetchBackendLesson, runBackendSandbox } from '../lib/courseApi';
 
 interface Props {
   lesson: Lesson;
@@ -14,12 +15,22 @@ interface Props {
   onSolutionUpdate: () => void;
 }
 
+interface LessonTaskView {
+  id?: string;
+  description: string;
+  starter_code: string;
+  expected_output: string;
+  hint: string;
+  check?: TaskCheck;
+}
+
 const STORAGE_KEY = (lessonId: string, userId: string) => `go_tutor_code_${lessonId}_${userId}`;
 
 export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) {
-  const { user, session } = useAuth();
-  const [task, setTask] = useState<Task | null>(null);
+  const { user } = useAuth();
+  const [task, setTask] = useState<LessonTaskView | null>(null);
   const [solution, setSolution] = useState<Solution | null>(null);
+  const [theoryHtml, setTheoryHtml] = useState('');
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const [outputError, setOutputError] = useState('');
@@ -36,6 +47,23 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
   }, [lesson.id]);
 
   async function loadTask() {
+    let backendTask: LessonTaskView | null = null;
+    let backendTheoryHtml = '';
+    try {
+      const backendLesson = await fetchBackendLesson(lesson.id);
+      backendTheoryHtml = backendLesson.theory_html || '';
+      backendTask = {
+        description: backendLesson.task.description,
+        starter_code: backendLesson.task.starter_code,
+        expected_output: '',
+        hint: '',
+        check: backendLesson.task.check,
+      };
+    } catch {
+      backendTask = null;
+      backendTheoryHtml = '';
+    }
+
     const { data: taskData } = await supabase
       .from('tasks')
       .select('*')
@@ -43,14 +71,30 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
       .order('order_num')
       .limit(1)
       .maybeSingle();
+    setTheoryHtml(backendTheoryHtml);
 
-    if (!taskData) return;
-    setTask(taskData as Task);
+    const mergedTask: LessonTaskView | null = backendTask
+      ? {
+          ...backendTask,
+          id: taskData?.id,
+          expected_output: taskData?.expected_output || '',
+          hint: taskData?.hint || '',
+        }
+      : taskData
+      ? {
+          id: taskData.id,
+          description: taskData.description,
+          starter_code: taskData.starter_code,
+          expected_output: taskData.expected_output || '',
+          hint: taskData.hint || '',
+        }
+      : null;
+    setTask(mergedTask);
 
     const storageKey = STORAGE_KEY(lesson.id, user?.id || 'anon');
     const saved = localStorage.getItem(storageKey);
 
-    if (user) {
+    if (user && taskData) {
       const { data: solData } = await supabase
         .from('solutions')
         .select('*')
@@ -59,9 +103,10 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
         .maybeSingle();
 
       setSolution(solData as Solution | null);
-      setCode(saved || solData?.code || taskData.starter_code || '');
+      setCode(saved || solData?.code || mergedTask?.starter_code || '');
     } else {
-      setCode(saved || taskData.starter_code || '');
+      setSolution(null);
+      setCode(saved || mergedTask?.starter_code || '');
     }
   }
 
@@ -76,32 +121,19 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
   }
 
   async function handleRun() {
-    if (running || !session) return;
+    if (running) return;
     setRunning(true);
     setOutput('');
     setOutputError('');
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/execute-code`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-            Apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({ code }),
-        }
-      );
-
-      const data = await res.json();
-      if (data.error) {
-        setOutputError(data.error);
-        setLastOutput(data.error);
+      const data = await runBackendSandbox(code);
+      if (!data.ok || data.stderr) {
+        setOutputError(data.stderr || 'Ошибка запуска');
+        setLastOutput(data.stderr || 'Ошибка запуска');
       } else {
-        setOutput(data.output || '(программа завершилась без вывода)');
-        setLastOutput(data.output || '');
+        setOutput(data.stdout || '(программа завершилась без вывода)');
+        setLastOutput(data.stdout || '');
       }
     } catch {
       setOutputError('Не удалось подключиться к песочнице. Проверь соединение.');
@@ -111,38 +143,29 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
   }
 
   async function handleCheck() {
-    if (!task || checking || !user || !session) return;
+    if (!task || checking || !user) return;
     setChecking(true);
     setOutput('');
     setOutputError('');
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/execute-code`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-            Apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({ code }),
-        }
-      );
+      const data = await runBackendSandbox(code);
 
-      const data = await res.json();
-
-      if (data.error) {
-        setOutputError(data.error);
-        setLastOutput(data.error);
+      if (!data.ok || data.stderr) {
+        setOutputError(data.stderr || 'Ошибка запуска');
+        setLastOutput(data.stderr || 'Ошибка запуска');
         await saveSolution('failed');
         showNotification('error', 'Код содержит ошибку. Почитай описание ошибки и попробуй ещё!');
       } else {
-        const programOutput = (data.output || '').trim();
+        const programOutput = (data.stdout || '').trim();
         setOutput(programOutput);
         setLastOutput(programOutput);
 
-        const isSolved = checkSolution(programOutput, task);
+        let isSolved = checkSolution(programOutput, task);
+        if (task.check) {
+          const checked = await checkBackendTask(programOutput, code, task.check);
+          isSolved = checked.ok;
+        }
 
         if (isSolved) {
           await saveSolution('solved');
@@ -160,7 +183,7 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
     }
   }
 
-  function checkSolution(programOutput: string, t: Task): boolean {
+  function checkSolution(programOutput: string, t: LessonTaskView): boolean {
     const expected = t.expected_output?.trim();
     if (!expected) {
       return programOutput.length > 0 && !programOutput.toLowerCase().includes('error');
@@ -170,14 +193,11 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
 
     if (normalizedOutput === normalizedExpected) return true;
     if (normalizedOutput.includes(normalizedExpected)) return true;
-    if (t.lesson_id === '44444444-4444-4444-4444-444444444444') {
-      return normalizedOutput.includes('горутина 1') && normalizedOutput.includes('горутина 2');
-    }
     return false;
   }
 
   async function saveSolution(status: 'solved' | 'failed') {
-    if (!user || !task) return;
+    if (!user || !task?.id) return;
     await supabase
       .from('solutions')
       .upsert({
@@ -271,8 +291,12 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
       <div className="flex flex-1 overflow-hidden">
         <div className="flex flex-col flex-1 overflow-hidden">
           {activeTab === 'theory' ? (
-            <div className="flex-1 overflow-y-auto p-6 max-w-3xl mx-auto w-full">
-              <MarkdownRenderer content={lesson.content} />
+            <div className="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto w-full">
+              {theoryHtml ? (
+                <div className="lesson-theory-html" dangerouslySetInnerHTML={{ __html: theoryHtml }} />
+              ) : (
+                <MarkdownRenderer content={lesson.content} />
+              )}
             </div>
           ) : (
             <div className="flex flex-col flex-1 overflow-hidden">

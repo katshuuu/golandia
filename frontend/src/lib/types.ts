@@ -13,12 +13,9 @@ export interface LessonTask {
 export interface Lesson {
   id: string;
   title: string;
-  summary: string;
   theory_html: string;
   demo_code: string;
   task: LessonTask;
-  socratic_questions: string[];
-  check_key_points: string[];
   module_id: string;
   order: number;
 }
@@ -43,7 +40,6 @@ export interface CourseModule {
 
 export interface FinalMiniProject {
   title: string;
-  summary: string;
   goals: string[];
   starter_code: string;
   hints: string[];

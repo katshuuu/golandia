@@ -18,16 +18,13 @@ type LessonTask struct {
 
 // Lesson — одно занятие курса.
 type Lesson struct {
-	ID                string     `json:"id"`
-	Title             string     `json:"title"`
-	Summary           string     `json:"summary"`
-	TheoryHTML        string     `json:"theory_html"`
-	DemoCode          string     `json:"demo_code"`
-	Task              LessonTask `json:"task"`
-	SocraticQuestions []string   `json:"socratic_questions"`
-	CheckKeyPoints    []string   `json:"check_key_points"`
-	ModuleID          string     `json:"module_id"`
-	Order             int        `json:"order"`
+	ID         string     `json:"id"`
+	Title      string     `json:"title"`
+	TheoryHTML string     `json:"theory_html"`
+	DemoCode   string     `json:"demo_code"`
+	Task       LessonTask `json:"task"`
+	ModuleID   string     `json:"module_id"`
+	Order      int        `json:"order"`
 }
 
 // LessonRef — ссылка на урок в оглавлении.
@@ -67,7 +64,6 @@ type CourseManifest struct {
 // FinalMiniProject — итоговый мини-проект.
 type FinalMiniProject struct {
 	Title       string    `json:"title"`
-	Summary     string    `json:"summary"`
 	Goals       []string  `json:"goals"`
 	StarterCode string    `json:"starter_code"`
 	Hints       []string  `json:"hints"`

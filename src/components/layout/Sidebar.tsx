@@ -1,113 +1,188 @@
-import { CheckCircle2, Circle, Lock, Zap, Code2, Layers, Cpu } from 'lucide-react';
-import { Lesson } from '../../lib/types';
+import { CourseModule, Lesson } from '../../lib/types';
+import moduleIcon from '../../../8c8693f6-d925-4da1-9848-66491718ece0/images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface SidebarProps {
   lessons: Lesson[];
+  modules: CourseModule[];
   solvedTaskIds: Set<string>;
   tasksByLesson: Record<string, string[]>;
   currentLessonId: string | null;
   onSelectLesson: (id: string) => void;
 }
 
-const lessonIcons = [Code2, Zap, Layers, Cpu];
-const difficultyLabel = ['', 'Легко', 'Средне', 'Сложно'];
-const difficultyColor = ['', 'text-emerald-400', 'text-yellow-400', 'text-pink-400'];
+type ModuleKey = 'm1' | 'm2' | 'm3' | 'm4' | 'm5' | 'm6';
 
-export default function Sidebar({ lessons, solvedTaskIds, tasksByLesson, currentLessonId, onSelectLesson }: SidebarProps) {
+const MODULE_HEADER_TITLE: Record<ModuleKey, string> = {
+  m1: 'МОДУЛЬ ПЕРВЫЙ',
+  m2: 'МОДУЛЬ ВТОРОЙ',
+  m3: 'МОДУЛЬ ТРЕТИЙ',
+  m4: 'МОДУЛЬ ЧЕТВЁРТЫЙ',
+  m5: 'МОДУЛЬ ПЯТЫЙ',
+  m6: 'МОДУЛЬ ШЕСТОЙ',
+};
+
+function deriveModuleKey(moduleId: string): ModuleKey {
+  const base = moduleId.split('_')[0];
+  if (base === 'm1' || base === 'm2' || base === 'm3' || base === 'm4' || base === 'm5') {
+    return base;
+  }
+  return 'm6';
+}
+
+export default function Sidebar({ lessons, modules, solvedTaskIds, tasksByLesson, currentLessonId, onSelectLesson }: SidebarProps) {
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const lessonsByModule = useMemo(() => {
+    const initial: Record<ModuleKey, Lesson[]> = {
+      m1: [],
+      m2: [],
+      m3: [],
+      m4: [],
+      m5: [],
+      m6: [],
+    };
+
+    const lessonMap = new Map(lessons.map((lesson) => [lesson.id, lesson]));
+    for (const module of modules) {
+      const key = deriveModuleKey(module.id);
+      for (const ref of module.lessons) {
+        const lesson = lessonMap.get(ref.id);
+        if (lesson) {
+          initial[key].push(lesson);
+        }
+      }
+    }
+
+    for (const key of Object.keys(initial) as ModuleKey[]) {
+      initial[key].sort((a, b) => a.order_num - b.order_num);
+    }
+
+    return initial;
+  }, [lessons, modules]);
+
+  const [openModuleKey, setOpenModuleKey] = useState<ModuleKey | null>(null);
+
+  const isPanelOpen = openModuleKey !== null;
+  const panelLessons = openModuleKey ? lessonsByModule[openModuleKey] : [];
+
+  useEffect(() => {
+    if (!isPanelOpen) {
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpenModuleKey(null);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isPanelOpen]);
+
+  useEffect(() => {
+    if (!isPanelOpen) {
+      return;
+    }
+    const onPointerDown = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (drawerRef.current?.contains(target)) return;
+      if (sidebarRef.current?.contains(target)) return;
+      setOpenModuleKey(null);
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    return () => document.removeEventListener('mousedown', onPointerDown);
+  }, [isPanelOpen]);
+
+  function closePanel() {
+    setOpenModuleKey(null);
+  }
+
   return (
-    <aside className="w-72 shrink-0 bg-[var(--bg-surface)] border-r border-[var(--border-color)] flex flex-col overflow-y-auto transition-colors">
-      <div className="px-4 pt-4 pb-3 border-b border-[var(--border-color)]">
-        <h2 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Модули курса</h2>
-      </div>
-
-      <nav className="p-3 flex flex-col gap-1 flex-1">
-        {lessons.map((lesson, idx) => {
-          const Icon = lessonIcons[idx % lessonIcons.length];
-          const taskIds = tasksByLesson[lesson.id] || [];
-          const solved = taskIds.filter(id => solvedTaskIds.has(id)).length;
-          const total = taskIds.length;
-          const allSolved = total > 0 && solved === total;
-          const isActive = lesson.id === currentLessonId;
-
-          return (
-            <button
-              key={lesson.id}
-              onClick={() => onSelectLesson(lesson.id)}
-              className={`w-full text-left rounded-xl p-3 transition-all duration-200 group relative ${
-                isActive
-                  ? 'bg-gradient-to-r from-cyan-500/15 to-cyan-400/5 border border-cyan-500/30'
-                  : 'hover:bg-[var(--bg-surface-hover)] border border-transparent hover:border-[var(--border-color)]'
-              }`}
-            >
-              {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-r-full" />
-              )}
-
-              <div className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                  isActive
-                    ? 'bg-cyan-500/20 text-cyan-400'
-                    : allSolved
-                    ? 'bg-emerald-500/10 text-emerald-400'
-                    : 'bg-[var(--bg-app)] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]'
-                }`}>
-                  <Icon size={14} />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-base font-semibold truncate ${
-                      isActive ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'
-                    }`}>
-                      {lesson.order_num}. {lesson.title}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-[10px] ${difficultyColor[lesson.difficulty]}`}>
-                      {difficultyLabel[lesson.difficulty]}
-                    </span>
-                    {total > 0 && (
-                      <span className="text-[10px] text-[var(--text-muted)]">
-                        {solved}/{total} задан.
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="shrink-0">
-                  {allSolved ? (
-                    <CheckCircle2 size={16} className="text-emerald-400" />
-                  ) : isActive ? (
-                    <Circle size={16} className="text-cyan-400" />
-                  ) : (
-                    <Lock size={14} className="text-[var(--border-color)]" />
-                  )}
-                </div>
+    <>
+      <aside ref={sidebarRef} className="sidebar" aria-label="Модули курса">
+        <nav className="module-list">
+          {(['m1', 'm2', 'm3', 'm4', 'm5', 'm6'] as ModuleKey[]).map((key) => {
+            const title = `${key.replace('m', '')} модуль`;
+            const moduleLessons = lessonsByModule[key];
+            const taskIds = moduleLessons.flatMap(lesson => tasksByLesson[lesson.id] || []);
+            const solved = taskIds.filter(taskId => solvedTaskIds.has(taskId)).length;
+            const activeInModule = moduleLessons.some(lesson => lesson.id === currentLessonId);
+            const isOpen = openModuleKey === key;
+            return (
+              <div key={key} className="module-group">
+                <button
+                  onClick={() => {
+                    setOpenModuleKey((prev) => (prev === key ? null : key));
+                  }}
+                  className={`module-card ${activeInModule || isOpen ? 'is-active' : ''}`}
+                  type="button"
+                  aria-expanded={isOpen}
+                  title={`${title} • ${solved}/${taskIds.length} выполнено`}
+                >
+                  <img src={moduleIcon} alt="" className="module-icon" />
+                  <span className="module-title">{title}</span>
+                </button>
               </div>
+            );
+          })}
+        </nav>
+      </aside>
 
-              {total > 0 && (
-                <div className="mt-2 ml-11">
-                  <div className="h-1 bg-[var(--bg-app)] rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        allSolved ? 'bg-emerald-400' : 'bg-gradient-to-r from-cyan-500 to-cyan-400'
-                      }`}
-                      style={{ width: `${total > 0 ? (solved / total) * 100 : 0}%` }}
-                    />
-                  </div>
-                </div>
+      <div
+        ref={drawerRef}
+        className={`module-drawer ${isPanelOpen ? 'is-open' : ''}`}
+        role="dialog"
+        aria-modal="false"
+        aria-label={openModuleKey ? MODULE_HEADER_TITLE[openModuleKey] : undefined}
+      >
+        {openModuleKey && (
+          <>
+            <header className="module-drawer-header">
+              <button type="button" className="module-drawer-close" onClick={closePanel} aria-label="Закрыть список уроков">
+                ×
+              </button>
+              <h2 className="module-drawer-title">{MODULE_HEADER_TITLE[openModuleKey]}</h2>
+            </header>
+            <div className="module-drawer-body">
+              {panelLessons.length === 0 ? (
+                <p className="module-drawer-empty">уроки скоро появятся</p>
+              ) : (
+                <ul className="module-drawer-list">
+                  {panelLessons.map((lesson, index) => {
+                    const lessonTaskIds = tasksByLesson[lesson.id] || [];
+                    const solvedInLesson = lessonTaskIds.filter(taskId => solvedTaskIds.has(taskId)).length;
+                    const isLessonActive = lesson.id === currentLessonId;
+                    const line =
+                      lesson.title.trim().toLowerCase().startsWith('урок') ? lesson.title : `Урок ${index + 1}: ${lesson.title}`;
+                    return (
+                      <li key={lesson.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onSelectLesson(lesson.id);
+                            closePanel();
+                          }}
+                          className={`module-drawer-item ${isLessonActive ? 'is-active' : ''}`}
+                        >
+                          <span className="module-drawer-item-text">{line}</span>
+                          {lessonTaskIds.length > 0 && (
+                            <span className="module-drawer-item-progress">
+                              {solvedInLesson}/{lessonTaskIds.length}
+                            </span>
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="p-4 border-t border-[var(--border-color)]">
-        <div className="bg-gradient-to-br from-cyan-500/10 to-pink-500/5 border border-cyan-500/20 rounded-xl p-3 text-center">
-          <p className="text-xs text-[var(--text-secondary)]">Нужна помощь?</p>
-          <p className="text-xs text-cyan-400 font-medium mt-0.5">Спроси AI-помощника!</p>
-        </div>
+            </div>
+          </>
+        )}
       </div>
-    </aside>
+
+      {isPanelOpen && <div className="module-drawer-backdrop" onClick={closePanel} aria-hidden />}
+    </>
   );
 }

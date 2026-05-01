@@ -63,9 +63,6 @@ export function LessonPage({ onProgress }: { onProgress: () => void }) {
             </span>
           ) : null}
         </div>
-        <p style={{ color: "var(--muted)", margin: "0.35rem 0 0", maxWidth: "52rem", fontSize: "0.95rem" }}>
-          {lesson.summary}
-        </p>
       </div>
 
       <div className="lesson-split">

@@ -10,7 +10,12 @@ function sanitizeText(input: string): string {
 
 function sanitizeHtml(input: string): string {
   return sanitizeText(
-    input.replace(/<p><strong>Оригинальная тема в[^<]*<\/strong>[^<]*<\/p>/gi, "")
+    input
+      .replace(
+        /<p>\s*<strong>\s*Оригинальная тема в A Tour of Go:\s*<\/strong>[\s\S]*?<\/p>/gi,
+        ""
+      )
+      .replace(/<p>\s*Оригинальная тема в A Tour of Go:[\s\S]*?<\/p>/gi, "")
   );
 }
 
@@ -23,7 +28,6 @@ function sanitizeManifest(manifest: CourseManifest): CourseManifest {
     final_project: {
       ...manifest.final_project,
       title: sanitizeText(manifest.final_project.title),
-      summary: sanitizeText(manifest.final_project.summary),
       goals: manifest.final_project.goals.map(sanitizeText),
       hints: manifest.final_project.hints.map(sanitizeText),
     },
@@ -51,10 +55,7 @@ function sanitizeLesson(lesson: Lesson): Lesson {
   return {
     ...lesson,
     title: sanitizeText(lesson.title),
-    summary: sanitizeText(lesson.summary),
     theory_html: sanitizeHtml(lesson.theory_html),
-    socratic_questions: lesson.socratic_questions.map(sanitizeText),
-    check_key_points: lesson.check_key_points.map(sanitizeText),
     task: {
       ...lesson.task,
       description: sanitizeText(lesson.task.description),

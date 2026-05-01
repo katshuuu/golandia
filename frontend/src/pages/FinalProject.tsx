@@ -39,7 +39,6 @@ export function FinalProject() {
         ← К курсу
       </Link>
       <h1 style={{ marginTop: "0.75rem", fontFamily: '"Raleway", Manrope, sans-serif' }}>{fp.title}</h1>
-      <p style={{ color: "var(--muted)", maxWidth: "44rem" }}>{fp.summary}</p>
       <ul>
         {fp.goals.map((g) => (
           <li key={g}>{g}</li>

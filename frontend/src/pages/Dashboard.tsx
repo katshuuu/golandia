@@ -33,7 +33,6 @@ export function Dashboard() {
         <p style={{ margin: "0.45rem 0 0" }}>
           <Link to="/final">{manifest.final_project.title}</Link>
         </p>
-        <p style={{ margin: "0.35rem 0 0", color: "var(--muted)", fontSize: "0.92rem" }}>{manifest.final_project.summary}</p>
       </div>
     </div>
   );

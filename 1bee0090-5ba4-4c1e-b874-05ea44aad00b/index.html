@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Page</title>
+  <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <style id="sections-styles">
+/* CSS for section section:Dashboard */
+#section-dashboard {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #f5f5f5; /* Optional outer background */
+}
+
+.app-container {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.app-container > * {
+  position: absolute;
+}
+
+.sidebar {
+  left: 0;
+  top: 0;
+  width: 213px;
+  height: 1080px;
+  background: radial-gradient(circle at top left, rgba(183, 204, 229, 1) 0%, rgba(217, 239, 255, 0.57) 100%);
+}
+
+.module-bg {
+  width: 179px;
+  height: 86px;
+  background-color: rgba(255, 255, 255, 0.81);
+  border-radius: 21px;
+  box-shadow: 0px 4px 11.1px 3px rgba(122, 180, 213, 0.36);
+}
+
+.module-img {
+  width: 62px;
+  height: 62px;
+  object-fit: cover;
+}
+
+.module-text {
+  color: #5b2330;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.header-bg {
+  left: 213px;
+  top: 0;
+  width: 1707px;
+  height: 106px;
+  background-color: rgba(247, 247, 247, 0.42);
+  border: 0.1px solid #000000;
+}
+
+.logo {
+  width: 268px;
+  height: 42px;
+}
+
+.btn-achievements {
+  width: 166px;
+  height: 60px;
+  background-color: rgba(255, 254, 245, 0.81);
+  border-radius: 21px;
+  box-shadow: 0px 4px 11.1px 3px rgba(122, 180, 213, 0.36);
+  cursor: pointer;
+}
+
+.btn-achievements span {
+  color: #5b2330;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.avatar {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 4px 4px 11.7px 0px rgba(217, 239, 255, 0.57);
+}
+
+.username {
+  color: #5b2330;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card-bg {
+  border-radius: 53px;
+}
+
+.greeting-bg {
+  width: 569px;
+  height: 882px;
+  background-color: rgba(221, 241, 255, 0.57);
+  box-shadow: inset 0px 4px 10.2px 0px rgba(122, 180, 213, 0.36);
+}
+
+.frame-img {
+  width: 475px;
+  height: 692px;
+}
+
+.greeting-title {
+  color: #000000;
+  font-size: 36px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.greeting-subtitle {
+  color: #000000;
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+.progress-bg {
+  width: 622px;
+  height: 273px;
+  background-color: rgba(217, 239, 255, 0.57);
+  box-shadow: inset 0px 4px 12.6px 0px rgba(122, 180, 213, 0.36);
+}
+
+.progress-title {
+  color: #000000;
+  font-size: 32px;
+  white-space: nowrap;
+}
+
+.progress-num {
+  color: #000000;
+  font-size: 56px;
+  white-space: nowrap;
+}
+
+.progress-label {
+  color: #000000;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.progress-percent {
+  color: #000000;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.goal-bg {
+  width: 327px;
+  height: 273px;
+  background-color: rgba(217, 239, 255, 0.57);
+  box-shadow: inset 0px 4px 13.2px 0px rgba(122, 180, 213, 0.36);
+}
+
+.goal-text-1, .goal-text-2 {
+  color: #000000;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.goal-input-bg {
+  width: 279px;
+  height: 42px;
+  background-color: rgba(255, 255, 255, 0.81);
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 53px;
+}
+
+.creature-img {
+  width: 128px;
+  height: 128px;
+}
+
+.questions-bg {
+  width: 985px;
+  height: 559px;
+  background-color: rgba(217, 239, 255, 0.57);
+  box-shadow: inset 0px 4px 10px 0px rgba(122, 180, 213, 0.36);
+}
+
+.questions-title {
+  color: #000000;
+  font-size: 48px;
+  white-space: nowrap;
+}
+
+.questions-subtitle {
+  color: #6a657b;
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+.chat-bubble {
+  width: 243px;
+  height: 243px;
+}
+
+.question-input-bg {
+  width: 884px;
+  height: 98px;
+  background-color: rgba(255, 255, 255, 0.81);
+  border: 1px solid rgba(0, 0, 0, 0.52);
+  border-radius: 53px;
+}
+
+.question-placeholder {
+  color: #6a657b;
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+.icon-export {
+  width: 31px;
+  height: 31px;
+}
+  </style>
+  <script src="global.js" defer></script>
+</head>
+<body>
+<section id="section-dashboard">
+  <div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar"></div>
+    
+    <!-- Modules -->
+    <div class="module-bg" style="left: 17px; top: 214px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 214px;" alt="Module 1">
+    <span class="module-text" style="left: 75px; top: 281px;">1 модуль</span>
+    
+    <div class="module-bg" style="left: 17px; top: 323px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 323px;" alt="Module 2">
+    <span class="module-text" style="left: 75px; top: 386px;">2 модуль</span>
+    
+    <div class="module-bg" style="left: 17px; top: 432px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 435px;" alt="Module 3">
+    <span class="module-text" style="left: 72px; top: 498px;">3 модуль</span>
+    
+    <div class="module-bg" style="left: 21px; top: 541px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 547px;" alt="Module 4">
+    <span class="module-text" style="left: 75px; top: 609px;">4 модуль</span>
+    
+    <div class="module-bg" style="left: 21px; top: 650px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 656px;" alt="Module 5">
+    <span class="module-text" style="left: 75px; top: 716px;">5 модуль</span>
+    
+    <div class="module-bg" style="left: 17px; top: 759px;"></div>
+    <img src="images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png" class="module-img" style="left: 75px; top: 759px;" alt="Module 6">
+    <span class="module-text" style="left: 72px; top: 825px;">6 модуль</span>
+
+    <!-- Sidebar Icons -->
+    <!--merged image-->
+    <div class="icon-setting" style="position: absolute; left: 89.2px; top: 516.1px; width: 29.7px; height: 15.6px;">
+      <img src="images/I34_447_33437_5021.svg" style="position: absolute; left: 2.5px; top: 1.3px; width: 23.9px; height: 13.4px;" alt="Setting Part 1">
+      <img src="images/I34_447_33437_5022.svg" style="position: absolute; left: 2.5px; top: 1.3px; width: 23.9px; height: 13.4px;" alt="Setting Part 2">
+      <img src="images/I34_447_33437_5025.svg" style="position: absolute; left: 10.2px; top: 5.8px; width: 8.4px; height: 4.4px;" alt="Setting Part 3">
+    </div>
+    
+    <!--merged image-->
+    <div class="icon-logout" style="position: absolute; left: 93.2px; top: 535.3px; width: 25.8px; height: 13.5px;">
+      <img src="images/I34_428_33437_4793.svg" style="position: absolute; left: 2.1px; top: 1.1px; width: 14.8px; height: 11.2px;" alt="Logout Part 1">
+      <img src="images/I34_428_33437_4794.svg" style="position: absolute; left: 9.7px; top: 6.3px; width: 14.5px; height: 0.8px;" alt="Logout Part 2">
+      <img src="images/I34_428_33437_4797.svg" style="position: absolute; left: 19.4px; top: 4.7px; width: 4.8px; height: 4.1px;" alt="Logout Part 3">
+    </div>
+
+    <!-- Header -->
+    <div class="header-bg"></div>
+    <img src="images/23_239.svg" class="logo" style="left: 256px; top: 42px;" alt="Logo">
+    
+    <div class="btn-achievements" style="left: 1536px; top: 23px;">
+      <span style="position: absolute; left: 11px; top: 19px;">мои достижения</span>
+    </div>
+    
+    <img src="images/34_482.svg" class="avatar" style="left: 1728px; top: 14px;" alt="User Avatar">
+    <span class="username" style="left: 1823px; top: 39px;">Иван</span>
+
+    <!-- Greeting Card -->
+    <div class="card-bg greeting-bg" style="left: 256px; top: 143px;"></div>
+    <img src="images/25_276.svg" class="frame-img" style="left: 303px; top: 159px;" alt="Decorative Frame">
+    <span class="greeting-title" style="left: 394px; top: 800px;">Привет, Иван!</span>
+    <span class="greeting-subtitle" style="left: 355px; top: 842px;">Готов показать прогресс сегодня?</span>
+
+    <!-- Progress Card -->
+    <div class="card-bg progress-bg" style="left: 861px; top: 143px;"></div>
+    <span class="progress-title" style="left: 1046px; top: 177px;">Прогресс по курсу</span>
+    <span class="progress-num" style="left: 1035px; top: 264px;">0/92</span>
+    <span class="progress-label" style="left: 1060px; top: 324px;">занятий</span>
+    
+    <!--merged image-->
+    <div class="progress-circle-container" style="position: absolute; left: 1200px; top: 234px; width: 163px; height: 163px;">
+      <img src="images/25_284.svg" style="position: absolute; left: 0; top: 0; width: 163px; height: 163px;" alt="Outer Circle">
+      <img src="images/25_285.svg" style="position: absolute; left: 28px; top: 28px; width: 108px; height: 107px;" alt="Inner Circle">
+    </div>
+    <span class="progress-percent" style="left: 1257px; top: 294px;">0%</span>
+
+    <!-- Goal Card -->
+    <div class="card-bg goal-bg" style="left: 1519px; top: 143px;"></div>
+    <span class="goal-text-1" style="left: 1543px; top: 190px;">Приближение цели в твоих руках -</span>
+    <span class="goal-text-2" style="left: 1589px; top: 216px;">помни, что ты хочешь</span>
+    <div class="goal-input-bg" style="left: 1543px; top: 252px;"></div>
+    <img src="images/13b0a847a47032ef3d8d38818df2b641e6d92e9e.png" class="creature-img" style="left: 1619px; top: 288px;" alt="Creature Mascot">
+
+    <!-- Questions Card -->
+    <div class="card-bg questions-bg" style="left: 861px; top: 456px;"></div>
+    
+    <!--merged image-->
+    <div class="icon-voice" style="position: absolute; left: 929.7px; top: 465.3px; width: 43.6px; height: 22.8px;">
+      <img src="images/I32_315_33437_4446.svg" style="position: absolute; left: 20px; top: 17px; width: 2.7px; height: 4.4px;" alt="Voice Part 1">
+      <img src="images/I32_315_33437_4447.svg" style="position: absolute; left: 12.6px; top: 1px; width: 17.5px; height: 13.6px;" alt="Voice Part 2">
+      <img src="images/I32_315_33437_4450.svg" style="position: absolute; left: 5.5px; top: 9.3px; width: 31.8px; height: 9.1px;" alt="Voice Part 3">
+    </div>
+
+    <!--merged image-->
+    <div class="icon-send" style="position: absolute; left: 1691.9px; top: 463.7px; width: 49.6px; height: 25.9px;">
+      <img src="images/I32_302_33437_4695.svg" style="position: absolute; left: 4.1px; top: 3.2px; width: 40.3px; height: 21.1px;" alt="Send Part 1">
+      <img src="images/I32_302_33437_4696.svg" style="position: absolute; left: 4.1px; top: 3.2px; width: 40.3px; height: 21.1px;" alt="Send Part 2">
+    </div>
+
+    <img src="images/I34_384_12_68135.svg" class="icon-export" style="left: 1757px; top: 509px;" alt="Export Icon">
+
+    <span class="questions-title" style="left: 1088px; top: 496px;">Есть вопросы? Задавай!</span>
+    <span class="questions-subtitle" style="left: 1200px; top: 552px;">Кусаться не буду, честно</span>
+    <img src="images/ba551f8ac7cfccc20c00caba383c044152e9763a.png" class="chat-bubble" style="left: 1207px; top: 590px;" alt="Chat Bubble">
+    
+    <div class="question-input-bg" style="left: 912px; top: 870px;"></div>
+    <span class="question-placeholder" style="left: 1004px; top: 904px;">Непонятен один момент...</span>
+
+  </div>
+</section>
+</body>
+</html>
