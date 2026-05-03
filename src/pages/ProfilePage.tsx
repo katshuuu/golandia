@@ -3,68 +3,182 @@ import avatarImage from '../../1bee0090-5ba4-4c1e-b874-05ea44aad00b/images/34_48
 import frameImage from '../../1bee0090-5ba4-4c1e-b874-05ea44aad00b/images/25_276.svg';
 import circleOuter from '../../1bee0090-5ba4-4c1e-b874-05ea44aad00b/images/25_284.svg';
 import circleInner from '../../1bee0090-5ba4-4c1e-b874-05ea44aad00b/images/25_285.svg';
-import { FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { fileToAvatarJpegDataUrl } from '../lib/resizeAvatar';
+import ChatPanel from '../components/chat/ChatPanel';
+import { PROFILE_CHAT_LESSON_ID, PROFILE_CHAT_LESSON_TITLE } from '../lib/profileChat';
 
 interface ProfilePageProps {
-  userName: string;
+  displayName: string;
+  avatarUrl: string;
   solvedCount: number;
   totalCount: number;
   goal: string;
   onSaveGoal: (goal: string) => Promise<void>;
+  onSaveDisplayName: (name: string) => Promise<void>;
+  onAvatarChange: (dataUrl: string) => Promise<void>;
 }
 
-export default function ProfilePage({ userName, solvedCount, totalCount, goal, onSaveGoal }: ProfilePageProps) {
-  const { session } = useAuth();
+export default function ProfilePage({
+  displayName,
+  avatarUrl,
+  solvedCount,
+  totalCount,
+  goal,
+  onSaveGoal,
+  onSaveDisplayName,
+  onAvatarChange,
+}: ProfilePageProps) {
+  const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const progressPercent = totalCount > 0 ? Math.round((solvedCount / totalCount) * 100) : 0;
   const [goalDraft, setGoalDraft] = useState(goal);
-  const [question, setQuestion] = useState('');
-  const [reply, setReply] = useState('');
-  const [loadingReply, setLoadingReply] = useState(false);
+  const [nameDraft, setNameDraft] = useState(displayName);
+  const [nameSaving, setNameSaving] = useState(false);
+  const [avatarSaving, setAvatarSaving] = useState(false);
+  const [profileChatDraft, setProfileChatDraft] = useState('');
+  const [profileChatOpen, setProfileChatOpen] = useState(false);
+  const [profileChatFullscreen, setProfileChatFullscreen] = useState(false);
+  const [profileChatPanelKey, setProfileChatPanelKey] = useState(0);
 
   useEffect(() => {
     setGoalDraft(goal);
   }, [goal]);
 
-  async function handleAskTutor(event: FormEvent) {
+  useEffect(() => {
+    setNameDraft(displayName);
+  }, [displayName]);
+
+  useEffect(() => {
+    if (!profileChatOpen) setProfileChatFullscreen(false);
+  }, [profileChatOpen]);
+
+  async function handleSaveName(event: FormEvent) {
     event.preventDefault();
-    if (!question.trim() || !session || loadingReply) return;
-
-    const message = question.trim();
-    setQuestion('');
-    setLoadingReply(true);
-    setReply('');
+    const next = nameDraft.trim();
+    if (!next || next === displayName.trim() || nameSaving) return;
+    setNameSaving(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-tutor`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-          Apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
-          message,
-          lessonTitle: 'Личный кабинет',
-          history: [],
-        }),
-      });
-
-      const data = await res.json();
-      setReply(data.reply || 'Пока не получилось получить ответ. Попробуй ещё раз.');
-    } catch {
-      setReply('Не удалось подключиться к AI-репетитору. Проверь соединение и повтори попытку.');
+      await onSaveDisplayName(next);
     } finally {
-      setLoadingReply(false);
+      setNameSaving(false);
     }
   }
 
+  async function handleAvatarPick(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file || !file.type.startsWith('image/')) return;
+    setAvatarSaving(true);
+    try {
+      const dataUrl = await fileToAvatarJpegDataUrl(file);
+      await onAvatarChange(dataUrl);
+    } catch {
+      /* пользователь увидит прежнее фото */
+    } finally {
+      setAvatarSaving(false);
+    }
+  }
+
+  async function handleRemoveAvatar() {
+    setAvatarSaving(true);
+    try {
+      await onAvatarChange('');
+    } finally {
+      setAvatarSaving(false);
+    }
+  }
+
+  function handleOpenProfileChat(event: FormEvent) {
+    event.preventDefault();
+    if (!user) return;
+    setProfileChatPanelKey((k) => k + 1);
+    setProfileChatOpen(true);
+  }
+
+  const greetingName = displayName.trim() || 'студент';
+
   return (
     <section className="profile-screen">
-      <div className="profile-grid">
+      <div className="profile-grid-outer">
+        <div className="profile-grid">
         <article className="profile-card profile-greeting-card">
-          <img src={frameImage} alt="Decorative frame" className="profile-frame-image" />
-          <h2 className="profile-greeting-title">Привет, {userName}!</h2>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="profile-file-input-hidden"
+            onChange={handleAvatarPick}
+          />
+
+          <div className="profile-frame-stack">
+            <div className="profile-frame-hit" aria-hidden />
+            <div className="profile-frame-photo-slot">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="profile-frame-photo-img" />
+              ) : (
+                <div className="profile-frame-photo-placeholder" aria-hidden />
+              )}
+              {avatarSaving && (
+                <div className="profile-frame-photo-saving">
+                  <Loader2 size={28} className="animate-spin text-white" />
+                </div>
+              )}
+            </div>
+            <div className="profile-frame-hover-overlay">
+              <div className="profile-frame-hover-actions">
+                <button
+                  type="button"
+                  className="profile-change-photo-btn"
+                  disabled={avatarSaving}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {avatarUrl ? 'Изменить фото' : 'Добавить фото'}
+                </button>
+                {avatarUrl ? (
+                  <button
+                    type="button"
+                    className="profile-remove-photo-btn"
+                    disabled={avatarSaving}
+                    onClick={() => void handleRemoveAvatar()}
+                  >
+                    Убрать фото
+                  </button>
+                ) : null}
+              </div>
+            </div>
+            <img src={frameImage} alt="Decorative frame" className="profile-frame-image" />
+          </div>
+          <h2 className="profile-greeting-title">Привет, {greetingName}!</h2>
           <p className="profile-greeting-subtitle">Готов показать прогресс сегодня?</p>
+
+          <form className="profile-name-edit-form" onSubmit={handleSaveName}>
+            <label htmlFor="profile-display-name" className="profile-name-edit-label">
+              Как к тебе обращаться
+            </label>
+            <div className="profile-name-edit-row">
+              <input
+                id="profile-display-name"
+                value={nameDraft}
+                onChange={(event) => setNameDraft(event.target.value)}
+                className="profile-name-edit-input"
+                placeholder="Имя или ник"
+              />
+              <button
+                type="submit"
+                className="profile-name-save-btn"
+                disabled={
+                  nameSaving ||
+                  !nameDraft.trim() ||
+                  nameDraft.trim() === displayName.trim()
+                }
+              >
+                {nameSaving ? '...' : 'Сохранить'}
+              </button>
+            </div>
+          </form>
         </article>
 
         <article className="profile-card profile-progress-card">
@@ -118,24 +232,47 @@ export default function ProfilePage({ userName, solvedCount, totalCount, goal, o
           <h3 className="profile-questions-title">Есть вопросы? Задавай!</h3>
           <p className="profile-questions-subtitle">Кусаться не буду, честно</p>
           <div className="profile-chat-bubble" aria-hidden />
-          <form className="profile-question-form" onSubmit={handleAskTutor}>
+          <form className="profile-question-form" onSubmit={handleOpenProfileChat}>
             <input
-              value={question}
-              onChange={(event) => setQuestion(event.target.value)}
+              value={profileChatDraft}
+              onChange={(event) => setProfileChatDraft(event.target.value)}
               placeholder="Непонятен один момент..."
               className="profile-question-input"
             />
-            <button
-              type="submit"
-              className="profile-question-send-btn"
-              disabled={!question.trim() || loadingReply || !session}
-            >
-              {loadingReply ? '...' : 'отправить'}
+            <button type="submit" className="profile-question-send-btn" disabled={!user}>
+              Открыть чат
             </button>
           </form>
-          {reply && <div className="profile-tutor-reply">{reply}</div>}
         </article>
       </div>
+      </div>
+
+      {profileChatOpen && user && (
+        <div
+          className={`fixed z-[100] flex flex-col overflow-hidden bg-[var(--bg-surface)] ${
+            profileChatFullscreen
+              ? 'inset-0 h-[100dvh] w-full max-h-none rounded-none border-0 shadow-none'
+              : 'right-4 bottom-4 max-sm:right-3 max-sm:bottom-3 h-[452px] max-h-[calc(100dvh-5.75rem)] w-[352px] max-w-[calc(100vw-1.5rem)] rounded-2xl border border-[var(--border-color)] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]'
+          }`}
+          role="dialog"
+          aria-label="Чат с AI-помощником"
+          aria-modal={profileChatFullscreen ? 'true' : undefined}
+        >
+          <ChatPanel
+            key={profileChatPanelKey}
+            lessonId={PROFILE_CHAT_LESSON_ID}
+            lessonTitle={PROFILE_CHAT_LESSON_TITLE}
+            userCode=""
+            lastOutput=""
+            initialInput={profileChatDraft}
+            welcomeMessage="Привет! Открылась страница профиля — отвечу на вопросы по курсу и обучению."
+            inputPlaceholder="Непонятен один момент..."
+            fullscreen={profileChatFullscreen}
+            onToggleFullscreen={() => setProfileChatFullscreen((v) => !v)}
+            onClose={() => setProfileChatOpen(false)}
+          />
+        </div>
+      )}
     </section>
   );
 }

@@ -106,9 +106,10 @@ VITE_SUPABASE_ANON_KEY=<anon_key>
 lessons/
   course_manifest.json   # оглавление, модули, финальный проект, мини-проекты
   module_01.json … module_07.json   # уроки: theory_html, demo_code, task (проверки)
+  theory_html/           # опционально: <id_урока>.html и _intro.html перекрывают theory/intro из JSON
 ```
 
-Редактирование контента: правьте соответствующие JSON и перезапустите dev или пересоберите проект.
+Редактирование контента: JSON и/или HTML в `theory_html/` (см. `lessons/theory_html/README.txt`), затем перезапуск бэкенда.
 
 ---
 

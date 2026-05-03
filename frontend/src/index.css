@@ -1,5 +1,13 @@
 /* Палитра в духе lk.smitup.ru (Vuetify): primary #ffa552, secondary #6b9eff, фон светлой темы #f6f9f8 */
 
+@font-face {
+  font-family: "NAURYZREDKEDS";
+  src: url("/fonts/NAURYZREDKEDS.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 [data-theme="dark"] {
   color-scheme: dark;
   --bg: #0e1118;
@@ -204,13 +212,18 @@ a:hover {
 .app-lesson-link {
   display: flex;
   align-items: flex-start;
-  gap: 0.35rem;
+  gap: 0.45rem;
   padding: 0.45rem 0.5rem;
   border-radius: 8px;
   color: var(--text);
   font-size: 0.88rem;
   line-height: 1.35;
   text-decoration: none;
+}
+
+.app-lesson-link__label {
+  flex: 1;
+  min-width: 0;
 }
 
 .app-lesson-link:hover {
@@ -223,20 +236,83 @@ a:hover {
   border: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent);
 }
 
-.app-lesson-done {
+/* Прогресс урока: по умолчанию не сдан; зелёный — после успешной автопроверки в песочнице */
+.app-lesson-pass-dot {
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.36rem;
   border-radius: 50%;
+  background: color-mix(in srgb, var(--muted) 65%, var(--panel) 35%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--border) 80%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.app-lesson-pass-dot--done {
   background: var(--success);
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 800;
-  line-height: 1;
-  box-shadow: 0 1px 2px var(--shadow);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--success) 28%, transparent);
+}
+
+[data-theme="light"] .app-lesson-pass-dot:not(.app-lesson-pass-dot--done) {
+  background: color-mix(in srgb, var(--muted) 42%, var(--panel) 58%);
+}
+
+.course-outline__intro {
+  margin: 0.45rem 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  max-width: 40rem;
+}
+
+.course-outline__modules {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.course-outline__mod-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: "Raleway", Manrope, sans-serif;
+  color: var(--text);
+}
+
+.course-outline__lessons {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.course-outline__lessons li {
+  margin: 0;
+}
+
+.course-outline__lesson-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-radius: 6px;
+}
+
+.course-outline__lesson-link:hover {
+  color: var(--secondary);
+}
+
+.course-outline__dot {
+  margin-top: 0;
+}
+
+.course-outline__lesson-title {
+  flex: 1;
+  min-width: 0;
 }
 
 .app-icon-btn {
@@ -592,12 +668,137 @@ a:hover {
   color: var(--text);
 }
 
+/* Теория (intro_html + theory_html): иерархия, акценты, опциональные классы авторов см. lessons/theory_html/README.txt */
 .theory {
-  line-height: 1.55;
+  --theory-fs: 1rem;
+  --theory-fs-small: 0.9rem;
+  --theory-fs-lead: 1.085rem;
+
+  font-size: var(--theory-fs);
+  line-height: 1.58;
   color: var(--text);
 }
+
 .theory p {
-  margin: 0.5rem 0;
+  margin: 0.55rem 0;
+}
+
+.theory h2 {
+  margin: 1rem 0 0.35rem;
+  font-size: 1.32rem;
+  font-weight: 800;
+  font-family: "Raleway", Manrope, sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.28;
+}
+
+.theory h3 {
+  margin: 0.9rem 0 0.3rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  font-family: "Raleway", Manrope, sans-serif;
+}
+
+.theory h4 {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.theory ul,
+.theory ol {
+  margin: 0.45rem 0;
+  padding-left: 1.35rem;
+}
+
+.theory li {
+  margin: 0.28rem 0;
+}
+
+.theory strong {
+  font-weight: 700;
+  color: color-mix(in srgb, var(--text) 92%, var(--secondary) 8%);
+}
+
+.theory em {
+  font-style: italic;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted) 12%);
+}
+
+.theory blockquote {
+  margin: 0.75rem 0;
+  padding: 0.65rem 0.85rem;
+  border-left: 4px solid color-mix(in srgb, var(--secondary) 55%, transparent);
+  background: color-mix(in srgb, var(--panel) 55%, transparent);
+  border-radius: 0 8px 8px 0;
+  color: color-mix(in srgb, var(--text) 90%, var(--muted) 10%);
+}
+
+.theory blockquote p {
+  margin: 0.35rem 0;
+}
+
+/** Ручная типографика: оборачиваем абзацы/блоки */
+.theory .theory-text--sm {
+  font-size: var(--theory-fs-small);
+  line-height: 1.52;
+}
+
+.theory .theory-text--lg {
+  font-size: var(--theory-fs-lead);
+  line-height: 1.55;
+}
+
+.theory .theory-callout {
+  margin: 0.85rem 0;
+  padding: 0.7rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--secondary) 38%, var(--border));
+  background: color-mix(in srgb, var(--secondary) 7%, var(--panel));
+}
+
+.theory .theory-callout strong {
+  color: var(--text);
+}
+
+.theory .theory-key-point {
+  display: inline;
+  padding: 0.08em 0.22em;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--secondary) 12%, transparent);
+  font-weight: 600;
+  font-style: normal;
+}
+
+.theory .theory-muted {
+  color: var(--muted);
+  font-size: var(--theory-fs-small);
+}
+
+/* Страница урока: колонка «Теория» — базовый кегль крупнее, чем вводный блок на дашборде (.card.theory без этой колонки). */
+.lesson-col--theory .theory {
+  --theory-fs: 1.15rem;
+  --theory-fs-small: 1.035rem;
+  --theory-fs-lead: 1.248rem;
+}
+
+.lesson-col--theory .theory h2 {
+  font-size: 1.518rem;
+}
+
+.lesson-col--theory .theory h3 {
+  font-size: 1.242rem;
+}
+
+.lesson-col--theory .theory h4 {
+  font-size: 1.127rem;
+}
+
+.lesson-col--theory .theory h2.lesson-welcome-title {
+  font-family: "NAURYZREDKEDS", "Raleway", Manrope, sans-serif;
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 0.02em;
 }
 
 /* Пример кода под теорией + встроенные pre в HTML теории — стиль «окна» */
@@ -688,7 +889,7 @@ a:hover {
   background: var(--code-window-body-bg);
   color: var(--code-window-body-text);
   font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
@@ -707,7 +908,7 @@ a:hover {
   display: flex;
   align-items: center;
   font-family: "Manrope", system-ui, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: lowercase;
   color: var(--muted);

@@ -62,14 +62,6 @@ export function FinalProject() {
           {msg && <p style={{ color: "var(--accent)" }}>{msg}</p>}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div className="card">
-            <div className="tag">Подсказки (не спойлеры)</div>
-            <ul style={{ color: "var(--muted)" }}>
-              {fp.hints.map((h) => (
-                <li key={h}>{h}</li>
-              ))}
-            </ul>
-          </div>
           <TutorChat
             lessonId="final-telegram-bot"
             lessonTitle={fp.title}

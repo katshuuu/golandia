@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Play, CheckSquare, BookOpen, Code2, ChevronRight, Lightbulb, X, CheckCircle2, MessageSquare, ChevronLeft } from 'lucide-react';
+import { Play, CheckSquare, BookOpen, Code2, ChevronRight, X, CheckCircle2, MessageSquare, ChevronLeft } from 'lucide-react';
 import { Lesson, Solution, TaskCheck } from '../lib/types';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,6 +8,7 @@ import CodeEditor from '../components/lesson/CodeEditor';
 import OutputPanel from '../components/lesson/OutputPanel';
 import ChatPanel from '../components/chat/ChatPanel';
 import { checkBackendTask, fetchBackendLesson, runBackendSandbox } from '../lib/courseApi';
+import { markLocalSandboxLessonDone } from '../lib/lessonProgressLocal';
 
 interface Props {
   lesson: Lesson;
@@ -20,7 +21,6 @@ interface LessonTaskView {
   description: string;
   starter_code: string;
   expected_output: string;
-  hint: string;
   check?: TaskCheck;
 }
 
@@ -37,16 +37,21 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
   const [running, setRunning] = useState(false);
   const [checking, setChecking] = useState(false);
   const [activeTab, setActiveTab] = useState<'theory' | 'task'>('theory');
-  const [showHint, setShowHint] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatFullscreen, setChatFullscreen] = useState(false);
   const [lastOutput, setLastOutput] = useState('');
 
   useEffect(() => {
     loadTask();
   }, [lesson.id]);
 
+  useEffect(() => {
+    if (!chatOpen) setChatFullscreen(false);
+  }, [chatOpen]);
+
   async function loadTask() {
+    setTheoryHtml('');
     let backendTask: LessonTaskView | null = null;
     let backendTheoryHtml = '';
     try {
@@ -56,12 +61,14 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
         description: backendLesson.task.description,
         starter_code: backendLesson.task.starter_code,
         expected_output: '',
-        hint: '',
         check: backendLesson.task.check,
       };
+      // Теория из локального JSON — показываем сразу, не ждём Supabase.
+      setTheoryHtml(backendTheoryHtml);
     } catch {
       backendTask = null;
       backendTheoryHtml = '';
+      setTheoryHtml('');
     }
 
     const { data: taskData } = await supabase
@@ -71,14 +78,12 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
       .order('order_num')
       .limit(1)
       .maybeSingle();
-    setTheoryHtml(backendTheoryHtml);
 
     const mergedTask: LessonTaskView | null = backendTask
       ? {
           ...backendTask,
           id: taskData?.id,
           expected_output: taskData?.expected_output || '',
-          hint: taskData?.hint || '',
         }
       : taskData
       ? {
@@ -86,7 +91,6 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
           description: taskData.description,
           starter_code: taskData.starter_code,
           expected_output: taskData.expected_output || '',
-          hint: taskData.hint || '',
         }
       : null;
     setTask(mergedTask);
@@ -168,9 +172,10 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
         }
 
         if (isSolved) {
+          if (user) markLocalSandboxLessonDone(lesson.id, user.id);
           await saveSolution('solved');
           onSolutionUpdate();
-          showNotification('success', 'Отлично! Задание выполнено! Ты крутой!');
+          showNotification('success', 'Задание выполнено, молодец🌟!');
         } else {
           await saveSolution('failed');
           showNotification('error', 'Вывод не совпадает с ожидаемым. Попробуй ещё раз!');
@@ -288,8 +293,8 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
         </button>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-h-0">
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           {activeTab === 'theory' ? (
             <div className="flex-1 overflow-y-auto p-6 max-w-5xl mx-auto w-full">
               {theoryHtml ? (
@@ -317,19 +322,7 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
                         </div>
                       )}
                     </div>
-                    <button
-                      onClick={() => setShowHint(v => !v)}
-                      className="shrink-0 flex items-center gap-1.5 text-[10px] text-yellow-400/70 hover:text-yellow-400 transition-colors border border-yellow-400/20 hover:border-yellow-400/40 px-2.5 py-1 rounded-xl"
-                    >
-                      <Lightbulb size={11} />
-                      Подсказка
-                    </button>
                   </div>
-                  {showHint && task.hint && (
-                    <div className="mt-3 ml-9 bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-3">
-                      <p className="text-yellow-400/80 text-xs leading-relaxed">{task.hint}</p>
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -380,16 +373,26 @@ export default function LessonPage({ lesson, onBack, onSolutionUpdate }: Props) 
           )}
         </div>
 
-        {chatOpen && (
-          <div className="w-80 shrink-0 border-l border-[var(--border-color)] flex flex-col overflow-hidden">
-            {user && (
-              <ChatPanel
-                lessonId={lesson.id}
-                lessonTitle={lesson.title}
-                userCode={code}
-                lastOutput={lastOutput}
-              />
-            )}
+        {chatOpen && user && (
+          <div
+            className={`fixed z-[100] flex flex-col overflow-hidden bg-[var(--bg-surface)] ${
+              chatFullscreen
+                ? 'inset-0 h-[100dvh] w-full max-h-none rounded-none border-0 shadow-none'
+                : 'right-4 bottom-4 max-sm:right-3 max-sm:bottom-3 h-[452px] max-h-[calc(100dvh-5.75rem)] w-[352px] max-w-[calc(100vw-1.5rem)] rounded-2xl border border-[var(--border-color)] shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]'
+            }`}
+            role="dialog"
+            aria-label="Чат с AI-помощником"
+            aria-modal={chatFullscreen ? 'true' : undefined}
+          >
+            <ChatPanel
+              lessonId={lesson.id}
+              lessonTitle={lesson.title}
+              userCode={code}
+              lastOutput={lastOutput}
+              fullscreen={chatFullscreen}
+              onToggleFullscreen={() => setChatFullscreen(v => !v)}
+              onClose={() => setChatOpen(false)}
+            />
           </div>
         )}
       </div>

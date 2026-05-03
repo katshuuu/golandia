@@ -147,7 +147,7 @@ func Compute(manifest *models.CourseManifest, completed map[string]bool, finalDo
 		ProgressToNextPct:  pct,
 		BossGolangDefeated: n >= 6,
 		FormulaVersion:     FormulaVersion,
-		NoviceTitle:        "Стажёр тура",
+		NoviceTitle:        "Стажёр",
 		Level:              n,
 	}
 

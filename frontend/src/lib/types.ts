@@ -42,7 +42,6 @@ export interface FinalMiniProject {
   title: string;
   goals: string[];
   starter_code: string;
-  hints: string[];
   check: TaskCheck;
 }
 

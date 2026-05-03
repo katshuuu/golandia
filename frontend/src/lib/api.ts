@@ -1,5 +1,27 @@
 import type { CourseManifest, HeroLevelResult, Lesson } from "./types";
 
+const MANIFEST_SESSION_KEY = "go-tutor-manifest-json-v1";
+
+/** Кэш оглавления курса — показываем сразу после входа, затем подменяем свежим ответом API. */
+export function readCachedManifest(): CourseManifest | null {
+  try {
+    const raw = sessionStorage.getItem(MANIFEST_SESSION_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as CourseManifest;
+    return sanitizeManifest(data);
+  } catch {
+    return null;
+  }
+}
+
+function persistManifest(manifest: CourseManifest) {
+  try {
+    sessionStorage.setItem(MANIFEST_SESSION_KEY, JSON.stringify(manifest));
+  } catch {
+    /* quota / private mode */
+  }
+}
+
 function sanitizeText(input: string): string {
   return input
     .replace(/A Tour of Go/gi, "")
@@ -29,7 +51,6 @@ function sanitizeManifest(manifest: CourseManifest): CourseManifest {
       ...manifest.final_project,
       title: sanitizeText(manifest.final_project.title),
       goals: manifest.final_project.goals.map(sanitizeText),
-      hints: manifest.final_project.hints.map(sanitizeText),
     },
     modules: manifest.modules.map((module) => ({
       ...module,
@@ -52,22 +73,36 @@ function sanitizeManifest(manifest: CourseManifest): CourseManifest {
 }
 
 function sanitizeLesson(lesson: Lesson): Lesson {
+  const rawDesc =
+    lesson.task.description == null ? "" : String(lesson.task.description);
+  /* Не используем sanitizeText: он вырезает «Tour of Go» и может оставить описание задания пустым. */
+  const description = rawDesc.trim();
   return {
     ...lesson,
     title: sanitizeText(lesson.title),
     theory_html: sanitizeHtml(lesson.theory_html),
     task: {
       ...lesson.task,
-      description: sanitizeText(lesson.task.description),
+      description,
     },
   };
 }
 
+const MANIFEST_FETCH_TIMEOUT_MS = 15_000;
+
 export async function fetchManifest(): Promise<CourseManifest> {
-  const r = await fetch("/api/course");
-  if (!r.ok) throw new Error("Не удалось загрузить курс");
-  const data = (await r.json()) as CourseManifest;
-  return sanitizeManifest(data);
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), MANIFEST_FETCH_TIMEOUT_MS);
+  try {
+    const r = await fetch("/api/course", { signal: ctl.signal });
+    if (!r.ok) throw new Error("Не удалось загрузить курс");
+    const data = (await r.json()) as CourseManifest;
+    const out = sanitizeManifest(data);
+    persistManifest(out);
+    return out;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function fetchLesson(id: string): Promise<Lesson> {

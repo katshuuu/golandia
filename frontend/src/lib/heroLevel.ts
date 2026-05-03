@@ -12,7 +12,8 @@ export const HERO_LEVEL_TITLES = [
   "Легенда Go",
 ] as const;
 
-export const NOVICE_TITLE = "Стажёр тура";
+/** Уровень по умолчанию до завершения первого модуля целиком. */
+export const NOVICE_TITLE = "Стажёр";
 export const FORMULA_VERSION = "v1";
 
 function lessonIdsForSidebarKey(key: string, manifest: CourseManifest): string[] {

@@ -1,4 +1,5 @@
 import { CourseModule, Lesson } from '../../lib/types';
+import { isLessonDoneForSidebar } from '../../lib/lessonProgressLocal';
 import moduleIcon from '../../../8c8693f6-d925-4da1-9848-66491718ece0/images/4bdb859d46b7031a5ae125bf2dbb85ea80ec2514.png';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -7,6 +8,8 @@ interface SidebarProps {
   modules: CourseModule[];
   solvedTaskIds: Set<string>;
   tasksByLesson: Record<string, string[]>;
+  /** Уроки сданы через песочницу локально, когда в Supabase нет task по lesson_id */
+  localSandboxDoneIds: Set<string>;
   currentLessonId: string | null;
   onSelectLesson: (id: string) => void;
 }
@@ -30,7 +33,15 @@ function deriveModuleKey(moduleId: string): ModuleKey {
   return 'm6';
 }
 
-export default function Sidebar({ lessons, modules, solvedTaskIds, tasksByLesson, currentLessonId, onSelectLesson }: SidebarProps) {
+export default function Sidebar({
+  lessons,
+  modules,
+  solvedTaskIds,
+  tasksByLesson,
+  localSandboxDoneIds,
+  currentLessonId,
+  onSelectLesson,
+}: SidebarProps) {
   const sidebarRef = useRef<HTMLElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const lessonsByModule = useMemo(() => {
@@ -152,6 +163,12 @@ export default function Sidebar({ lessons, modules, solvedTaskIds, tasksByLesson
                   {panelLessons.map((lesson, index) => {
                     const lessonTaskIds = tasksByLesson[lesson.id] || [];
                     const solvedInLesson = lessonTaskIds.filter(taskId => solvedTaskIds.has(taskId)).length;
+                    const lessonDone = isLessonDoneForSidebar(
+                      lesson.id,
+                      lessonTaskIds,
+                      solvedTaskIds,
+                      localSandboxDoneIds,
+                    );
                     const isLessonActive = lesson.id === currentLessonId;
                     const line =
                       lesson.title.trim().toLowerCase().startsWith('урок') ? lesson.title : `Урок ${index + 1}: ${lesson.title}`;
@@ -165,6 +182,15 @@ export default function Sidebar({ lessons, modules, solvedTaskIds, tasksByLesson
                           }}
                           className={`module-drawer-item ${isLessonActive ? 'is-active' : ''}`}
                         >
+                          <span
+                            className={`lesson-pass-dot${lessonDone ? ' lesson-pass-dot--done' : ''}`}
+                            title={
+                              lessonDone
+                                ? 'Задание выполнено (автопроверка)'
+                                : 'Не сдано: выполни задание на вкладке «Задание» и нажми «Проверить»'
+                            }
+                            aria-hidden
+                          />
                           <span className="module-drawer-item-text">{line}</span>
                           {lessonTaskIds.length > 0 && (
                             <span className="module-drawer-item-progress">

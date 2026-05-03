@@ -28,19 +28,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const hashIndicatesRecovery =
         typeof window !== 'undefined' && /[#&](?:[^#&]*[&])?type=recovery(?:&|$)/.test(window.location.hash);
 
-      const [{ data: sessionData }, { data: userData }] = await Promise.all([
-        supabase.auth.getSession(),
-        supabase.auth.getUser(),
-      ]);
-      setSession(sessionData.session);
-      setUser(userData.user ?? null);
-      if (hashIndicatesRecovery && sessionData.session) {
-        setPasswordRecoveryPending(true);
+      try {
+        const [{ data: sessionData }, { data: userData }] = await Promise.all([
+          supabase.auth.getSession(),
+          supabase.auth.getUser(),
+        ]);
+        setSession(sessionData.session);
+        // Сессия без user из getUser (сеть/retry) не должна сбрасывать профиль во flash на null.
+        const u = userData.user ?? sessionData.session?.user ?? null;
+        setUser(u);
+        if (hashIndicatesRecovery && sessionData.session) {
+          setPasswordRecoveryPending(true);
+        }
+      } catch (e) {
+        console.error('Не удалось восстановить сессию:', e);
+        setSession(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
 
-    bootstrapAuth();
+    void bootstrapAuth();
 
     const {
       data: { subscription },
@@ -54,8 +63,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setPasswordRecoveryPending(false);
         return;
       }
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user ?? nextSession.user ?? null);
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user ?? nextSession.user ?? null);
+      } catch (e) {
+        console.error('Не удалось обновить пользователя после смены сессии:', e);
+        setUser(nextSession.user ?? null);
+      }
     });
 
     return () => subscription.unsubscribe();

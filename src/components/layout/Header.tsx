@@ -7,15 +7,25 @@ import userAvatar from '../../../8c8693f6-d925-4da1-9848-66491718ece0/images/23_
 interface HeaderProps {
   solvedCount: number;
   totalCount: number;
+  displayName: string;
+  avatarUrl: string;
   onGoHome: () => void;
   onOpenProfile: () => void;
   onOpenAchievements: () => void;
 }
 
-export default function Header({ solvedCount, totalCount, onGoHome, onOpenProfile, onOpenAchievements }: HeaderProps) {
+export default function Header({
+  solvedCount,
+  totalCount,
+  displayName,
+  avatarUrl,
+  onGoHome,
+  onOpenProfile,
+  onOpenAchievements,
+}: HeaderProps) {
   const { user, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-  const userName = user?.email?.split('@')[0] || 'Иван';
+  const userName = displayName.trim() || user?.email?.split('@')[0] || 'Иван';
 
   return (
     <header className="top-header relative z-50">
@@ -44,7 +54,11 @@ export default function Header({ solvedCount, totalCount, onGoHome, onOpenProfil
             type="button"
           >
             <div className="avatar-wrapper">
-              <img src={userAvatar} alt="User Avatar" className="user-avatar" />
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="user-avatar" />
+              ) : (
+                <img src={userAvatar} alt="User Avatar" className="user-avatar" />
+              )}
             </div>
             <span
               className="user-name"

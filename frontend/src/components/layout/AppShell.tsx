@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useManifest } from "@/context/ManifestContext";
 import { logout, type AuthUser } from "@/store/auth";
 import { useCelebrate } from "@/context/CelebrationContext";
 import { collectNewGamificationEvents } from "@/lib/gamificationEvents";
-import { loadProgress, recordPlatformVisit } from "@/store/progress";
+import { loadProgress, recordPlatformVisit, subscribeProgressStore } from "@/store/progress";
 import { manifestModulesByIds, SIDEBAR_MODULES, sidebarKeyForLessonModuleId } from "@/lib/sidebarModules";
 import { fetchLesson } from "@/lib/api";
+import { reloadApplication } from "@/lib/appLifecycle";
 
 const THEME_KEY = "go-tutor-theme";
 
@@ -71,7 +72,11 @@ export function AppShell({ user, onLogout }: { user: AuthUser; onLogout: () => v
     setDrawerKey(null);
   }
 
-  const progress = loadProgress();
+  const progress = useSyncExternalStore(
+    subscribeProgressStore,
+    () => loadProgress(),
+    () => loadProgress(),
+  );
 
   return (
     <div className="app-root">
@@ -137,12 +142,18 @@ export function AppShell({ user, onLogout }: { user: AuthUser; onLogout: () => v
                           }
                           onClick={closeDrawer}
                         >
-                          {lesson.title}
-                          {progress.completedLessons[lesson.id] ? (
-                            <span className="app-lesson-done" aria-hidden>
-                              ✓
-                            </span>
-                          ) : null}
+                          <span
+                            className={`app-lesson-pass-dot${progress.completedLessons[lesson.id] ? " app-lesson-pass-dot--done" : ""}`}
+                            title={
+                              progress.completedLessons[lesson.id]
+                                ? "Задание выполнено (автопроверка)"
+                                : "Урок не сдан: выполни задание и нажми «Проверить задание»"
+                            }
+                            aria-label={
+                              progress.completedLessons[lesson.id] ? "Пройдено" : "Не пройдено"
+                            }
+                          />
+                          <span className="app-lesson-link__label">{lesson.title}</span>
                         </NavLink>
                       </li>
                     ))}
@@ -169,6 +180,15 @@ export function AppShell({ user, onLogout }: { user: AuthUser; onLogout: () => v
             >
               Мои достижения
             </Link>
+            <button
+              type="button"
+              className="btn btn-ghost app-theme-btn"
+              onClick={() => reloadApplication()}
+              title="Полная перезагрузка страницы. Вход и прогресс сохраняются в этом браузере."
+              aria-label="Перезагрузить приложение"
+            >
+              ⟳
+            </button>
             <button
               type="button"
               className="btn btn-ghost app-theme-btn"

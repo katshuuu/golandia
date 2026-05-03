@@ -18,7 +18,20 @@ func main() {
 	dataDir := os.Getenv("COURSE_DATA_DIR")
 	if dataDir == "" {
 		wd, _ := os.Getwd()
-		dataDir = filepath.Join(wd, "data")
+		// Prefer repo-root lessons/ (single source with Vite + courseApi).
+		for _, try := range []string{
+			filepath.Join(wd, "..", "lessons"),
+			filepath.Join(wd, "lessons"),
+			filepath.Join(wd, "data"),
+		} {
+			if st, err := os.Stat(filepath.Join(try, "course_manifest.json")); err == nil && !st.IsDir() {
+				dataDir = try
+				break
+			}
+		}
+		if dataDir == "" {
+			dataDir = filepath.Join(wd, "data")
+		}
 	}
 
 	svc, err := course.NewService(dataDir)
@@ -34,7 +47,7 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"},
+		AllowOrigins:     []string{"http://localhost:5174", "http://127.0.0.1:5174", "http://localhost:5174", "http://127.0.0.1:5174"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},

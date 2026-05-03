@@ -1,1 +1,0 @@
-// No global JavaScript required for this static layout.

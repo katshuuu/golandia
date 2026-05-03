@@ -40,10 +40,13 @@ export function CodePanel({
   lesson,
   onSolved,
   className,
+  onDraftDirtyChange,
 }: {
   lesson: Lesson;
   onSolved?: () => void;
   className?: string;
+  /** Вызывается при изменении черновика относительно starter_code урока. */
+  onDraftDirtyChange?: (dirty: boolean) => void;
 }) {
   const [code, setCode] = useState(lesson.task.starter_code);
   const [out, setOut] = useState("");
@@ -57,7 +60,15 @@ export function CodePanel({
 
   useEffect(() => {
     setFreshPraise(null);
+    setCode(lesson.task.starter_code);
+    setOut("");
+    setMsg(null);
   }, [lesson.id]);
+
+  useEffect(() => {
+    const dirty = code !== lesson.task.starter_code;
+    onDraftDirtyChange?.(dirty);
+  }, [code, lesson.task.starter_code, lesson.id, onDraftDirtyChange]);
 
   async function run() {
     setMsg(null);
@@ -90,6 +101,9 @@ export function CodePanel({
   }
 
   const praiseText = freshPraise ?? (taskComplete ? praiseForLessonId(lesson.id) : null);
+  const taskDescription =
+    String(lesson.task.description ?? "").trim() ||
+    `Задание: отредактируй код ниже под тему урока «${lesson.title}» и нажми «Проверить задание».`;
 
   return (
     <div
@@ -100,7 +114,7 @@ export function CodePanel({
 
       <div>
         <div className="tag">Песочница</div>
-        <p style={{ margin: "0.35rem 0 0", color: "var(--muted)" }}>{lesson.task.description}</p>
+        <p style={{ margin: "0.35rem 0 0", color: "var(--muted)" }}>{taskDescription}</p>
       </div>
       <textarea className="editor" value={code} onChange={(e) => setCode(e.target.value)} spellCheck={false} />
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>

@@ -74,7 +74,8 @@ export default function AchievementsPage({
 
   return (
     <section className="achievements-screen">
-      <div className="achievements-grid">
+      <div className="achievements-grid-outer">
+        <div className="achievements-grid">
         <div className="achievements-col-character">
           <div className="achievements-character-image-wrapper">
             <img src={characterImage} alt="Character" className="achievements-character-img" />
@@ -150,6 +151,7 @@ export default function AchievementsPage({
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

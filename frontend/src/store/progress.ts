@@ -1,5 +1,14 @@
 const KEY = "go-llm-tutor-progress-v1";
 
+/** Событие после любого сохранения прогресса — для синхронизации UI. */
+export const PROGRESS_STORE_EVENT = "golandia-progress";
+
+export function subscribeProgressStore(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener(PROGRESS_STORE_EVENT, onStoreChange);
+  return () => window.removeEventListener(PROGRESS_STORE_EVENT, onStoreChange);
+}
+
 export type ProgressState = {
   completedLessons: Record<string, boolean>;
   finalProjectDone: boolean;
@@ -12,6 +21,27 @@ export type ProgressState = {
   /** Сколько заданий (уроков) сдано за день — ключ дата */
   tasksPerDay: Record<string, number>;
 };
+
+/**
+ * Кэш для useSyncExternalStore (строгая семантика):
+ * - Инвариант «строка в localStorage» = ровно `localStorage.getItem(KEY)` после последнего чтения или записи.
+ * - Если `progressMemoryCache.storageRaw === getItem(KEY)` (сравнение по ===), один и тот же `state`.
+ * - `saveProgress`: после записи обновляет кэш по фактической строке в хранилище (повторный getItem).
+ * - Событие `storage` срабатывает в других вкладках при изменении/очистке; в той же вкладке, где дернули API, не срабатывает (см. MDN — обновление кэша только через saveProgress здесь).
+ */
+let progressMemoryCache: { storageRaw: string | null; state: ProgressState } | null = null;
+
+function invalidateProgressMemoryCache() {
+  progressMemoryCache = null;
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (e) => {
+    if (e.key === KEY || e.key === null) {
+      invalidateProgressMemoryCache();
+    }
+  });
+}
 
 function todayStamp() {
   return new Date().toISOString().slice(0, 10);
@@ -36,32 +66,54 @@ function defaults(): ProgressState {
   };
 }
 
+function parseProgressFromStorage(raw: string): ProgressState {
+  const p = JSON.parse(raw) as ProgressState;
+  const d = defaults();
+  return {
+    completedLessons: p.completedLessons ?? d.completedLessons,
+    finalProjectDone: Boolean(p.finalProjectDone),
+    streakDays: Number.isFinite(p.streakDays) ? Math.max(0, p.streakDays) : d.streakDays,
+    lastActiveDate: typeof p.lastActiveDate === "string" ? p.lastActiveDate : d.lastActiveDate,
+    totalActiveDays: Number.isFinite(p.totalActiveDays) ? Math.max(0, p.totalActiveDays) : d.totalActiveDays,
+    mainGoal: typeof p.mainGoal === "string" && p.mainGoal.trim() ? p.mainGoal : d.mainGoal,
+    visitDays: Array.isArray(p.visitDays) ? p.visitDays.filter((x) => typeof x === "string").sort() : d.visitDays,
+    tasksPerDay:
+      p.tasksPerDay && typeof p.tasksPerDay === "object" && !Array.isArray(p.tasksPerDay)
+        ? (p.tasksPerDay as Record<string, number>)
+        : d.tasksPerDay,
+  };
+}
+
 export function loadProgress(): ProgressState {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return defaults();
-    const p = JSON.parse(raw) as ProgressState;
-    const d = defaults();
-    return {
-      completedLessons: p.completedLessons ?? d.completedLessons,
-      finalProjectDone: Boolean(p.finalProjectDone),
-      streakDays: Number.isFinite(p.streakDays) ? Math.max(0, p.streakDays) : d.streakDays,
-      lastActiveDate: typeof p.lastActiveDate === "string" ? p.lastActiveDate : d.lastActiveDate,
-      totalActiveDays: Number.isFinite(p.totalActiveDays) ? Math.max(0, p.totalActiveDays) : d.totalActiveDays,
-      mainGoal: typeof p.mainGoal === "string" && p.mainGoal.trim() ? p.mainGoal : d.mainGoal,
-      visitDays: Array.isArray(p.visitDays) ? p.visitDays.filter((x) => typeof x === "string").sort() : d.visitDays,
-      tasksPerDay:
-        p.tasksPerDay && typeof p.tasksPerDay === "object" && !Array.isArray(p.tasksPerDay)
-          ? (p.tasksPerDay as Record<string, number>)
-          : d.tasksPerDay,
-    };
+    if (progressMemoryCache && progressMemoryCache.storageRaw === raw) {
+      return progressMemoryCache.state;
+    }
+    if (!raw) {
+      const state = defaults();
+      progressMemoryCache = { storageRaw: null, state };
+      return state;
+    }
+    const state = parseProgressFromStorage(raw);
+    progressMemoryCache = { storageRaw: raw, state };
+    return state;
   } catch {
-    return defaults();
+    invalidateProgressMemoryCache();
+    const state = defaults();
+    progressMemoryCache = { storageRaw: null, state };
+    return state;
   }
 }
 
 export function saveProgress(p: ProgressState) {
-  localStorage.setItem(KEY, JSON.stringify(p));
+  const serialized = JSON.stringify(p);
+  localStorage.setItem(KEY, serialized);
+  const stored = localStorage.getItem(KEY);
+  progressMemoryCache = { storageRaw: stored ?? serialized, state: p };
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(PROGRESS_STORE_EVENT));
+  }
 }
 
 export function updateMainGoal(goal: string) {

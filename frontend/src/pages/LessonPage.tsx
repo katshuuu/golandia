@@ -4,12 +4,17 @@ import { fetchLesson } from "@/lib/api";
 import type { Lesson } from "@/lib/types";
 import { CodePanel } from "@/components/lesson/CodePanel";
 import { CodeWindow } from "@/components/lesson/CodeWindow";
+import { useBeforeUnloadWhen } from "@/lib/appLifecycle";
 import { isLessonTaskCompleted } from "@/store/progress";
 
-export function LessonPage({ onProgress }: { onProgress: () => void }) {
+export function LessonPage({ onProgress }: { onProgress?: () => void }) {
   const { id } = useParams();
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [editorDirty, setEditorDirty] = useState(false);
+
+  useBeforeUnloadWhen(editorDirty);
+  useEffect(() => () => setEditorDirty(false), []);
 
   useEffect(() => {
     if (!id) return;
@@ -74,7 +79,7 @@ export function LessonPage({ onProgress }: { onProgress: () => void }) {
         </div>
 
         <div className="lesson-col lesson-col--lab">
-          <CodePanel lesson={lesson} onSolved={onProgress} />
+          <CodePanel lesson={lesson} onSolved={onProgress ?? undefined} onDraftDirtyChange={setEditorDirty} />
         </div>
       </div>
     </div>

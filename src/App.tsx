@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthPage from './components/auth/AuthPage';
 import PasswordRecoveryPage from './components/auth/PasswordRecoveryPage';
@@ -13,11 +13,16 @@ import { supabase } from './lib/supabase';
 import { Loader2 } from 'lucide-react';
 import { fetchManifest } from './lib/courseApi';
 import { trackLearningEvent } from './lib/analytics';
+import { readLocalSandboxDoneLessonIds, LESSON_PROGRESS_EVENT } from './lib/lessonProgressLocal';
 
 const TASKS_CACHE_KEY = 'go_tutor_tasks_by_lesson_v1';
 const SOLVED_CACHE_KEY = (userId: string) => `go_tutor_solved_task_ids_v1_${userId}`;
 const GOAL_CACHE_KEY = (userId: string) => `go_tutor_goal_v1_${userId}`;
+const DISPLAY_NAME_CACHE_KEY = (userId: string) => `go_tutor_display_name_v1_${userId}`;
+const AVATAR_CACHE_KEY = (userId: string) => `go_tutor_avatar_v1_${userId}`;
 const VIEWED_LESSONS_CACHE_KEY = (userId: string) => `go_tutor_viewed_lessons_v1_${userId}`;
+
+const MAX_AVATAR_IN_METADATA_CHARS = 48_000;
 
 function readCachedTasksByLesson(): Record<string, string[]> {
   try {
@@ -92,6 +97,42 @@ function writeCachedGoal(userId: string, goal: string) {
   }
 }
 
+function readCachedDisplayName(userId: string): string {
+  try {
+    return (localStorage.getItem(DISPLAY_NAME_CACHE_KEY(userId)) || '').trim();
+  } catch {
+    return '';
+  }
+}
+
+function writeCachedDisplayName(userId: string, name: string) {
+  try {
+    localStorage.setItem(DISPLAY_NAME_CACHE_KEY(userId), name);
+  } catch {
+    // ignore
+  }
+}
+
+function readCachedAvatar(userId: string): string {
+  try {
+    return localStorage.getItem(AVATAR_CACHE_KEY(userId)) || '';
+  } catch {
+    return '';
+  }
+}
+
+function writeCachedAvatar(userId: string, dataUrl: string) {
+  try {
+    if (dataUrl) {
+      localStorage.setItem(AVATAR_CACHE_KEY(userId), dataUrl);
+    } else {
+      localStorage.removeItem(AVATAR_CACHE_KEY(userId));
+    }
+  } catch {
+    // ignore quota
+  }
+}
+
 function AppContent() {
   const { user, loading: authLoading, passwordRecoveryPending } = useAuth();
   const [page, setPage] = useState<Page>('dashboard');
@@ -101,123 +142,204 @@ function AppContent() {
   const [solvedTaskIds, setSolvedTaskIds] = useState<Set<string>>(new Set());
   const [viewedLessonIds, setViewedLessonIds] = useState<Set<string>>(new Set());
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
+  const [localSandboxDoneIds, setLocalSandboxDoneIds] = useState<Set<string>>(() => new Set());
   const [dataLoading, setDataLoading] = useState(true);
   const [userGoal, setUserGoal] = useState('');
+  const [userDisplayName, setUserDisplayName] = useState('');
+  const [avatarDataUrl, setAvatarDataUrl] = useState('');
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalDraft, setGoalDraft] = useState('');
   const [goalSaving, setGoalSaving] = useState(false);
   const [goalError, setGoalError] = useState('');
+  const [nameModalOpen, setNameModalOpen] = useState(false);
+  const [nameDraft, setNameDraft] = useState('');
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameError, setNameError] = useState('');
+
+  const userIdForData = user?.id;
+  const manifestLoadedOnce = useRef(false);
+  const dataFetchInProgress = useRef(false); // ← ДОБАВИТЬ ФЛАГ
+
+  /** Загрузка курса + фон Supabase без гонки */
+  useEffect(() => {
+    // ★★★ ГЛАВНОЕ ИЗМЕНЕНИЕ ★★★
+    if (authLoading || !userIdForData || dataFetchInProgress.current) {
+      return;
+    }
+
+    // Отмечаем, что начали загрузку
+    dataFetchInProgress.current = true;
+    let cancelled = false;
+    const uid = userIdForData;
+
+    void (async () => {
+      if (!manifestLoadedOnce.current) {
+        setDataLoading(true);
+      }
+
+      try {
+        const manifestData = await fetchManifest();
+        if (cancelled) return;
+
+        const lessonList: Lesson[] = [];
+        let order = 1;
+        for (const module of manifestData.modules) {
+          for (const lesson of module.lessons) {
+            lessonList.push({
+              id: lesson.id,
+              title: lesson.title,
+              content: '',
+              order_num: order,
+              difficulty: 1,
+              created_at: '',
+              module_id: module.id,
+            });
+            order += 1;
+          }
+        }
+
+        setManifest(manifestData);
+        setLessons(lessonList);
+        manifestLoadedOnce.current = true;
+      } catch (err) {
+        console.error('Failed to load manifest:', err);
+        if (!cancelled) {
+          setLessons([]);
+          setManifest(null);
+          manifestLoadedOnce.current = false;
+        }
+      } finally {
+        if (!cancelled) {
+          setDataLoading(false);
+        }
+      }
+
+      if (cancelled) {
+        dataFetchInProgress.current = false; // ← СБРОСИТЬ ФЛАГ
+        return;
+      }
+
+      // Загружаем кэшированные данные
+      const cachedTasks = readCachedTasksByLesson();
+      if (Object.keys(cachedTasks).length > 0) {
+        setTasksByLesson(cachedTasks);
+      }
+
+      setSolvedTaskIds(readCachedSolvedTaskIds(uid));
+      setViewedLessonIds(readCachedViewedLessons(uid));
+
+      // Загружаем задачи из Supabase
+      const { data: tasksData } = await supabase
+        .from('tasks')
+        .select('id, lesson_id')
+        .order('order_num');
+
+      if (cancelled) {
+        dataFetchInProgress.current = false;
+        return;
+      }
+
+      if (tasksData && tasksData.length > 0) {
+        const byLesson: Record<string, string[]> = {};
+        tasksData.forEach((t) => {
+          if (!byLesson[t.lesson_id]) byLesson[t.lesson_id] = [];
+          byLesson[t.lesson_id].push(t.id);
+        });
+        setTasksByLesson(byLesson);
+        writeCachedTasksByLesson(byLesson);
+        
+        // ★★★ ИСПРАВЛЕНИЕ: передаём tasksData как есть, не маппим лишний раз ★★★
+        await loadSolutionsForUser(uid, tasksData.map((t) => t.id));
+      }
+      
+      // Загрузка завершена - сбрасываем флаг
+      dataFetchInProgress.current = false;
+    })();
+
+    return () => {
+      cancelled = true;
+      //при размонтировании НЕ сбрасываем флаг мгновенно,
+      // так как другой эффект может запуститься сразу после размонтирования
+      // При монтировании нового экземпляра флаг всё равно будет сброшен в useState
+    };
+  }, [authLoading, userIdForData]); // ← зависимости не изменились
 
   useEffect(() => {
-    if (!authLoading) {
-      loadData();
-    }
-  }, [authLoading, user]);
+    return () => {
+      // Сбрасываем флаг при размонтировании компонента
+      dataFetchInProgress.current = false;
+    };
+  }, []);
+
 
   useEffect(() => {
     if (!user) {
       setUserGoal('');
+      setUserDisplayName('');
+      setAvatarDataUrl('');
       setGoalModalOpen(false);
+      setNameModalOpen(false);
       setGoalDraft('');
+      setNameDraft('');
       setGoalError('');
+      setNameError('');
       setGoalSaving(false);
+      setNameSaving(false);
       setViewedLessonIds(new Set());
       return;
     }
+
+    const metadataName = String(user.user_metadata?.display_name || '').trim();
+    const cachedName = readCachedDisplayName(user.id);
+    const savedName = metadataName || cachedName;
+    setUserDisplayName(savedName);
 
     const metadataGoal = String(user.user_metadata?.goal || '').trim();
     const cachedGoal = readCachedGoal(user.id);
     const savedGoal = metadataGoal || cachedGoal;
     setUserGoal(savedGoal);
-    if (!savedGoal) {
+
+    const fromStorage = readCachedAvatar(user.id);
+    const rawMetaAvatar =
+      typeof user.user_metadata?.avatar_url === 'string' ? user.user_metadata.avatar_url : '';
+    const metaAvatar =
+      rawMetaAvatar.startsWith('data:image/') || rawMetaAvatar.startsWith('http://') || rawMetaAvatar.startsWith('https://')
+        ? rawMetaAvatar
+        : '';
+    setAvatarDataUrl(fromStorage || metaAvatar || '');
+
+    if (!savedName) {
+      setNameDraft('');
+      setNameModalOpen(true);
+      setGoalModalOpen(false);
       setGoalDraft('');
+    } else if (!savedGoal) {
+      setNameModalOpen(false);
       setGoalModalOpen(true);
+      setGoalDraft('');
     } else {
+      setNameModalOpen(false);
       setGoalModalOpen(false);
       setGoalDraft(savedGoal);
     }
   }, [user]);
 
-  async function loadData() {
-    setDataLoading(true);
-    try {
-      const manifestData = await fetchManifest();
-      setManifest(manifestData);
-
-      let order = 1;
-      const lessonList: Lesson[] = [];
-      for (const module of manifestData.modules) {
-        for (const lesson of module.lessons) {
-          lessonList.push({
-            id: lesson.id,
-            title: lesson.title,
-            content: '',
-            order_num: order,
-            difficulty: 1,
-            created_at: '',
-            module_id: module.id,
-          });
-          order += 1;
-        }
-      }
-      setLessons(lessonList);
-      // Показываем интерфейс сразу после локального манифеста,
-      // не блокируя экран ожиданием сетевых запросов в Supabase.
-      setDataLoading(false);
-    } catch {
-      setLessons([]);
-      setManifest(null);
-      setDataLoading(false);
-      return;
-    }
-
-    // stale-while-revalidate: сразу показываем кэш, затем обновляем из сети
-    const cachedTasks = readCachedTasksByLesson();
-    if (Object.keys(cachedTasks).length > 0) {
-      setTasksByLesson(cachedTasks);
-    }
-    if (user) {
-      setSolvedTaskIds(readCachedSolvedTaskIds(user.id));
-      setViewedLessonIds(readCachedViewedLessons(user.id));
-    } else {
-      setSolvedTaskIds(new Set());
-      setViewedLessonIds(new Set());
-    }
-
-    const { data: tasksData } = await supabase
-      .from('tasks')
-      .select('id, lesson_id')
-      .order('order_num');
-
-    if (tasksData) {
-      const byLesson: Record<string, string[]> = {};
-      tasksData.forEach(t => {
-        if (!byLesson[t.lesson_id]) byLesson[t.lesson_id] = [];
-        byLesson[t.lesson_id].push(t.id);
-      });
-      setTasksByLesson(byLesson);
-      writeCachedTasksByLesson(byLesson);
-
-      if (user) {
-        await loadSolutions(tasksData.map(t => t.id));
-      }
-    }
-  }
-
-  async function loadSolutions(taskIds: string[]) {
-    if (!user || taskIds.length === 0) return;
-
+  async function loadSolutionsForUser(forUserId: string, taskIds: string[]) {
+    if (!forUserId || taskIds.length === 0) return;
+  
+    // Добавить проверку - компонент ещё смонтирован?
     const { data } = await supabase
       .from('solutions')
       .select('task_id, status')
-      .eq('user_id', user.id)
+      .eq('user_id', forUserId)
       .in('task_id', taskIds)
       .eq('status', 'solved');
-
-    if (data) {
-      const solved = new Set(data.map(s => s.task_id));
+  
+    // ★★★ ПРОВЕРКА: если userIdForData изменился - не обновляем состояние ★★★
+    if (data && userIdForData === forUserId) {
+      const solved = new Set(data.map((s) => s.task_id));
       setSolvedTaskIds(solved);
-      writeCachedSolvedTaskIds(user.id, solved);
+      writeCachedSolvedTaskIds(forUserId, solved);
     }
   }
 
@@ -253,13 +375,42 @@ function AppContent() {
 
   function handleSolutionUpdate() {
     const allTaskIds = Object.values(tasksByLesson).flat();
-    loadSolutions(allTaskIds);
     if (user) {
+      void loadSolutionsForUser(user.id, allTaskIds);
       trackLearningEvent({
         userId: user.id,
         type: 'solution_progress_updated',
         meta: { solvedCount: solvedTaskIds.size, totalTasks: allTaskIds.length },
       });
+    }
+  }
+
+  async function saveDisplayName(name: string) {
+    if (!user || nameSaving) return;
+    const value = name.trim();
+    if (!value) return;
+    setNameSaving(true);
+    setNameError('');
+    writeCachedDisplayName(user.id, value);
+    setUserDisplayName(value);
+    const { data, error } = await supabase.auth.updateUser({
+      data: {
+        ...user.user_metadata,
+        display_name: value,
+      },
+    });
+    if (error) {
+      console.error('Не удалось сохранить имя:', error.message);
+      setNameError('Не удалось сохранить. Проверь интернет и попробуй снова.');
+      setNameSaving(false);
+      return;
+    }
+    setNameModalOpen(false);
+    setNameSaving(false);
+    const nextGoal = String(data.user?.user_metadata?.goal || readCachedGoal(user.id) || '').trim();
+    if (!nextGoal) {
+      setGoalDraft('');
+      setGoalModalOpen(true);
     }
   }
 
@@ -297,6 +448,30 @@ function AppContent() {
     setGoalSaving(false);
   }
 
+  async function saveUserAvatar(dataUrl: string) {
+    if (!user) return;
+    writeCachedAvatar(user.id, dataUrl);
+    setAvatarDataUrl(dataUrl);
+
+    const nextMeta: Record<string, unknown> = {
+      ...user.user_metadata,
+      display_name: userDisplayName,
+      goal: userGoal,
+    };
+    if (dataUrl && dataUrl.length <= MAX_AVATAR_IN_METADATA_CHARS) {
+      nextMeta.avatar_url = dataUrl;
+    } else {
+      nextMeta.avatar_url = '';
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      data: nextMeta as Record<string, unknown>,
+    });
+    if (error) {
+      console.error('Не удалось сохранить аватар в профиле:', error.message);
+    }
+  }
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center">
@@ -324,6 +499,7 @@ function AppContent() {
         modules={manifest?.modules || []}
         solvedTaskIds={solvedTaskIds}
         tasksByLesson={tasksByLesson}
+        localSandboxDoneIds={localSandboxDoneIds}
         currentLessonId={currentLessonId}
         onSelectLesson={handleSelectLesson}
       />
@@ -332,6 +508,8 @@ function AppContent() {
       <Header
         solvedCount={solvedTaskIds.size}
         totalCount={totalTasks}
+        displayName={userDisplayName || user.email?.split('@')[0] || ''}
+        avatarUrl={avatarDataUrl}
         onGoHome={handleGoHome}
         onOpenProfile={handleOpenProfile}
         onOpenAchievements={handleOpenAchievements}
@@ -353,11 +531,14 @@ function AppContent() {
             />
           ) : page === 'profile' ? (
             <ProfilePage
-              userName={user.email?.split('@')[0] || 'Иван'}
+              displayName={userDisplayName || user.email?.split('@')[0] || 'студент'}
+              avatarUrl={avatarDataUrl}
               solvedCount={solvedTaskIds.size}
               totalCount={totalTasks}
               goal={userGoal}
               onSaveGoal={saveUserGoal}
+              onSaveDisplayName={saveDisplayName}
+              onAvatarChange={saveUserAvatar}
             />
           ) : page === 'achievements' ? (
             <AchievementsPage
@@ -370,10 +551,49 @@ function AppContent() {
               viewedLessonIds={viewedLessonIds}
             />
           ) : (
-            <Dashboard />
+            <Dashboard
+              modules={modules}
+              tasksByLesson={tasksByLesson}
+              solvedTaskIds={solvedTaskIds}
+              localSandboxDoneIds={localSandboxDoneIds}
+              onOpenLesson={handleSelectLesson}
+            />
           )}
         </main>
       </div>
+
+      {nameModalOpen && (
+        <div className="goal-modal-backdrop">
+          <div className="goal-modal-card">
+            <h2>Как я могу к тебе обращаться?</h2>
+            <p>Имя будет показываться в приветствии в профиле.</p>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                const next = nameDraft.trim();
+                if (!next) return;
+                void saveDisplayName(next);
+              }}
+            >
+              <input
+                value={nameDraft}
+                onChange={(event) => {
+                  setNameDraft(event.target.value);
+                  if (nameError) setNameError('');
+                }}
+                placeholder="Например: Иван"
+                autoFocus
+              />
+              <button type="submit" disabled={!nameDraft.trim() || nameSaving}>
+                {nameSaving ? 'Сохраняем...' : 'Продолжить'}
+              </button>
+              {nameError && (
+                <p className="text-xs text-red-500 mt-2">{nameError}</p>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
 
       {goalModalOpen && (
         <div className="goal-modal-backdrop">

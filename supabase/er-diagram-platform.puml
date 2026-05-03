@@ -1,0 +1,265 @@
+@startuml er_platform_online_learning
+' ER-диаграмма (Information Engineering / Crow's Foot)
+' Часть таблиц соответствует supabase/migrations/* (развёрнуто в проекте).
+' Сущности course, module, category, quiz* — целевая нормализация контента и LMS (manifest / типовая модель).
+
+title ER-диаграмма базы данных платформы онлайн-обучения
+
+hide circle
+skinparam linetype ortho
+skinparam nodesep 45
+skinparam ranksep 50
+skinparam shadowing false
+skinparam defaultFontSize 11
+
+' ========== Пользователи и профили (#B3D9FF) ==========
+entity "**auth.users**\n(учётная запись Supabase Auth)" as auth_users #B3D9FF {
+  * **id** : uuid <<PK>>
+  --
+  * **instance_id** : uuid <<UNIQUE within schema>>
+  * **aud** : varchar
+  * **role** : varchar
+  **email** : varchar <<UNIQUE>>
+  **encrypted_password** : varchar
+  **email_confirmed_at** : timestamptz
+  **invited_at** : timestamptz
+  **confirmation_token** : varchar
+  **confirmation_sent_at** : timestamptz
+  **recovery_token** : varchar
+  **recovery_sent_at** : timestamptz
+  **email_change_token_new** : varchar
+  **email_change** : varchar
+  **email_change_sent_at** : timestamptz
+  **last_sign_in_at** : timestamptz
+  **raw_app_meta_data** : jsonb
+  **raw_user_meta_data** : jsonb
+  **is_super_admin** : boolean
+  * **created_at** : timestamptz
+  * **updated_at** : timestamptz
+  **phone** : text <<UNIQUE>>
+  **phone_confirmed_at** : timestamptz
+  **phone_change** : text
+  **phone_change_token** : varchar
+  **phone_change_sent_at** : timestamptz
+  **email_change_token_current** : varchar
+  **email_change_confirm_status** : smallint
+  **banned_until** : timestamptz
+  **reauthentication_token** : varchar
+  **reauthentication_sent_at** : timestamptz
+  **is_sso_user** : boolean
+  **deleted_at** : timestamptz
+  **is_anonymous** : boolean
+}
+
+entity "**user_profile**\n(расширение профиля обучения;\nчасть полей дублируется в raw_user_meta_data)" as user_profile #B3D9FF {
+  * **user_id** : uuid <<PK>> <<FK>>
+  --
+  **learning_goal** : text
+  **display_name** : varchar
+  **avatar_url** : text
+  * **updated_at** : timestamptz
+}
+
+' ========== Курсы, модули, уроки, категории (#C1F0C1) ==========
+entity "**course**\n(нормализация оглавления курса)" as course #C1F0C1 {
+  * **id** : uuid <<PK>>
+  --
+  * **slug** : varchar <<UNIQUE>>
+  * **title** : text
+  **subtitle** : text
+  **intro_html** : text
+  * **created_at** : timestamptz
+}
+
+entity "**category**\n(тематические категории)" as category #C1F0C1 {
+  * **id** : uuid <<PK>>
+  --
+  * **name** : varchar <<UNIQUE>>
+  **description** : text
+}
+
+entity "**course_category**\n(связь курс ↔ категория)" as course_category #C1F0C1 {
+  * **course_id** : uuid <<PK>> <<FK>>
+  * **category_id** : uuid <<PK>> <<FK>>
+}
+
+entity "**module**\n(раздел курса)" as module #C1F0C1 {
+  * **id** : uuid <<PK>>
+  --
+  * **course_id** : uuid <<FK>>
+  * **title** : text
+  **description** : text
+  * **order_num** : integer
+}
+
+entity "**lessons**\n(урок; совпадает с миграцией проекта)" as lessons #C1F0C1 {
+  * **id** : uuid <<PK>>
+  --
+  **module_id** : uuid <<FK>>
+  * **title** : text
+  * **content** : text
+  * **order_num** : integer
+  * **difficulty** : integer
+  **created_at** : timestamptz
+}
+
+note right of lessons
+  В текущей миграции колонка **module_id** отсутствует;
+  структура модулей задаётся JSON (manifest).
+  На диаграмме — целевая схема с FK.
+end note
+
+' ========== Тесты, вопросы, ответы, результаты (#FFF2B3) ==========
+entity "**tasks**\n(задание по программированию)" as tasks #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **lesson_id** : uuid <<FK>>
+  * **description** : text
+  **starter_code** : text
+  **expected_output** : text
+  **hint** : text
+  * **order_num** : integer
+}
+
+note bottom of tasks
+  Развёрнуто в миграции.
+  Проверки по JSON (тип output / regex и т.д.)
+  хранятся в контенте урока на бэкенде/JSON.
+end note
+
+entity "**quiz**\n(тест с вариантами ответов)" as quiz #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **lesson_id** : uuid <<FK>>
+  * **title** : text
+  * **passing_score_percent** : integer
+  * **created_at** : timestamptz
+}
+
+entity "**quiz_question**" as quiz_question #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **quiz_id** : uuid <<FK>>
+  * **prompt** : text
+  * **order_num** : integer
+}
+
+entity "**quiz_answer_option**" as quiz_answer_option #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **question_id** : uuid <<FK>>
+  * **label** : text
+  * **is_correct** : boolean
+  * **order_num** : integer
+}
+
+entity "**quiz_attempt**\n(прохождение теста)" as quiz_attempt #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **user_id** : uuid <<FK>>
+  * **quiz_id** : uuid <<FK>>
+  * **started_at** : timestamptz
+  **finished_at** : timestamptz
+  **score_percent** : numeric
+}
+
+entity "**quiz_response**\n(выбор ответа в попытке)" as quiz_response #FFF2B3 {
+  * **id** : uuid <<PK>>
+  --
+  * **attempt_id** : uuid <<FK>>
+  * **question_id** : uuid <<FK>>
+  * **selected_option_id** : uuid <<FK>>
+}
+
+note bottom of quiz
+  Таблицы quiz* в текущем репозитории
+  не созданы — типовая модель для раздела «тесты».
+end note
+
+' ========== Записи, прогресс, коммуникации (#D9C2EC) ==========
+entity "**solutions**\n(решение задачи пользователем)" as solutions #D9C2EC {
+  * **id** : uuid <<PK>>
+  --
+  * **user_id** : uuid <<FK>>
+  * **task_id** : uuid <<FK>>
+  * **code** : text
+  * **status** : text <<CHECK pending/solved/failed>>
+  * **created_at** : timestamptz
+  * **updated_at** : timestamptz
+  ---
+  <<UNIQUE>> **(user_id, task_id)**
+}
+
+entity "**chat_messages**\n(история чата с ИИ-репетитором)" as chat_messages #D9C2EC {
+  * **id** : uuid <<PK>>
+  --
+  * **user_id** : uuid <<FK>>
+  * **lesson_id** : uuid <<FK>>
+  * **role** : text <<CHECK user/assistant>>
+  * **content** : text
+  * **created_at** : timestamptz
+}
+
+entity "**lesson_progress**\n(агрегат просмотра; в приложении частично в localStorage)" as lesson_progress #D9C2EC {
+  * **user_id** : uuid <<PK>> <<FK>>
+  * **lesson_id** : uuid <<PK>> <<FK>>
+  --
+  * **first_opened_at** : timestamptz
+  **last_opened_at** : timestamptz
+  **completed_at** : timestamptz
+}
+
+note bottom of lesson_progress
+  Логическая таблица прогресса.
+  В коде фиксируется просмотр урока локально;
+  при переносе в БД — эта связь.
+end note
+
+' ========== Связи (Crow's Foot IE) + подписи кардинальности ==========
+
+auth_users ||--|| user_profile : "1 : 1\nпрофиль расширения"
+
+auth_users ||--o{ solutions : "1 : N\nрешенные задачи"
+tasks ||--o{ solutions : "1 : N\nпопытки разных пользователей\nUNIQUE (user,task) → фактически\nне более одной записи на пару"
+
+auth_users ||--o{ chat_messages : "1 : N\nсообщения чата"
+lessons ||--o{ chat_messages : "1 : N\nтред по уроку"
+
+course ||--o{ module : "1 : N\nразделы курса"
+module ||--o{ lessons : "1 : N\nуроки в модуле"
+
+course }o--o{ category : "N : M\nчерез course_category"
+course ||--o{ course_category : "1 : N"
+category ||--o{ course_category : "1 : N"
+
+lessons ||--o{ tasks : "1 : N\nзадания к уроку"
+lessons ||--o{ quiz : "1 : N\nтесты к уроку"
+
+quiz ||--o{ quiz_question : "1 : N"
+quiz_question ||--o{ quiz_answer_option : "1 : N"
+
+auth_users ||--o{ quiz_attempt : "1 : N"
+quiz ||--o{ quiz_attempt : "1 : N"
+
+quiz_attempt ||--o{ quiz_response : "1 : N"
+quiz_question ||--o{ quiz_response : "1 : N"
+quiz_answer_option ||--o{ quiz_response : "0 : 1\nвыбранный вариант"
+
+auth_users ||--o{ lesson_progress : "1 : N"
+lessons ||--o{ lesson_progress : "1 : N"
+
+legend bottom
+  |= Цвет |= Группа сущностей |= Пояснение |
+  | <#B3D9FF> | Пользователи и профили | **auth.users** (Supabase), логический **user_profile** |
+  | <#C1F0C1> | Курсы, модули, уроки, категории | **course**, **module**, **lessons**, **category**, связь N:M **course_category** |
+  | <#FFF2B3> | Тесты, вопросы, ответы, результаты | **tasks** (из миграции), целевые **quiz***, **quiz_response** |
+  | <#D9C2EC> | Записи, прогресс | **solutions**, **chat_messages** (миграция), **lesson_progress** (целевая) |
+  | | Нотация связей | PlantUML IE: **||** ровно один, **|o** ноль или один, **}o** ноль или много, **}|** один или много |
+  | | Кардинальности на стрелках | Явно указаны **1:1**, **1:N**, **N:M** для соответствующих пар |
+  |= Поля |= Маркеры |= |
+  | | **<<PK>>** / **<<FK>>** | Первичный / внешний ключ |
+  | | ***** перед атрибутом | NOT NULL (обязательное поле) |
+  | | **<<UNIQUE>>** | Уникальность (столбец или составной ключ) |
+endlegend
+
+@enduml

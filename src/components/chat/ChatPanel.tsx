@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, Loader2, User } from 'lucide-react';
+import { Send, Bot, Loader2, User, X, Maximize2, Minimize2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { ChatMessage } from '../../lib/types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,19 +9,54 @@ interface Props {
   lessonTitle: string;
   userCode: string;
   lastOutput: string;
+  /** Текст в поле ввода при открытии (например, из черновика на странице профиля). */
+  initialInput?: string;
+  /** Первое сообщение к репетитору при пустой истории; по умолчанию — шаблон с названием урока. */
+  welcomeMessage?: string;
+  /** Плейсхолдер поля ввода внизу чата. */
+  inputPlaceholder?: string;
+  /** Кнопка «Закрыть» в заголовке (например, плавающее окно). */
+  onClose?: () => void;
+  /** Развёрнуто на весь экран. */
+  fullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 }
 
-export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput }: Props) {
+export default function ChatPanel({
+  lessonId,
+  lessonTitle,
+  userCode,
+  lastOutput,
+  initialInput,
+  welcomeMessage,
+  inputPlaceholder,
+  onClose,
+  fullscreen,
+  onToggleFullscreen,
+}: Props) {
   const { user, session } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [welcomed, setWelcomed] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  /** Поколение загрузки: при смене урока отбрасываем ответы устаревших запросов. */
+  const loadGenRef = useRef(0);
+  const initialInputAppliedRef = useRef(false);
 
   useEffect(() => {
-    loadMessages();
+    initialInputAppliedRef.current = false;
+  }, [lessonId]);
+
+  useEffect(() => {
+    const seed = initialInput?.trim();
+    if (!seed || initialInputAppliedRef.current) return;
+    setInput(seed);
+    initialInputAppliedRef.current = true;
+  }, [initialInput]);
+
+  useEffect(() => {
+    void loadMessages();
   }, [lessonId]);
 
   useEffect(() => {
@@ -29,8 +64,8 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
   }, [messages]);
 
   async function loadMessages() {
+    const gen = ++loadGenRef.current;
     setMessages([]);
-    setWelcomed(false);
     if (!user) return;
 
     const { data } = await supabase
@@ -41,22 +76,39 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
       .order('created_at', { ascending: true })
       .limit(50);
 
+    if (gen !== loadGenRef.current) return;
+
     if (data && data.length > 0) {
       setMessages(data as ChatMessage[]);
-      setWelcomed(true);
     } else {
-      await sendWelcome();
+      const openingLine =
+        welcomeMessage ?? `Привет! Я только что открыл урок «${lessonTitle}».`;
+      await sendToTutor(openingLine, true, gen);
     }
   }
 
-  async function sendWelcome() {
-    if (welcomed) return;
-    setWelcomed(true);
-    await sendToTutor(`Привет! Я только что открыл урок «${lessonTitle}».`, true);
-  }
+  async function sendToTutor(text: string, isWelcome = false, expectedGen?: number) {
+    if (!user) return;
+    if (expectedGen !== undefined && expectedGen !== loadGenRef.current) return;
 
-  async function sendToTutor(text: string, isWelcome = false) {
-    if (!user || !session) return;
+    let accessToken = session?.access_token;
+    if (!accessToken) {
+      const { data: sessionData } = await supabase.auth.getSession();
+      accessToken = sessionData.session?.access_token;
+    }
+    if (expectedGen !== undefined && expectedGen !== loadGenRef.current) return;
+    if (!accessToken) {
+      const errMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        user_id: user.id,
+        lesson_id: lessonId,
+        role: 'assistant',
+        content: 'Нет активной сессии. Обнови страницу или войди снова.',
+        created_at: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, errMsg]);
+      return;
+    }
 
     const userMsg: ChatMessage = {
       id: crypto.randomUUID(),
@@ -85,7 +137,7 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${session.access_token}`,
+            Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
             Apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
           },
@@ -99,8 +151,12 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
         }
       );
 
+      if (expectedGen !== undefined && expectedGen !== loadGenRef.current) return;
+
       const data = await res.json();
       const replyText = data.reply || 'Что-то пошло не так. Попробуй ещё раз!';
+
+      if (expectedGen !== undefined && expectedGen !== loadGenRef.current) return;
 
       const assistantMsg: ChatMessage = {
         id: crypto.randomUUID(),
@@ -119,6 +175,7 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
         content: replyText,
       });
     } catch {
+      if (expectedGen !== undefined && expectedGen !== loadGenRef.current) return;
       const errMsg: ChatMessage = {
         id: crypto.randomUUID(),
         user_id: user.id,
@@ -151,19 +208,41 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
   const visibleMessages = messages.filter(m => !(m.role === 'user' && m.content.startsWith('Привет! Я только что открыл урок')));
 
   return (
-    <div className="flex flex-col h-full bg-[var(--bg-surface)]">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--border-color)] bg-[var(--bg-app)]">
+    <div className="flex flex-col h-full min-h-0 bg-[var(--bg-surface)]">
+      <div className="flex shrink-0 items-center gap-3 px-4 py-3 border-b border-[var(--border-color)] bg-[var(--bg-app)]">
         <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-400/10 border border-cyan-500/30 flex items-center justify-center">
           <Bot size={15} className="text-cyan-400" />
         </div>
-        <div>
-          <p className="text-sm font-semibold text-[var(--text-primary)]">AI-помощник</p>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-[var(--text-primary)]">Геннадий Нейронович</p>
           <p className="text-[10px] text-[var(--text-muted)]">Всегда готов помочь</p>
         </div>
-        <div className="ml-auto w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" />
+        <div className="flex shrink-0 items-center gap-1">
+          <div className="mr-1 w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50" aria-hidden />
+          {onToggleFullscreen && (
+            <button
+              type="button"
+              onClick={onToggleFullscreen}
+              aria-label={fullscreen ? 'Свернуть окно чата' : 'Развернуть чат на весь экран'}
+              className="rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              {fullscreen ? <Minimize2 size={17} strokeWidth={2} /> : <Maximize2 size={17} strokeWidth={2} />}
+            </button>
+          )}
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Закрыть чат"
+              className="rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              <X size={17} strokeWidth={2} />
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-3">
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3">
         {visibleMessages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
@@ -216,14 +295,14 @@ export default function ChatPanel({ lessonId, lessonTitle, userCode, lastOutput 
         <div ref={bottomRef} />
       </div>
 
-      <div className="p-3 border-t border-[var(--border-color)]">
+      <div className="shrink-0 p-3 border-t border-[var(--border-color)]">
         <div className="flex gap-2 bg-[var(--bg-app)] border border-[var(--border-color)] rounded-xl p-2 focus-within:border-cyan-500/40 transition-colors">
           <textarea
             ref={inputRef}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Задай вопрос..."
+            placeholder={inputPlaceholder ?? 'Задай вопрос...'}
             rows={1}
             className="flex-1 bg-transparent text-[var(--text-primary)] text-sm resize-none focus:outline-none placeholder-[var(--text-muted)] max-h-24 leading-5"
             style={{ scrollbarWidth: 'none' }}

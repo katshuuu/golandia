@@ -16,6 +16,8 @@ func NewCourseHandler(svc *course.Service) *CourseHandler {
 }
 
 func (h *CourseHandler) Manifest(c *gin.Context) {
+	// Короткий кэш в браузере: оглавление меняется редко, повторные заходы быстрее.
+	c.Header("Cache-Control", "private, max-age=120")
 	c.JSON(http.StatusOK, h.svc.Manifest())
 }
 

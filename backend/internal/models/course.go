@@ -66,6 +66,5 @@ type FinalMiniProject struct {
 	Title       string    `json:"title"`
 	Goals       []string  `json:"goals"`
 	StarterCode string    `json:"starter_code"`
-	Hints       []string  `json:"hints"`
 	Check       TaskCheck `json:"check"`
 }

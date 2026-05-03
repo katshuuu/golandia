@@ -14,7 +14,6 @@ export interface Task {
   description: string;
   starter_code: string;
   expected_output: string;
-  hint: string;
   order_num: number;
 }
 
@@ -86,7 +85,6 @@ export interface CourseManifest {
     title: string;
     goals: string[];
     starter_code: string;
-    hints: string[];
     check: TaskCheck;
   };
   modules: CourseModule[];

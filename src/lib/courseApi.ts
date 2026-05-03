@@ -9,21 +9,71 @@ interface LessonsModuleFile {
 const lessonModules = import.meta.glob<LessonsModuleFile>('../../lessons/module_*.json', {
   import: 'default',
 });
+
+/** Диапазоны tour-NNN → один JSON-файл модуля (избегаем загрузки всех модулей при первом уроке). */
+const TOUR_NUM_TO_MODULE_FILE: { min: number; max: number; file: string }[] = [
+  { min: 1, max: 2, file: 'module_01.json' },
+  { min: 3, max: 18, file: 'module_02.json' },
+  { min: 19, max: 31, file: 'module_03.json' },
+  { min: 32, max: 57, file: 'module_04.json' },
+  { min: 58, max: 80, file: 'module_05.json' },
+  { min: 81, max: 83, file: 'module_06.json' },
+  { min: 84, max: 92, file: 'module_07.json' },
+];
+
 const localLessonsById: Record<string, BackendLesson> = {};
-let lessonsCacheReady = false;
+const loadedModuleFiles = new Set<string>();
+let allLessonsCacheReady = false;
 
-async function ensureLessonsCache() {
-  if (lessonsCacheReady) return;
-  const loadedModules = await Promise.all(
-    Object.values(lessonModules).map((loadModule) => loadModule())
+function moduleFileForTourLessonId(id: string): string | undefined {
+  const m = /^tour-(\d+)$/.exec(id);
+  if (!m) return undefined;
+  const n = parseInt(m[1], 10);
+  const row = TOUR_NUM_TO_MODULE_FILE.find((r) => n >= r.min && n <= r.max);
+  return row?.file;
+}
+
+function findModuleLoader(file: string) {
+  const suffix = `lessons/${file}`;
+  const directKey = `../../lessons/${file}`;
+  if (lessonModules[directKey]) return lessonModules[directKey];
+  const hit = Object.entries(lessonModules).find(([path]) =>
+    path.replace(/\\/g, '/').endsWith(suffix)
   );
+  return hit?.[1];
+}
 
-  loadedModules.forEach((moduleFile) => {
-    moduleFile.lessons.forEach((lesson) => {
-      localLessonsById[lesson.id] = lesson;
-    });
+async function loadSingleModuleFile(file: string) {
+  if (loadedModuleFiles.has(file)) return;
+  const loader = findModuleLoader(file);
+  if (!loader) {
+    throw new Error(`Не найден загрузчик для ${file}`);
+  }
+  const moduleFile = await loader();
+  moduleFile.lessons.forEach((lesson) => {
+    localLessonsById[lesson.id] = lesson;
   });
-  lessonsCacheReady = true;
+  loadedModuleFiles.add(file);
+}
+
+async function ensureAllLessonsCache() {
+  if (allLessonsCacheReady) return;
+  await Promise.all(
+    TOUR_NUM_TO_MODULE_FILE.map(({ file }) => loadSingleModuleFile(file))
+  );
+  allLessonsCacheReady = true;
+}
+
+async function ensureLessonInCache(id: string) {
+  if (localLessonsById[id]) return;
+
+  const file = moduleFileForTourLessonId(id);
+  if (file) {
+    await loadSingleModuleFile(file);
+    if (localLessonsById[id]) return;
+  }
+
+  await ensureAllLessonsCache();
 }
 
 export async function fetchManifest(): Promise<CourseManifest> {
@@ -31,7 +81,7 @@ export async function fetchManifest(): Promise<CourseManifest> {
 }
 
 export async function fetchBackendLesson(id: string): Promise<BackendLesson> {
-  await ensureLessonsCache();
+  await ensureLessonInCache(id);
   const lesson = localLessonsById[id];
   if (!lesson) {
     throw new Error(`Не удалось загрузить урок: ${id}`);
