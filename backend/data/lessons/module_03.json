@@ -1,0 +1,236 @@
+{
+  "lessons": [
+    {
+      "id": "tour-019",
+      "title": "Урок 19: Цикл for",
+      "theory_html": "<h2>Урок 19: Цикл for</h2>\n<p>В Go есть только один вид цикла — <code>for</code>. Но он очень мощный!</p>\n<p>Можно использовать его как обычный for, как while и даже как бесконечный цикл.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfor i := 0; i < 5; i++ {\n\t\tfmt.Println(\"Счётчик:\", i)\n\t}\n}",
+      "task": {
+        "description": "Напиши цикл for, который выводит числа от 1 до 10.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: напиши цикл for\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "for "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 19
+    },
+    {
+      "id": "tour-020",
+      "title": "Урок 20: Цикл for как while",
+      "theory_html": "<h2>Урок 20: Цикл for как while</h2>\n<p>Если убрать части инициализации и пост-выражения, цикл for превращается в while.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tsum := 1\n\tfor sum < 1000 {\n\t\tsum += sum\n\t}\n\tfmt.Println(sum)\n}",
+      "task": {
+        "description": "Напиши цикл, который удваивает число, пока оно меньше 500.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := 2\n\t// TODO: напиши цикл for как while\n\tfmt.Println(num)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "for "
+          ]
+        }
+      },
+      "module_id": "m2_2",
+      "order": 2
+    },
+    {
+      "id": "tour-021",
+      "title": "Урок 21: Цикл for — продолжение",
+      "theory_html": "<h2>Урок 21: Цикл for — продолжение</h2>\n<p>Цикл <code>for</code> в Go очень гибкий. Если убрать условие, получится бесконечный цикл.</p>\n<p>Можно также использовать только условие — тогда он работает как обычный <code>while</code>.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tsum := 1\n\tfor sum < 100 {\n\t\tsum += sum\n\t}\n\tfmt.Println(sum)\n}",
+      "task": {
+        "description": "Напиши цикл for, который умножает число на 2, пока оно меньше 1000.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := 1\n\t// TODO: напиши цикл\n\tfmt.Println(num)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "for "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 21
+    },
+    {
+      "id": "tour-022",
+      "title": "Урок 22: Бесконечный цикл",
+      "theory_html": "<h2>Урок 22: Бесконечный цикл</h2>\n<p>Если в цикле <code>for</code> не указывать никакого условия — он будет работать вечно.</p>\n<p>Обычно такие циклы прерывают с помощью <code>break</code> или <code>return</code>.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tfor {\n\t\tfmt.Println(\"Я буду повторяться вечно... пока не нажмёшь Stop\")\n\t\ttime.Sleep(500 * time.Millisecond)\n\t}\n}",
+      "task": {
+        "description": "Создай бесконечный цикл, который выводит сообщение 5 раз, а потом выходит с помощью break.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tcount := 0\n\tfor {\n\t\t// TODO: выведи сообщение и сделай break после 5 раз\n\t}\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "5"
+          ]
+        }
+      },
+      "module_id": "m2_2",
+      "order": 4
+    },
+    {
+      "id": "tour-023",
+      "title": "Урок 23: Условный оператор if",
+      "theory_html": "<h2>Урок 23: Условный оператор if</h2>\n<p>Оператор <code>if</code> позволяет выполнять код только при выполнении условия.</p>\n<p>В Go после <code>if</code> не нужны скобки, но фигурные скобки обязательны.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tx := 42\n\tif x > 0 {\n\t\tfmt.Println(\"Число положительное\")\n\t}\n}",
+      "task": {
+        "description": "Напиши if, который проверяет, является ли число чётным.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := 17\n\t// TODO: проверь чётность\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "if "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 23
+    },
+    {
+      "id": "tour-024",
+      "title": "Урок 24: if с коротким объявлением",
+      "theory_html": "<h2>Урок 24: if с коротким объявлением</h2>\n<p>В Go можно объявить переменную прямо внутри условия <code>if</code>. Она будет видна только внутри этого if и else.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tif num := 10; num%2 == 0 {\n\t\tfmt.Println(num, \"— чётное число\")\n\t} else {\n\t\tfmt.Println(num, \"— нечётное число\")\n\t}\n}",
+      "task": {
+        "description": "Напиши if с коротким объявлением, который проверяет, больше ли число 100.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: if с коротким объявлением\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "if "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 24
+    },
+    {
+      "id": "tour-025",
+      "title": "Урок 25: if, else if, else",
+      "theory_html": "<h2>Урок 25: if, else if, else</h2>\n<p>Можно проверять сразу несколько условий с помощью <code>else if</code>.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := 75\n\tif num > 100 {\n\t\tfmt.Println(\"Большое число\")\n\t} else if num > 50 {\n\t\tfmt.Println(\"Среднее число\")\n\t} else {\n\t\tfmt.Println(\"Маленькое число\")\n\t}\n}",
+      "task": {
+        "description": "Напиши условие, которое определяет оценку по баллам (отлично, хорошо, удовлетворительно).",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscore := 85\n\t// TODO: if-else цепочка\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "else if"
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 25
+    },
+    {
+      "id": "tour-026",
+      "title": "Урок 26: Оператор switch",
+      "theory_html": "<h2>Урок 26: Оператор switch</h2>\n<p><code>switch</code> — удобный способ проверить сразу несколько значений.</p>\n<p>В Go не нужно писать <code>break</code> в каждом случае — он прерывается автоматически.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tday := 3\n\tswitch day {\n\tcase 1:\n\t\tfmt.Println(\"Понедельник\")\n\tcase 2:\n\t\tfmt.Println(\"Вторник\")\n\tcase 3:\n\t\tfmt.Println(\"Среда\")\n\tdefault:\n\t\tfmt.Println(\"Другой день\")\n\t}\n}",
+      "task": {
+        "description": "Напиши switch, который определяет время суток по часу (утро, день, вечер, ночь).",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\thour := 14\n\t// TODO: switch\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "switch "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 26
+    },
+    {
+      "id": "tour-027",
+      "title": "Урок 27: Switch без условия",
+      "theory_html": "<h2>Урок 27: Switch без условия</h2>\n<p>В Go можно использовать <code>switch</code> без выражения. Тогда он работает как цепочка if-else.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tswitch hour := time.Now().Hour(); {\n\tcase hour < 12:\n\t\tfmt.Println(\"Доброе утро!\")\n\tcase hour < 17:\n\t\tfmt.Println(\"Добрый день!\")\n\tdefault:\n\t\tfmt.Println(\"Добрый вечер!\")\n\t}\n}",
+      "task": {
+        "description": "Напиши switch без условия, который выводит оценку по баллам.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscore := 92\n\t// TODO: switch без условия\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "switch "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 27
+    },
+    {
+      "id": "tour-028",
+      "title": "Урок 28: Порядок вычислений в switch",
+      "theory_html": "<h2>Урок 28: Порядок вычислений в switch</h2>\n<p>Go проверяет case'ы сверху вниз и останавливается на первом совпадении.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := 5\n\tswitch {\n\tcase num > 0:\n\t\tfmt.Println(\"Положительное\")\n\tcase num < 0:\n\t\tfmt.Println(\"Отрицательное\")\n\tdefault:\n\t\tfmt.Println(\"Ноль\")\n\t}\n}",
+      "task": {
+        "description": "Напиши switch, который определяет знак числа.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnum := -7\n\t// TODO: switch\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "switch "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 28
+    },
+    {
+      "id": "tour-029",
+      "title": "Урок 29: Оператор defer",
+      "theory_html": "<h2>Урок 29: Оператор defer</h2>\n<p><code>defer</code> откладывает выполнение функции до момента выхода из текущей функции.</p>\n<p>Очень удобно для закрытия файлов, соединений и очистки ресурсов.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Начало\")\n\tdefer fmt.Println(\"Это выполнится в самом конце\")\n\tfmt.Println(\"Середина\")\n}",
+      "task": {
+        "description": "Добавь defer, чтобы сообщение \"Программа завершена\" вывелось в конце.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Программа запущена\")\n\t// TODO: добавь defer\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "defer "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 29
+    },
+    {
+      "id": "tour-030",
+      "title": "Урок 30: Стекирование отложенных вызовов",
+      "theory_html": "<h2>Урок 30: Стекирование отложенных вызовов</h2>\n<p>Если использовать несколько <code>defer</code> подряд, они будут выполняться в обратном порядке (последним пришёл — первым вышел).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Счёт начинается\")\n\tfor i := 0; i < 5; i++ {\n\t\tdefer fmt.Println(\"Отложено:\", i)\n\t}\n\tfmt.Println(\"Счёт окончен\")\n}",
+      "task": {
+        "description": "Напиши цикл, в котором 5 раз используется defer с разными числами.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: цикл с defer\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "defer "
+          ]
+        }
+      },
+      "module_id": "m2",
+      "order": 30
+    },
+    {
+      "id": "tour-031",
+      "title": "Урок 31: Стекирование отложенных вызовов",
+      "theory_html": "<h2>Урок 31: Стекирование отложенных вызовов </h2>\n<p>Если в функции несколько раз использовать <code>defer</code>, они будут выполняться в обратном порядке — как стопка тарелок: последнюю положил — первую снимаешь.</p>\n<p>Это называется LIFO (Last In, First Out).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Начинаем программу\")\n\n\tfor i := 1; i <= 5; i++ {\n\t\tdefer fmt.Println(\"Отложено число:\", i)\n\t}\n\n\tfmt.Println(\"Программа почти завершена\")\n}",
+      "task": {
+        "description": "Напиши цикл от 1 до 4 и используй defer, чтобы числа вывелись в обратном порядке.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: цикл с defer\n\tfmt.Println(\"Начало\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["defer"]
+        }
+      },
+      "module_id": "m2",
+      "order": 31
+    }
+  ]
+}

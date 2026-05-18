@@ -1,0 +1,260 @@
+{
+  "lessons": [
+    {
+      "id": "tour-003",
+      "title": "Урок 3: Пакеты",
+      "theory_html": "<h2>Урок 3: Пакеты 📦</h2>\n<p>Всё в Go организовано в пакеты. Пакет — это как папка с кодом, которая решает одну задачу.</p>\n<p>Каждая программа начинается с пакета <code>main</code>. Именно он говорит Go: «Эй, это точка входа в программу!»</p>\n<p>Чтобы использовать готовые функции (например, для вывода текста), нужно импортировать нужный пакет.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math/rand\"\n)\n\nfunc main() {\n\tfmt.Println(\"Моё любимое число сегодня:\", rand.Intn(100))\n}",
+      "task": {
+        "description": "Импортируй пакет fmt и выведи любое своё сообщение с помощью fmt.Println().",
+        "starter_code": "package main\n\n// TODO: добавь импорт и выведи сообщение\nfunc main() {\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["fmt"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 1
+    },
+    {
+      "id": "tour-004",
+      "title": "Урок 4: Импорт пакетов",
+      "theory_html": "<h2>Урок 4: Импорт пакетов 🔗</h2>\n<p>Чтобы использовать код из других пакетов, нужно их импортировать с помощью ключевого слова <code>import</code>.</p>\n<p>Можно импортировать несколько пакетов сразу — для этого используют круглые скобки.</p>\n<p>Go очень строгий: если ты импортировал пакет, но не использовал — программа не скомпилируется.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n\tfmt.Println(\"Квадратный корень из 16 равен\", math.Sqrt(16))\n}",
+      "task": {
+        "description": "Импортируй пакет math и выведи значение math.Pi.",
+        "starter_code": "package main\n\nfunc main() {\n\t// TODO: импортируй math и выведи Pi\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["math"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 2
+    },
+    {
+      "id": "tour-005",
+      "title": "Урок 5: Экспортируемые имена",
+      "theory_html": "<h2>Урок 5: Экспортируемые имена 🔓</h2>\n<p>В Go есть правило: если имя функции, переменной или типа начинается с **большой буквы** — оно экспортировано (доступно из других пакетов).</p>\n<p>Если с маленькой — оно приватное, доступно только внутри своего пакета.</p>\n<p>Это как публичный и личный аккаунт в соцсетях.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Экспортируемое имя должно начинаться с большой буквы\")\n}",
+      "task": {
+        "description": "Создай свою функцию с большой буквы (экспортированную) и вызови её.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай функцию с большой буквы\n\nfunc main() {\n\t// вызови свою функцию\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["func "]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 3
+    },
+    {
+      "id": "tour-006",
+      "title": "Урок 6: Функции",
+      "theory_html": "<h2>Урок 6: Функции 🔧</h2>\n<p>Функция — это блок кода, который можно вызвать по имени. Они помогают не повторять один и тот же код много раз.</p>\n<p>Функции в Go объявляются с помощью ключевого слова <code>func</code>.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc sayHello() {\n\tfmt.Println(\"Привет! Я функция!\")\n}\n\nfunc main() {\n\tsayHello()\n\tsayHello()\n}",
+      "task": {
+        "description": "Создай функцию greet(name string), которая выводит приветствие с именем.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай функцию greet\n\nfunc main() {\n\tgreet(\"Алексей\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["greet"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 4
+    },
+    {
+      "id": "tour-007",
+      "title": "Урок 7: Функции с несколькими результатами",
+      "theory_html": "<h2>Урок 7: Функции с несколькими результатами</h2>\n<p>В Go функция может возвращать не один, а сразу несколько результатов. Это очень удобно!</p>\n<p>Часто используют для возврата значения + ошибки.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc swap(x, y int) (int, int) {\n\treturn y, x\n}\n\nfunc main() {\n\ta, b := swap(10, 20)\n\tfmt.Println(a, b)\n}",
+      "task": {
+        "description": "Создай функцию divide(a, b int) (int, error), которая делит a на b.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай функцию divide\n\nfunc main() {\n\tresult, err := divide(10, 2)\n\tfmt.Println(result, err)\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["divide"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 5
+    },
+    {
+      "id": "tour-008",
+      "title": "Урок 8: Именованные возвращаемые значения",
+      "theory_html": "<h2>Урок 8: Именованные возвращаемые значения</h2>\n<p>В Go можно дать имена возвращаемым значениям. Тогда их можно использовать как обычные переменные внутри функции.</p>\n<p>Просто <code>return</code> вернёт все именованные значения.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc split(sum int) (x, y int) {\n\tx = sum * 4 / 9\n\ty = sum - x\n\treturn\n}\n\nfunc main() {\n\tfmt.Println(split(17))\n}",
+      "task": {
+        "description": "Создай функцию half(n int) (half int, isEven bool), которая возвращает половину числа и проверяет чётность.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай функцию half\n\nfunc main() {\n\th, even := half(8)\n\tfmt.Println(h, even)\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["half"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 6
+    },
+    {
+      "id": "tour-009",
+      "title": "Урок 9: Переменные",
+      "theory_html": "<h2>Урок 9: Переменные</h2>\n<p>Переменная — это коробочка с именем, в которой можно хранить значение. В Go их создают с помощью слова <code>var</code>.</p>\n<p>После <code>var</code> пишется имя переменной, а потом — её тип (например, int, bool, string).</p>\n<h3>Простыми словами:</h3>\n<p>Представь, что ты заводишь дневник: «Сегодняшнее настроение» — это имя переменной, а значение — «отличное!».</p>\n<p>Если не задать начальное значение, Go автоматически поставит «нулевое» (0 для чисел, false для bool, пустая строка для текста).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nvar c, python, java bool\n\nfunc main() {\n\tvar i int\n\tfmt.Println(i, c, python, java)\n}",
+      "task": {
+        "description": "Создай три переменные с помощью var: своё имя (string), возраст (int) и переменную isCool (bool = true). Выведи их на экран.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай три переменные и выведи их\n\tfmt.Println(\"Здесь будет информация о тебе\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["true"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 7
+    },
+    {
+      "id": "tour-010",
+      "title": "Урок 10: Короткое объявление переменных",
+      "theory_html": "<h2>Урок 10: Короткое объявление переменных</h2>\n<p>Самый популярный способ объявления переменных в Go — через <code>:=</code> (короткое объявление).</p>\n<p>Go сам определяет тип переменной по значению справа.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := 10\n\tb := \"Привет\"\n\tc := true\n\tfmt.Println(a, b, c)\n}",
+      "task": {
+        "description": "Используй короткое объявление := и создай несколько переменных.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: используй :=\n}",
+        "check": {
+          "type": "contains",
+          "contains": [":="]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 8
+    },
+    {
+      "id": "tour-011",
+      "title": "Урок 11: Переменные с начальными значениями",
+      "theory_html": "<h2>Урок 11: Переменные с начальными значениями </h2>\n<p>При создании переменной можно сразу дать ей значение. Go сам поймёт тип по этому значению.</p>\n<p>Можно объявлять несколько переменных сразу и присваивать им значения через запятую.</p>\n<h3>Почему это удобно?</h3>\n<p>Не нужно писать тип вручную — Go всё сделает за тебя. Код становится короче и приятнее.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nvar i, j int = 1, 2\n\nfunc main() {\n\tvar c, python, java = true, false, \"no!\"\n\tfmt.Println(i, j, c, python, java)\n}",
+      "task": {
+        "description": "Создай переменные: year = 2026 (int), language = \"Go\" (string), isFun = true (bool). Выведи их одной строкой.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай переменные с начальными значениями\n\tfmt.Println(\"Здесь будет вывод\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["2026", "Go"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 9
+    },
+    {
+      "id": "tour-012",
+      "title": "Урок 12: Короткое объявление переменных",
+      "theory_html": "<h2>Урок 12: Короткое объявление переменных ⚡</h2>\n<p>Внутри функции можно использовать супер-удобную запись: <code>имя := значение</code>. Go сам поймёт тип.</p>\n<p>Это самый популярный способ создавать переменные в Go.</p>\n<p>Важно: короткую запись <code>:=</code> можно использовать только внутри функций.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ti, j := 1, 2\n\tk := 3\n\tc, python, java := true, false, \"no!\"\n\n\tfmt.Println(i, j, k, c, python, java)\n}",
+      "task": {
+        "description": "Используй короткую запись := и создай переменные: name, age и isStudent. Выведи их.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: используй :=\n\tfmt.Println(\"Представься!\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": [":="]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 10
+    },
+    {
+      "id": "tour-013",
+      "title": "Урок 13: Базовые типы данных",
+      "theory_html": "<h2>Урок 13: Базовые типы данных</h2>\n<p>Go имеет богатый набор базовых типов:</p>\n<ul>\n<li><code>bool</code> — правда или ложь</li>\n<li><code>string</code> — текст</li>\n<li><code>int, int8, int16...</code> — целые числа</li>\n<li><code>float32, float64</code> — числа с плавающей точкой</li>\n<li><code>byte</code> (это uint8) и <code>rune</code> (это int32)</li>\n</ul>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar b bool = true\n\tvar s string = \"Go\"\n\tvar i int = 42\n\tvar f float64 = 3.14\n\tfmt.Println(b, s, i, f)\n}",
+      "task": {
+        "description": "Создай переменные типов bool, string, int и float64 с помощью короткого объявления.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай 4 переменные разных типов\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["bool", "string", "int", "float64"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 11
+    },
+    {
+      "id": "tour-014",
+      "title": "Урок 14: Нулевые значения",
+      "theory_html": "<h2>Урок 14: Нулевые значения 🌟</h2>\n<p>Если создать переменную, но не дать ей значение — Go сам поставит «нулевое» значение:</p>\n<ul>\n<li>для чисел — <strong>0</strong></li>\n<li>для bool — <strong>false</strong></li>\n<li>для string — пустая строка <strong>\"\"</strong></li>\n</ul>\n<p>Это удобно: не нужно бояться, что переменная будет «пустой» в плохом смысле.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i int\n\tvar f float64\n\tvar b bool\n\tvar s string\n\tfmt.Printf(\"%v %v %v %q\\n\", i, f, b, s)\n}",
+      "task": {
+        "description": "Создай 4 переменные без начальных значений (int, float64, bool, string) и выведи их, чтобы увидеть нулевые значения.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай 4 переменные без значений\n\tfmt.Println(\"Нулевые значения\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["0", "false"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 12
+    },
+    {
+      "id": "tour-015",
+      "title": "Урок 15: Преобразование типов",
+      "theory_html": "<h2>Урок 15: Преобразование типов </h2>\n<p>Иногда нужно превратить один тип в другой. В Go это делается явно: <code>тип(значение)</code>.</p>\n<p>Например, int → float64 или float64 → int.</p>\n<p>Go не делает это автоматически, чтобы ты случайно не потерял данные.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n\tvar x, y int = 3, 4\n\tvar f float64 = math.Sqrt(float64(x*x + y*y))\n\tvar z uint = uint(f)\n\tfmt.Println(x, y, z)\n}",
+      "task": {
+        "description": "Преобразуй число 25 (int) в float64 и выведи его. Затем преобразуй обратно в int.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar num int = 25\n\t// TODO: преобразуй в float64 и обратно\n\tfmt.Println(\"Результат\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["25"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 13
+    },
+    {
+      "id": "tour-016",
+      "title": "Урок 16: Вывод типов",
+      "theory_html": "<h2>Урок 16: Вывод типов </h2>\n<p>Когда ты пишешь <code>name := \"Гоша\"</code> или <code>age := 15</code>, Go сам понимает тип переменной.</p>\n<p>Это называется <strong>вывод типов</strong>. Очень удобно и экономит время.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tname := \"Гоша\"\n\tage := 15\n\tisCool := true\n\tfmt.Printf(\"%s, %d лет, крутой? %v\\n\", name, age, isCool)\n}",
+      "task": {
+        "description": "Создай 3 переменные с помощью := (имя, возраст, любимое число) и выведи их.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: используй :=\n\tfmt.Println(\"Представься!\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": [":="]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 14
+    },
+    {
+      "id": "tour-017",
+      "title": "Урок 17: Константы",
+      "theory_html": "<h2>Урок 17: Константы </h2>\n<p>Константа — это переменная, значение которой нельзя изменить. Создаётся словом <code>const</code>.</p>\n<p>Константы обычно пишут с большой буквы (Pi, MaxScore и т.д.).</p>\n<p>Они полезны для значений, которые точно не поменяются (число π, версия программы и др.).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nconst Pi = 3.14159\n\nconst Version = \"1.0.0\"\n\nfunc main() {\n\tfmt.Println(\"Число π ≈\", Pi)\n\tfmt.Println(\"Версия программы:\", Version)\n}",
+      "task": {
+        "description": "Создай константы: Gravity = 9.8 и AppName = \"GoLandia\". Выведи их.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай две константы\n\tfmt.Println(\"Константы\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["9.8"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 15
+    },
+    {
+      "id": "tour-018",
+      "title": "Урок 18: Числовые константы",
+      "theory_html": "<h2>Урок 18: Числовые константы </h2>\n<p>В Go числовые константы имеют очень высокую точность. Они могут быть «нетипизированными» до тех пор, пока не попадут в контекст, где нужен конкретный тип.</p>\n<p>Это позволяет писать очень удобный код с большими числами.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nconst Big = 1 << 60\n\nconst Small = Big >> 59\n\nfunc main() {\n\tfmt.Println(Small)\n}",
+      "task": {
+        "description": "Создай большую числовую константу (например 1 << 10) и выведи её.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай большую константу\n\tfmt.Println(\"Большое число\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["1024"]
+        }
+      },
+      "module_id": "m2_1",
+      "order": 16
+    }
+  ]
+}
