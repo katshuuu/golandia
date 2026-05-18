@@ -1,21 +1,11 @@
 /* Страница профиля — макет «scrapbook» (сверка с image.png / Group 14-2). */
 
 .app-page--profile-scrapbook {
-  --sp-brown: #5b3323;
-  --sp-brown-soft: #6b4a38;
-  --sp-page-bg: #ebecef;
-  --sp-sky: #eff9ff;
-  --sp-blue-card: #d9e9f8;
-  --sp-blue-deep: #7eb8e8;
-  --sp-yellow: #f8f1eb;
-  --sp-pill-blue: #cfe8fb;
-  --sp-shadow: rgba(60, 48, 40, 0.14);
-  --sp-font-rounded: 'Unageo-Light', system-ui, sans-serif;
   --sp-font-serif: 'Merriweather', 'Literature Decor', Georgia, serif;
   --sp-font-hand: 'Caveat', 'Santa Catarina', cursive;
   --sp-font-pixel: 'Press Start 2P', monospace;
   /* Первый / второй экран (минус шапка и padding секции .student-profile) */
-  --profile-chrome-top: 106px;
+  --profile-chrome-top: var(--golia-header-height);
   --profile-pad-block: clamp(16px, 3vw, 36px);
   --profile-viewport-h: calc(100dvh - var(--profile-chrome-top) - var(--profile-pad-block) * 2);
   --profile-hero-min-h: var(--profile-viewport-h);
@@ -23,7 +13,7 @@
   --profile-hero-cols: minmax(0, 1fr) minmax(0, 1fr);
   --profile-content-max: min(1680px, 100%);
 
-  background: #ffffff;
+  background: var(--golia-bg);
   color: var(--sp-brown);
 }
 
@@ -33,7 +23,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   scroll-snap-type: y proximity;
-  background: #ffffff;
+  background: var(--golia-bg);
   padding: var(--profile-pad-block) clamp(14px, 4vw, 40px) clamp(28px, 4vw, 48px);
 }
 
@@ -162,7 +152,8 @@
 }
 
 .student-profile__avatar-zone:focus-within {
-  outline: 3px solid #3b82f6;
+  outline: var(--golia-focus-outline);
+  outline-offset: var(--golia-focus-offset);
   outline-offset: 2px;
 }
 
@@ -231,7 +222,7 @@
 }
 
 .student-profile__avatar-action--danger {
-  color: #7f1d1d;
+  color: var(--golia-error-soft);
   border-color: rgba(127, 29, 29, 0.35);
   background: rgba(254, 242, 242, 0.96);
 }
@@ -335,7 +326,7 @@
   letter-spacing: 0.01em;
   white-space: nowrap;
   color: var(--sp-brown);
-  background-image: url('../assets/images/chatbox.png');
+  background-image: url('../../assets/images/chatbox.png');
   background-color: rgba(255, 255, 255, 0);
   background-repeat: no-repeat;
   background-position: center;
@@ -373,7 +364,8 @@
 
 
 .student-profile__hello-pill:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: var(--golia-focus-outline);
+  outline-offset: var(--golia-focus-offset);
   outline-offset: 3px;
   transform: translateX(-50%);
 }
@@ -580,8 +572,7 @@
   --profile-chat-form-max-w: min(820px, 100%);
 }
 
-.student-profile__panel-lead,
-.student-profile__goal-copy {
+.student-profile__panel-lead {
   margin: 0 0 12px;
   font-family: var(--sp-font-rounded);
   font-weight: 700;
@@ -621,23 +612,6 @@
   border-color: rgba(62, 130, 200, 0.45);
 }
 
-.student-profile__goal-form {
-  margin: 0;
-  margin-top: 12px;
-}
-
-.student-profile__goal-input {
-  width: 100%;
-  margin-top: 6px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(26, 50, 103, 0.2);
-  font-family: inherit;
-  font-size: 13px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
 .student-profile__save-notice {
   margin: 8px 0 0;
   font-size: 13px;
@@ -652,7 +626,7 @@
   font-family: var(--sp-font-rounded);
   font-weight: 700;
   font-size: clamp(13px, 0.85vw + 0.55rem, 14px);
-  color: #1a3267;
+  color: var(--golia-link);
   text-decoration: none;
 }
 
@@ -811,7 +785,8 @@
 }
 
 .student-profile__chat-icon:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: var(--golia-focus-outline);
+  outline-offset: var(--golia-focus-offset);
   outline-offset: 2px;
 }
 
@@ -926,8 +901,8 @@
 }
 
 .student-profile__chat-send:focus-visible {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 2px;
+  outline: var(--golia-focus-outline);
+  outline-offset: var(--golia-focus-offset);
 }
 
 @media (max-width: 900px) {

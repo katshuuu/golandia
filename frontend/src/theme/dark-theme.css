@@ -450,7 +450,7 @@
 
 [data-theme='dark'] .app-page--profile-scrapbook .student-profile__hello-pill {
   color: #442727;
-  background: #fffbd5;
+  background-color: rgba(255, 251, 213, 0.35);
 }
 
 [data-theme='dark'] .app-page--profile-scrapbook .student-profile__progress-card,
