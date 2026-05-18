@@ -56,10 +56,6 @@ export function ProfilePage() {
                 solvedCount={profile.solvedCount}
                 totalCount={profile.totalCount}
                 resumeLesson={profile.resumeLesson}
-                goal={profile.goal}
-                goalError={profile.goalError}
-                onGoalChange={profile.setGoal}
-                onGoalBlur={profile.persistGoal}
               />
               {profile.saveNotice ? (
                 <p className="student-profile__save-notice" role="status">

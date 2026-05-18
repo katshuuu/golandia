@@ -1,6 +1,5 @@
 import { RefObject } from 'react'
 import { LinkWithRef } from '../LinkWithRef'
-import { ProfileGoalForm } from '../../forms/ProfileGoalForm'
 import { lessonResumePillText } from '../../lib/profileLessonOrder'
 import type { OrderedLessonEntry } from '../../lib/profileLessonOrder'
 
@@ -11,10 +10,6 @@ type ProfileProgressSectionProps = {
   solvedCount: number
   totalCount: number
   resumeLesson: OrderedLessonEntry | null
-  goal: string
-  goalError?: string
-  onGoalChange: (value: string) => void
-  onGoalBlur: () => void
 }
 
 export function ProfileProgressSection({
@@ -24,10 +19,6 @@ export function ProfileProgressSection({
   solvedCount,
   totalCount,
   resumeLesson,
-  goal,
-  goalError,
-  onGoalChange,
-  onGoalBlur,
 }: ProfileProgressSectionProps) {
   return (
     <div className="student-profile__progress-col">
@@ -66,7 +57,6 @@ export function ProfileProgressSection({
         </div>
         <p className="student-profile__lessons-count">{totalCount ? `${solvedCount}/${totalCount}` : '…'}</p>
         <p className="student-profile__lessons-caption">занятий пройдено</p>
-        <ProfileGoalForm goal={goal} error={goalError} onChange={onGoalChange} onBlur={onGoalBlur} />
       </aside>
 
       <article className="student-profile__panel student-profile__panel--blue student-profile__panel--resume">

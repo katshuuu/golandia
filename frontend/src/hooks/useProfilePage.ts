@@ -13,7 +13,6 @@ import {
   ensureInitialDisplayName,
   writeAvatarDataUrl,
   writeDisplayName,
-  writeGoal,
 } from '../lib/profileLocal'
 import { fileToAvatarJpegDataUrl } from '../lib/resizeAvatar'
 import { ApiValidationError, fetchUserProfile, saveUserProfile } from '../lib/userApi'
@@ -22,7 +21,6 @@ import {
   validateAvatarDataUrl,
   validateAvatarFile,
   validateDisplayName,
-  validateGoal,
 } from '../lib/validation'
 
 export function progressRingDash(percent: number, radius = 52) {
@@ -41,7 +39,6 @@ export function useProfilePage(userId: string) {
   const [manifest, setManifest] = useState<CourseManifest | null>(null)
   const [avatarSaving, setAvatarSaving] = useState(false)
   const [nameError, setNameError] = useState<string | undefined>()
-  const [goalError, setGoalError] = useState<string | undefined>()
   const [avatarError, setAvatarError] = useState<string | undefined>()
   const [saveNotice, setSaveNotice] = useState<string | undefined>()
 
@@ -103,7 +100,6 @@ export function useProfilePage(userId: string) {
         if (err instanceof ApiValidationError) {
           const map = fieldErrorsToMap(err.fields)
           setNameError(map.display_name)
-          setGoalError(map.goal)
           setAvatarError(map.avatar_data_url)
           setSaveNotice(err.message)
           return
@@ -125,19 +121,6 @@ export function useProfilePage(userId: string) {
     setDisplayName(trimmed)
     writeDisplayName(userId, trimmed)
     void syncProfileToServer(trimmed, goal.trim(), avatarUrl)
-  }, [userId, displayName, goal, avatarUrl, syncProfileToServer])
-
-  const persistGoal = useCallback(() => {
-    const r = validateGoal(goal)
-    if (!r.ok) {
-      setGoalError(r.message)
-      return
-    }
-    setGoalError(undefined)
-    const trimmed = goal.trim()
-    setGoal(trimmed)
-    writeGoal(userId, trimmed)
-    void syncProfileToServer(displayName.trim(), trimmed, avatarUrl)
   }, [userId, displayName, goal, avatarUrl, syncProfileToServer])
 
   const handleAvatarPick = useCallback(
@@ -188,20 +171,12 @@ export function useProfilePage(userId: string) {
     if (nameError) setNameError(undefined)
   }, [nameError])
 
-  const handleGoalChange = useCallback((value: string) => {
-    setGoal(value)
-    if (goalError) setGoalError(undefined)
-  }, [goalError])
-
   return {
     displayName,
-    goal,
     setDisplayName: handleDisplayNameChange,
-    setGoal: handleGoalChange,
     avatarUrl,
     avatarSaving,
     nameError,
-    goalError,
     avatarError,
     saveNotice,
     solvedCount,
@@ -212,7 +187,6 @@ export function useProfilePage(userId: string) {
     memberShort,
     resumeLesson,
     persistDisplayName,
-    persistGoal,
     handleAvatarPick,
     handleRemoveAvatar,
   }
