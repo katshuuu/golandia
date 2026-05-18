@@ -1,0 +1,9 @@
+.lesson-theory-html h2.lesson-welcome-title {
+  font-family:
+    'Dudu',
+    'Unageo-Light',
+    system-ui,
+    sans-serif;
+  font-weight: 400;
+  text-align: center;
+}
