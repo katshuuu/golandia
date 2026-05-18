@@ -1,0 +1,6 @@
+# Минимальный образ для будущего изолированного go run (seccomp, лимиты CPU/RAM).
+FROM golang:1.22-alpine
+RUN apk add --no-cache git ca-certificates
+WORKDIR /work
+# Здесь позже: принять код по HTTP/stdin, собрать tmp модуль, go run с таймаутом.
+CMD ["sleep", "infinity"]
