@@ -1,0 +1,138 @@
+/* Переиспользуемые UI-примитивы */
+
+.golia-focusable:focus-visible {
+  outline: var(--golia-focus-outline);
+  outline-offset: var(--golia-focus-offset);
+}
+
+.golia-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: var(--golia-radius-control);
+  background: var(--golia-brand);
+  color: var(--golia-text-on-brand);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.golia-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.golia-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.golia-btn-pill {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--golia-border-strong);
+  border-radius: var(--golia-radius-pill);
+  background: var(--golia-bg);
+  color: inherit;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.golia-btn-pill:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--golia-shadow-card);
+}
+
+.golia-btn-pill.is-active {
+  background: var(--golia-nav-active-bg);
+  box-shadow:
+    0 0 0 1px var(--golia-nav-active-glow),
+    0 0 20px 2px var(--golia-nav-active-glow-wide),
+    0 0 36px 10px var(--golia-nav-active-glow-wide);
+}
+
+/* Модалка цели (достижения) */
+.goal-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.goal-modal-card {
+  width: min(560px, 100%);
+  border-radius: var(--golia-radius-modal);
+  background: var(--golia-bg);
+  box-shadow: 0 22px 46px var(--golia-shadow-modal);
+  padding: 24px;
+}
+
+.goal-modal-card h2 {
+  margin: 0;
+  color: var(--golia-brand);
+  font-family: var(--golia-font-body);
+}
+
+.goal-modal-card p {
+  margin: 8px 0 0;
+  color: var(--golia-brand-muted);
+}
+
+.goal-modal-card form {
+  margin-top: 14px;
+}
+
+.goal-modal-card input {
+  width: 100%;
+  height: 46px;
+  border-radius: var(--golia-radius-control);
+  border: 1px solid var(--golia-border);
+  padding: 0 14px;
+  outline: none;
+  font-family: inherit;
+  color: var(--golia-text);
+}
+
+.goal-modal-card input:focus-visible {
+  outline: var(--golia-focus-outline);
+  outline-offset: 0;
+  border-color: var(--golia-border-strong);
+}
+
+.goal-modal-card button[type='submit'] {
+  margin-top: 12px;
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: var(--golia-radius-control);
+  background: var(--golia-brand);
+  color: var(--golia-text-on-brand);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.goal-modal-card button[type='submit']:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
