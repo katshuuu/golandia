@@ -1,0 +1,18 @@
+npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> solduul-modules@1.0.0 test
+> vitest run
+
+
+ RUN  v1.6.1 /Users/katshu/kursovaya/frontend
+
+ ✓ src/lib/validation.test.ts  (9 tests) 18ms
+ ✓ src/lib/progressMap.test.ts  (4 tests) 4ms
+ ✓ src/lib/profileLessonOrder.test.ts  (6 tests) 8ms
+ ✓ src/forms/ProfileDisplayNameForm.test.tsx  (3 tests) 85ms
+
+ Test Files  4 passed (4)
+      Tests  22 passed (22)
+   Start at  13:57:09
+   Duration  1.11s (transform 396ms, setup 460ms, collect 568ms, tests 115ms, environment 1.50s, prepare 396ms)
+

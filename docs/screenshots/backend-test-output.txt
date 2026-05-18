@@ -1,0 +1,11 @@
+?   	go-llm-tutor/backend/cmd/server	[no test files]
+ok  	go-llm-tutor/backend/internal/checker	0.460s
+ok  	go-llm-tutor/backend/internal/course	0.242s
+?   	go-llm-tutor/backend/internal/db	[no test files]
+ok  	go-llm-tutor/backend/internal/handlers	0.501s
+ok  	go-llm-tutor/backend/internal/hero	0.706s
+?   	go-llm-tutor/backend/internal/llm	[no test files]
+ok  	go-llm-tutor/backend/internal/middleware	0.967s
+?   	go-llm-tutor/backend/internal/models	[no test files]
+?   	go-llm-tutor/backend/internal/repository	[no test files]
+?   	go-llm-tutor/backend/internal/sandbox	[no test files]

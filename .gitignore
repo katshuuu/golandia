@@ -1,2 +1,6 @@
 # Случайная копия проекта — не часть репозитория
 golandia/
+.DS_Store
+backend/.env
+frontend/node_modules/
+frontend/dist/
