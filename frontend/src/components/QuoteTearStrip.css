@@ -1,0 +1,178 @@
+/* Отрывная лента — адаптивная высота и типографика */
+
+.quote-strip-scene {
+  --quote-strip-h: clamp(118px, 34vw, min(252px, 36dvh));
+  --quote-strip-radius: clamp(28px, 5vw, 58px);
+  --quote-strip-stub-w: clamp(40px, 8.5%, 68px);
+  --quote-strip-border: rgba(91, 58, 42, 0.173);
+  --quote-strip-border-width: 2px;
+
+  position: relative;
+  width: 100%;
+  max-width: min(700px, 100%);
+  height: var(--quote-strip-h);
+  margin-inline: auto;
+  z-index: 2;
+  border-radius: var(--quote-strip-radius);
+}
+
+/* После отрыва: рамка и цитата поверх скрытого слоя canvas */
+.quote-strip-scene--revealed .quote-strip-reveal--visible {
+  z-index: 5;
+  border: var(--quote-strip-border-width) solid var(--quote-strip-border);
+}
+
+.quote-strip-scene--revealed .quote-strip-outer {
+  pointer-events: none;
+}
+
+.quote-strip-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: var(--quote-strip-h);
+  padding: clamp(1rem, 3vw, 2.2rem) clamp(1rem, 4vw, 2rem);
+  border-radius: var(--quote-strip-radius);
+  border: var(--quote-strip-border-width) solid transparent;
+  background: #fbfaf9;
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.2vw, 10px);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Цитата под лентой — видна сразу при отрыве, пока canvas рисует только правую часть */
+.quote-strip-reveal--visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.quote-strip-reveal__text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: 'Literature Decor', 'Times New Roman', serif;
+  font-size: clamp(13px, 2.4vw + 0.35rem, 20px);
+  font-weight: 700;
+  font-style: normal;
+  color: #65553a;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+.quote-strip-particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.quote-strip-outer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  border-radius: var(--quote-strip-radius);
+  overflow: hidden;
+}
+
+.quote-strip-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  touch-action: none;
+  background: transparent;
+}
+
+.quote-strip-canvas:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+}
+
+.quote-strip-hint {
+  text-align: center;
+  margin-top: clamp(6px, 1.5vw, 10px);
+  font-size: clamp(11px, 2.2vw, 13px);
+  color: rgba(125, 102, 39, 0.6);
+  letter-spacing: clamp(0.5px, 0.2vw, 1px);
+  font-family: 'Dudu', Georgia, serif;
+  font-style: italic;
+  transition: opacity 0.3s;
+}
+
+.quote-strip-reset {
+  display: none;
+  margin-top: clamp(0.75rem, 2vw, 1.2rem);
+  padding: clamp(6px, 1.5vw, 8px) clamp(18px, 4vw, 28px);
+  border: 1px solid #c9a245;
+  border-radius: 99px;
+  background: transparent;
+  color: #c9a245;
+  font-size: clamp(11px, 2.2vw, 13px);
+  font-family: 'Dudu', Georgia, serif;
+  letter-spacing: clamp(1px, 0.35vw, 2px);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  position: relative;
+  z-index: 1001;
+}
+
+.quote-strip-reset.quote-strip-reset--visible {
+  display: inline-block;
+}
+
+.quote-strip-reset:hover {
+  background: #c9a245;
+  color: #1a1008;
+}
+
+.quote-strip-reset:focus-visible {
+  outline: 2px solid #5b3a2a;
+  outline-offset: 2px;
+}
+
+/* Профиль: лента на всю ширину колонки; --quote-strip-h — высота canvas */
+.student-profile__banner-wrap .quote-strip-scene {
+  --quote-strip-h: clamp(72px, 14vw, min(168px, 22dvh));
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+}
+
+.student-profile__banner-wrap .quote-strip-reveal {
+  padding: clamp(0.65rem, 2vw, 1.1rem) clamp(1rem, 3vw, 1.5rem);
+}
+
+@media (min-width: 900px) {
+  .student-profile__banner-wrap .quote-strip-scene {
+    --quote-strip-h: clamp(84px, 11vw, 188px);
+  }
+}
+
+@media (max-width: 420px) {
+  .student-profile__banner-wrap .quote-strip-scene {
+    --quote-strip-h: clamp(68px, 22vw, 140px);
+  }
+}
+
+@media (max-width: 420px) {
+  .quote-strip-scene {
+    --quote-strip-h: clamp(104px, 38vw, 168px);
+    --quote-strip-radius: 24px;
+  }
+}
