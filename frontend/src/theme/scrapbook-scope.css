@@ -1,0 +1,43 @@
+/**
+ * Общий визуальный язык «scrapbook» для профиля и достижений.
+ */
+.app-page--profile-scrapbook,
+.app-page--achievements {
+  --sp-brown: var(--golia-brand);
+  --sp-brown-soft: var(--golia-brand-soft);
+  --sp-page-bg: var(--golia-bg);
+  --sp-sky: var(--golia-surface-sky);
+  --sp-blue-card: var(--golia-surface-blue-card);
+  --sp-blue-deep: var(--golia-blue-deep);
+  --sp-yellow: var(--golia-surface-yellow);
+  --sp-pill-blue: var(--golia-pill-blue);
+  --sp-shadow: var(--golia-shadow-warm);
+  --sp-font-rounded: var(--golia-font-body);
+
+  background: var(--golia-bg);
+  color: var(--sp-brown);
+}
+
+.app-page--achievements .achievements-screen {
+  background-color: var(--golia-bg);
+  color: var(--golia-text);
+}
+
+/* Чат на профиле — в тёплой палитре scrapbook, без «холодного» cyan */
+.student-profile__panel--chat,
+.student-profile__panel--chat .tutor-chat-dock--inline {
+  --lesson-bg-app: var(--golia-surface-yellow);
+  --lesson-bg-surface: var(--golia-bg);
+  --lesson-border-color: var(--golia-border-subtle);
+  --lesson-text-primary: var(--golia-text);
+  --lesson-text-secondary: var(--golia-brand-soft);
+  --lesson-text-muted: var(--golia-brand-muted);
+  --lesson-accent: var(--golia-blue-deep);
+  --lesson-accent-alt: var(--golia-pill-blue);
+  --lesson-accent-soft: rgba(var(--golia-brand-rgb), 0.08);
+  --lesson-accent-border: rgba(126, 184, 232, 0.45);
+  --lesson-user-icon-bg: var(--golia-blue-deep);
+  --lesson-send-bg: var(--golia-brand);
+  --lesson-send-color: var(--golia-text-on-brand);
+  --lesson-send-radius: var(--golia-radius-pill);
+}
