@@ -1,0 +1,16 @@
+{
+  "lessons": [
+    {
+      "id": "l1",
+      "title": "Lesson 1",
+      "theory_html": "<p>Theory</p>",
+      "task": {
+        "description": "Task",
+        "starter_code": "package main",
+        "check": { "type": "output", "expected": "ok" }
+      },
+      "module_id": "m1",
+      "order": 1
+    }
+  ]
+}

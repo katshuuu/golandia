@@ -1,0 +1,18 @@
+{
+  "title": "Test course",
+  "subtitle": "Unit test manifest",
+  "intro_html": "<p>Intro</p>",
+  "final_project": {
+    "title": "Финальный проект",
+    "starter_code": "package main",
+    "check": { "type": "output", "expected": "done" }
+  },
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Module 1",
+      "description": "Desc",
+      "lessons": [{ "id": "l1", "title": "Lesson 1" }]
+    }
+  ]
+}
