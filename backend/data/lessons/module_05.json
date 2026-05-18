@@ -1,0 +1,422 @@
+{
+  "lessons": [
+    {
+      "id": "tour-058",
+      "title": "Урок 58: Методы",
+      "theory_html": "<h2>Урок 58: Методы</h2>\n<p>В Go нет традиционных классов, но ты можешь добавлять методы к любому типу!</p>\n<p>Метод — это обычная функция, у которой есть специальный параметр — <strong>получатель</strong> (receiver). Он указывает, к какому типу этот метод «принадлежит».</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v Vertex) Abs() float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tfmt.Println(\"Длина вектора:\", v.Abs())\n}",
+      "task": {
+        "description": "Создай структуру Point с полями X и Y. Добавь метод Distance(), который возвращает расстояние от начала координат.",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Point struct {\n\tX, Y float64\n}\n\n// TODO: добавь метод Distance()\n\nfunc main() {\n\tp := Point{5, 12}\n\tfmt.Println(p.Distance())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "13"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 1
+    },
+    {
+      "id": "tour-059",
+      "title": "Урок 59: Методы — это функции",
+      "theory_html": "<h2>Урок 59: Методы — это функции</h2>\n<p>Метод — это просто обычная функция, у которой первым параметром идёт получатель.</p>\n<p>Можно писать методы и обычные функции — результат будет одинаковый.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc Abs(v Vertex) float64 {\n\treturn math.Sqrt(v.X*v.X + v.Y*v.Y)\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tfmt.Println(Abs(v))\n}",
+      "task": {
+        "description": "Напиши обычную функцию Scale(v Vertex, factor float64) Vertex, которая умножает координаты на factor.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\n// TODO: напиши функцию Scale\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tfmt.Println(Scale(v, 2))\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "6"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 2
+    },
+    {
+      "id": "tour-060",
+      "title": "Урок 60: Методы, продолжение",
+      "theory_html": "<h2>Урок 60: Методы, продолжение</h2>\n<p>Методы можно объявлять не только для структур, но и для любых типов, которые ты сам определил (например, для своего типа на основе float64).</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype MyFloat float64\n\nfunc (f MyFloat) Abs() float64 {\n\tif f < 0 {\n\t\treturn float64(-f)\n\t}\n\treturn float64(f)\n}\n\nfunc main() {\n\tf := MyFloat(-3.14)\n\tfmt.Println(f.Abs())\n}",
+      "task": {
+        "description": "Создай свой тип MyInt на основе int и добавь метод IsEven(), который проверяет чётность.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype MyInt int\n\n// TODO: добавь метод IsEven\n\nfunc main() {\n\tn := MyInt(42)\n\tfmt.Println(n.IsEven())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "true"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 3
+    },
+    {
+      "id": "tour-061",
+      "title": "Урок 61: Получатели-указатели",
+      "theory_html": "<h2>Урок 61: Получатели-указатели</h2>\n<p>Если получатель метода — указатель (*T), то метод может изменять оригинальную структуру.</p>\n<p>Это очень удобно, когда нужно менять данные, а не работать с копией.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X *= f\n\tv.Y *= f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tv.Scale(2)\n\tfmt.Println(v)\n}",
+      "task": {
+        "description": "Добавь метод Double() к структуре Point, который удваивает обе координаты (используй указатель).",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Point struct {\n\tX, Y float64\n}\n\n// TODO: добавь метод Double\n\nfunc main() {\n\tp := Point{5, 6}\n\tp.Double()\n\tfmt.Println(p)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "10",
+            "12"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 4
+    },
+    {
+      "id": "tour-062",
+      "title": "Урок 62: Указатели и функции",
+      "theory_html": "<h2>Урок 62: Указатели и функции</h2>\n<p>Методы с указателями и обычные функции с указателями делают одно и то же. Разница только в синтаксисе вызова.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc Scale(v *Vertex, f float64) {\n\tv.X *= f\n\tv.Y *= f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tScale(&v, 3)\n\tfmt.Println(v)\n}",
+      "task": {
+        "description": "Напиши функцию DoublePoint(p *Point), которая удваивает координаты.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Point struct {\n\tX, Y float64\n}\n\n// TODO: напиши функцию\n\nfunc main() {\n\tp := Point{1, 2}\n\tDoublePoint(&p)\n\tfmt.Println(p)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "2",
+            "4"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 5
+    },
+    {
+      "id": "tour-063",
+      "title": "Урок 63: Методы и косвенность указателей",
+      "theory_html": "<h2>Урок 63: Методы и косвенность указателей</h2>\n<p>Go автоматически преобразует значение в указатель (и наоборот), когда это нужно для вызова метода.</p>\n<p>Это делает код удобнее.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X *= f\n\tv.Y *= f\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tv.Scale(2) // Go сам берёт &v\n\tfmt.Println(v)\n}",
+      "task": {
+        "description": "Создай метод Grow(f float64) для структуры Size, который увеличивает значение. Вызови его от обычной переменной.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Size struct {\n\tValue float64\n}\n\n// TODO: добавь метод Grow\n\nfunc main() {\n\ts := Size{10}\n\ts.Grow(2)\n\tfmt.Println(s.Value)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "20"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 6
+    },
+    {
+      "id": "tour-064",
+      "title": "Урок 64: Выбор получателя",
+      "theory_html": "<h2>Урок 64: Выбор получателя</h2>\n<p>Выбирай получатель-указатель, если:</p>\n<ul>\n<li>Метод должен изменять данные</li>\n<li>Структура большая (чтобы избежать копирования)</li>\n</ul>\n<p>Обычно для одного типа все методы используют один вид получателя.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Vertex struct {\n\tX, Y float64\n}\n\nfunc (v *Vertex) Scale(f float64) {\n\tv.X *= f\n\tv.Y *= f\n}\n\nfunc (v Vertex) Abs() float64 {\n\treturn v.X*v.X + v.Y*v.Y\n}\n\nfunc main() {\n\tv := Vertex{3, 4}\n\tv.Scale(2)\n\tfmt.Println(v.Abs())\n}",
+      "task": {
+        "description": "Добавь к структуре Rectangle методы Area() (значение) и Resize(f float64) (указатель).",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Rectangle struct {\n\tWidth, Height float64\n}\n\n// TODO: добавь два метода\n\nfunc main() {\n\tr := Rectangle{5, 6}\n\tfmt.Println(r.Area())\n\tr.Resize(2)\n\tfmt.Println(r.Area())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "60"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 7
+    },
+    {
+      "id": "tour-065",
+      "title": "Урок 65: Интерфейсы",
+      "theory_html": "<h2>Урок 65: Интерфейсы</h2>\n<p>Интерфейс — это набор методов, которые должен реализовать тип.</p>\n<p>Если тип имеет все эти методы — он автоматически реализует интерфейс (без слова implements!).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Shape interface {\n\tArea() float64\n}\n\ntype Circle struct {\n\tRadius float64\n}\n\nfunc (c Circle) Area() float64 {\n\treturn 3.14 * c.Radius * c.Radius\n}\n\nfunc main() {\n\tvar s Shape = Circle{5}\n\tfmt.Println(s.Area())\n}",
+      "task": {
+        "description": "Создай интерфейс Drawable с методом Draw() string. Реализуй его для структуры Square.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Drawable interface {\n\tDraw() string\n}\n\ntype Square struct {\n\tSide float64\n}\n\n// TODO: реализуй метод Draw\n\nfunc main() {\n\tvar d Drawable = Square{4}\n\tfmt.Println(d.Draw())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "квадрат"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 8
+    },
+    {
+      "id": "tour-066",
+      "title": "Урок 66: Неявная реализация интерфейсов",
+      "theory_html": "<h2>Урок 66: Неявная реализация интерфейсов</h2>\n<p>В Go не нужно писать «implements». Если тип имеет все методы интерфейса — он его реализует автоматически.</p>\n<p>Это делает код очень гибким.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Writer interface {\n\tWrite(string) string\n}\n\ntype Console struct {}\n\nfunc (c Console) Write(text string) string {\n\treturn \"Вывод: \" + text\n}\n\nfunc main() {\n\tvar w Writer = Console{}\n\tfmt.Println(w.Write(\"Привет!\"))\n}",
+      "task": {
+        "description": "Создай интерфейс Speaker с методом Speak() string. Реализуй его для типа Dog.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Speaker interface {\n\tSpeak() string\n}\n\ntype Dog struct {}\n\n// TODO: реализуй Speak\n\nfunc main() {\n\tvar s Speaker = Dog{}\n\tfmt.Println(s.Speak())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "Гав"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 9
+    },
+    {
+      "id": "tour-067",
+      "title": "Урок 67: Значения интерфейса",
+      "theory_html": "<h2>Урок 67: Значения интерфейса</h2>\n<p>Значение интерфейса можно представить как пару: (конкретный тип + само значение этого типа).</p>\n<p>Когда ты вызываешь метод через интерфейс, Go автоматически вызывает нужный метод из реального типа.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\ntype I interface {\n\tM()\n}\n\ntype T struct {\n\tS string\n}\n\nfunc (t *T) M() {\n\tfmt.Println(t.S)\n}\n\ntype F float64\n\nfunc (f F) M() {\n\tfmt.Println(f)\n}\n\nfunc main() {\n\tvar i I\n\n\ti = &T{\"Привет, Go!\"}\n\tdescribe(i)\n\ti.M()\n\n\ti = F(math.Pi)\n\tdescribe(i)\n\ti.M()\n}\n\nfunc describe(i I) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}",
+      "task": {
+        "description": "Создай интерфейс Named с методом Name() string. Реализуй его для двух структур и выведи их через интерфейс.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Named interface {\n\tName() string\n}\n\n// TODO: создай две структуры и реализуй Name\n\nfunc main() {\n\tvar n1, n2 Named\n\tfmt.Println(n1.Name(), n2.Name())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "Name"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 10
+    },
+    {
+      "id": "tour-068",
+      "title": "Урок 68: Интерфейсы с nil-значениями",
+      "theory_html": "<h2>Урок 68: Интерфейсы с nil-значениями</h2>\n<p>Если внутри интерфейса лежит nil (конкретное значение), метод всё равно вызовется — но уже с nil-получателем.</p>\n<p>В Go принято обрабатывать такие случаи внутри метода.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\ntype T struct {\n\tS string\n}\n\nfunc (t *T) M() {\n\tif t == nil {\n\t\tfmt.Println(\"<nil>\")\n\t\treturn\n\t}\n\tfmt.Println(t.S)\n}\n\nfunc main() {\n\tvar i I\n\tvar t *T\n\ti = t\n\ti.M()\n\n\ti = &T{\"Привет\"}\n\ti.M()\n}",
+      "task": {
+        "description": "Создай метод Speak() для *Dog, который корректно обрабатывает nil.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Dog struct {}\n\nfunc (d *Dog) Speak() {\n\t// TODO: обработай nil\n}\n\nfunc main() {\n\tvar d *Dog\n\td.Speak()\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "nil"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 11
+    },
+    {
+      "id": "tour-069",
+      "title": "Урок 69: Нулевые значения интерфейса",
+      "theory_html": "<h2>Урок 69: Нулевые значения интерфейса</h2>\n<p>Полностью nil-интерфейс (без типа и значения) — это когда в нём ничего нет.</p>\n<p>Вызов метода на таком интерфейсе приведёт к ошибке.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\nfunc main() {\n\tvar i I\n\tif i == nil {\n\t\tfmt.Println(\"Интерфейс nil\")\n\t}\n}",
+      "task": {
+        "description": "Создай nil-интерфейс и проверь его на nil перед вызовом метода.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype I interface {\n\tM()\n}\n\nfunc main() {\n\tvar i I\n\t// TODO: проверь на nil\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "nil"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 12
+    },
+    {
+      "id": "tour-070",
+      "title": "Урок 70: Пустой интерфейс",
+      "theory_html": "<h2>Урок 70: Пустой интерфейс</h2>\n<p>Пустой интерфейс (`interface{}`) может хранить значение **любого** типа.</p>\n<p>Это очень мощный инструмент для работы с неизвестными данными.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc describe(i interface{}) {\n\tfmt.Printf(\"(%v, %T)\\n\", i, i)\n}\n\nfunc main() {\n\tdescribe(42)\n\tdescribe(\"Go\")\n\tdescribe(true)\n}",
+      "task": {
+        "description": "Напиши функцию describe, которая принимает interface{} и выводит тип и значение.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc describe(i interface{}) {\n\t// TODO: выведи тип и значение\n}\n\nfunc main() {\n\tdescribe(100)\n\tdescribe(\"Привет\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "100"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 13
+    },
+    {
+      "id": "tour-071",
+      "title": "Урок 71: Утверждение типа",
+      "theory_html": "<h2>Урок 71: Утверждение типа</h2>\n<p>Утверждение типа (`i.(T)`) позволяет «распаковать» интерфейс и получить конкретный тип.</p>\n<p>Можно проверить, удалось ли: `value, ok := i.(T)`.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i interface{} = \"Привет, Go!\"\n\n\ts, ok := i.(string)\n\tif ok {\n\t\tfmt.Println(\"Строка:\", s)\n\t}\n}",
+      "task": {
+        "description": "Сделай утверждение типа для interface{} и выведи значение, если это строка.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i interface{} = \"Go\"\n\t// TODO: утверждение типа\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "Go"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 14
+    },
+    {
+      "id": "tour-072",
+      "title": "Урок 72: Переключатели типа",
+      "theory_html": "<h2>Урок 72: Переключатели типа</h2>\n<p>Переключатель типа (`type switch`) позволяет проверить, какого конкретного типа является значение интерфейса.</p>\n<p>Это очень удобно, когда нужно обработать разные типы по-разному.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc do(i interface{}) {\n\tswitch v := i.(type) {\n\tcase int:\n\t\tfmt.Println(\"Целое число:\", v*2)\n\tcase string:\n\t\tfmt.Println(\"Строка длиной\", len(v), \"символов\")\n\tdefault:\n\t\tfmt.Println(\"Неизвестный тип!\")\n\t}\n}\n\nfunc main() {\n\tdo(42)\n\tdo(\"Привет, Go!\")\n\tdo(true)\n}",
+      "task": {
+        "description": "Напиши функцию printInfo(i interface{}), которая с помощью type switch выводит информацию о числе, строке или другом типе.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc printInfo(i interface{}) {\n\t// TODO: type switch\n}\n\nfunc main() {\n\tprintInfo(100)\n\tprintInfo(\"Go\")\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "100",
+            "Go"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 15
+    },
+    {
+      "id": "tour-073",
+      "title": "Урок 73: Интерфейс Stringer",
+      "theory_html": "<h2>Урок 73: Интерфейс Stringer</h2>\n<p>Интерфейс `Stringer` из пакета `fmt` позволяет типу самому определять, как он должен выглядеть при выводе.</p>\n<p>Для этого нужно реализовать метод `String() string`.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Person struct {\n\tName string\n\tAge int\n}\n\nfunc (p Person) String() string {\n\treturn fmt.Sprintf(\"%s (%d лет) \", p.Name, p.Age)\n}\n\nfunc main() {\n\tp := Person{\"Маша\", 15}\n\tfmt.Println(p)\n}",
+      "task": {
+        "description": "Добавь метод String() к структуре Book, чтобы при выводе показывалось «Книга: Название (автор)».",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Book struct {\n\tTitle string\n\tAuthor string\n}\n\n// TODO: добавь String()\n\nfunc main() {\n\tb := Book{\"Гарри Поттер\", \"Дж. К. Роулинг\"}\n\tfmt.Println(b)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "Гарри Поттер"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 16
+    },
+    {
+      "id": "tour-074",
+      "title": "Урок 74: Упражнение: Stringers",
+      "theory_html": "<h2>Урок 74: Упражнение: Stringers</h2>\n<p>Сделай так, чтобы тип `IPAddr` красиво выводился в формате `a.b.c.d`.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype IPAddr [4]byte\n\nfunc (ip IPAddr) String() string {\n\treturn fmt.Sprintf(\"%d.%d.%d.%d\", ip[0], ip[1], ip[2], ip[3])\n}\n\nfunc main() {\n\thosts := map[string]IPAddr{\n\t\t\"loopback\": {127, 0, 0, 1},\n\t\t\"googleDNS\": {8, 8, 8, 8},\n\t}\n\tfor name, ip := range hosts {\n\t\tfmt.Printf(\"%v: %v\\n\", name, ip)\n\t}\n}",
+      "task": {
+        "description": "Реализуй метод String() для IPAddr, чтобы адрес выводился в формате a.b.c.d.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype IPAddr [4]byte\n\n// TODO: добавь String()\n\nfunc main() {\n\tip := IPAddr{192, 168, 0, 1}\n\tfmt.Println(ip)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "192.168.0.1"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 17
+    },
+    {
+      "id": "tour-075",
+      "title": "Урок 75: Ошибки",
+      "theory_html": "<h2>Урок 75: Ошибки</h2>\n<p>В Go ошибки — это обычные значения типа `error`. Если функция может завершиться неудачей, она возвращает ошибку как второй результат.</p>\n<p>Если ошибка `nil` — всё хорошо. Если нет — что-то пошло не так.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype MyError struct {\n\tWhat string\n}\n\nfunc (e *MyError) Error() string {\n\treturn \"Ошибка: \" + e.What\n}\n\nfunc run() error {\n\treturn &MyError{\"что-то пошло не так\"}\n}\n\nfunc main() {\n\tif err := run(); err != nil {\n\t\tfmt.Println(err)\n\t}\n}",
+      "task": {
+        "description": "Создай свою ошибку `NegativeNumberError` и возвращай её, если число отрицательное.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype NegativeNumberError struct {\n\tValue int\n}\n\n// TODO: реализуй Error()\n\nfunc check(n int) error {\n\t// TODO: верни ошибку, если n < 0\n\treturn nil\n}\n\nfunc main() {\n\tif err := check(-5); err != nil {\n\t\tfmt.Println(err)\n\t}\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "отрицательное"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 18
+    },
+    {
+      "id": "tour-076",
+      "title": "Урок 76: Упражнение: Ошибки",
+      "theory_html": "<h2>Урок 76: Упражнение: Ошибки</h2>\n<p>Добавь обработку ошибок в функцию `Sqrt`: возвращай ошибку для отрицательных чисел.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype ErrNegativeSqrt float64\n\nfunc (e ErrNegativeSqrt) Error() string {\n\treturn fmt.Sprintf(\"cannot Sqrt negative number: %v\", float64(e))\n}\n\nfunc Sqrt(x float64) (float64, error) {\n\tif x < 0 {\n\t\treturn 0, ErrNegativeSqrt(x)\n\t}\n\t// простой расчёт (для примера)\n\treturn x, nil\n}\n\nfunc main() {\n\tv, err := Sqrt(4)\n\tfmt.Println(v, err)\n\tv, err = Sqrt(-1)\n\tfmt.Println(v, err)\n}",
+      "task": {
+        "description": "Реализуй `Sqrt(x float64) (float64, error)` с проверкой на отрицательное число.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype ErrNegativeSqrt float64\n\nfunc (e ErrNegativeSqrt) Error() string {\n\t// TODO: верни сообщение об ошибке\n\treturn \"\"\n}\n\nfunc Sqrt(x float64) (float64, error) {\n\t// TODO: реализуй\n\treturn 0, nil\n}\n\nfunc main() {\n\tv, err := Sqrt(9)\n\tfmt.Println(v, err)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "3",
+            "negative"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 19
+    },
+    {
+      "id": "tour-077",
+      "title": "Урок 77: Интерфейс Reader",
+      "theory_html": "<h2>Урок 77: Интерфейс Reader</h2>\n<p>Интерфейс `io.Reader` — один из самых важных в Go. Он позволяет читать данные из любого источника: файла, строки, сети и т.д.</p>\n<p>Главный метод — `Read([]byte) (int, error)`.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"io\"\n\t\"strings\"\n)\n\nfunc main() {\n\tr := strings.NewReader(\"Привет, Go! \")\n\tb := make([]byte, 5)\n\tfor {\n\t\tn, err := r.Read(b)\n\t\tif n > 0 {\n\t\t\tfmt.Printf(\"Прочитано: %s\\n\", b[:n])\n\t\t}\n\t\tif err == io.EOF {\n\t\t\tbreak\n\t\t}\n\t}\n}",
+      "task": {
+        "description": "Создай строку и прочитай её по 4 байта с помощью strings.Reader.",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"io\"\n\t\"strings\"\n)\n\nfunc main() {\n\ttext := \"Go is awesome\"\n\tr := strings.NewReader(text)\n\tb := make([]byte, 4)\n\t// TODO: прочитай по 4 байта\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "Go i"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 20
+    },
+    {
+      "id": "tour-078",
+      "title": "Урок 78: Упражнение: Readers",
+      "theory_html": "<h2>Урок 78: Упражнение: Readers</h2>\n<p>Создай свой `Reader`, который всегда возвращает байт `A` (ASCII 65).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype MyReader struct{}\n\nfunc (MyReader) Read(b []byte) (int, error) {\n\tfor i := range b {\n\t\tb[i] = 'A'\n\t}\n\treturn len(b), nil\n}\n\nfunc main() {\n\tvar r MyReader\n\tb := make([]byte, 5)\n\tn, _ := r.Read(b)\n\tfmt.Println(n, string(b))\n}",
+      "task": {
+        "description": "Реализуй `MyReader`, который заполняет любой буфер символом 'A'.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype MyReader struct{}\n\nfunc (MyReader) Read(b []byte) (int, error) {\n\t// TODO: заполни b символом 'A'\n\treturn 0, nil\n}\n\nfunc main() {\n\tvar r MyReader\n\tb := make([]byte, 3)\n\tn, _ := r.Read(b)\n\tfmt.Println(n, string(b))\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "AAA"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 21
+    },
+    {
+      "id": "tour-079",
+      "title": "Урок 79: Интерфейс Image",
+      "theory_html": "<h2>Урок 79: Интерфейс Image</h2>\n<p>Интерфейс `image.Image` позволяет работать с изображениями. Главные методы: Bounds, ColorModel и At.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n\t\"image/color\"\n)\n\ntype MyImage struct{}\n\nfunc (MyImage) Bounds() image.Rectangle { return image.Rect(0, 0, 4, 4) }\nfunc (MyImage) ColorModel() color.Model { return color.RGBAModel }\nfunc (MyImage) At(x, y int) color.Color { return color.RGBA{uint8(x*50), uint8(y*50), 255, 255} }\n\nfunc main() {\n\timg := MyImage{}\n\tfmt.Println(img.Bounds())\n}",
+      "task": {
+        "description": "Создай простой `Image`, который возвращает Bounds 0,0,8,8 и цвет на основе координат.",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n\t\"image/color\"\n)\n\ntype MyImage struct{}\n\n// TODO: реализуй 3 метода\n\nfunc main() {\n\timg := MyImage{}\n\tfmt.Println(img.Bounds())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "8"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 22
+    },
+    {
+      "id": "tour-080",
+      "title": "Урок 80: Упражнение: Изображения",
+      "theory_html": "<h2>Урок 80: Упражнение: Изображения</h2>\n<p>Создай своё изображение, которое красиво раскрашивает пиксели по формуле (например, x*y).</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n\t\"image/color\"\n)\n\ntype MyImage struct{}\n\nfunc (MyImage) Bounds() image.Rectangle { return image.Rect(0, 0, 8, 8) }\nfunc (MyImage) ColorModel() color.Model { return color.RGBAModel }\nfunc (MyImage) At(x, y int) color.Color {\n\treturn color.RGBA{uint8(x*30), uint8(y*30), 200, 255}\n}\n\nfunc main() {\n\timg := MyImage{}\n\tfmt.Println(img.At(4, 4))\n}",
+      "task": {
+        "description": "Реализуй `MyImage` с Bounds 0,0,8,8 и цветом, зависящим от x и y.",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"image\"\n\t\"image/color\"\n)\n\ntype MyImage struct{}\n\n// TODO: реализуй 3 метода\n\nfunc main() {\n\timg := MyImage{}\n\tfmt.Println(img.At(3, 5))\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "RGBA"
+          ]
+        }
+      },
+      "module_id": "m3",
+      "order": 23
+    }
+  ]
+}

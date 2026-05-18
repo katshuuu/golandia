@@ -1,0 +1,60 @@
+{
+  "lessons": [
+    {
+      "id": "tour-081",
+      "title": "Урок 81: Параметры типа",
+      "theory_html": "<h2>Урок 81: Параметры типа</h2>\n<p>Обобщения (generics) позволяют писать функции и типы, которые работают с разными типами данных.</p>\n<p>Параметры типа пишутся в квадратных скобках перед обычными параметрами.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\n// Index ищет элемент в срезе любого типа\nfunc Index[T comparable](s []T, x T) int {\n\tfor i, v := range s {\n\t\tif v == x {\n\t\t\treturn i\n\t\t}\n\t}\n\treturn -1\n}\n\nfunc main() {\n\tnumbers := []int{10, 20, 30, 40}\n\tfmt.Println(\"Индекс 30:\", Index(numbers, 30))\n\n\twords := []string{\"Go\", \"is\", \"awesome\"}\n\tfmt.Println(\"Индекс \\\"is\\\":\", Index(words, \"is\"))\n}",
+      "task": {
+        "description": "Напиши обобщённую функцию Max[T comparable](a, b T) T, которая возвращает большее из двух значений.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: напиши функцию Max\n\nfunc main() {\n\tfmt.Println(Max(5, 12))\n\tfmt.Println(Max(3.14, 2.71))\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "12",
+            "3.14"
+          ]
+        }
+      },
+      "module_id": "m4",
+      "order": 1
+    },
+    {
+      "id": "tour-082",
+      "title": "Урок 82: Обобщённые типы",
+      "theory_html": "<h2>Урок 82: Обобщённые типы</h2>\n<p>Не только функции, но и целые типы могут быть обобщёнными.</p>\n<p>Это особенно полезно для создания универсальных структур данных (списки, деревья, очереди и т.д.).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Node[T any] struct {\n\tValue T\n\tNext *Node[T]\n}\n\nfunc main() {\n\tn1 := Node[int]{Value: 10}\n\tn2 := Node[string]{Value: \"Go\"}\n\tfmt.Println(n1.Value, n2.Value)\n}",
+      "task": {
+        "description": "Создай обобщённый тип Pair[T, U any] с полями First и Second.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай тип Pair\n\nfunc main() {\n\tp := Pair[int, string]{First: 42, Second: \"ответ\"}\n\tfmt.Println(p.First, p.Second)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "42",
+            "ответ"
+          ]
+        }
+      },
+      "module_id": "m4",
+      "order": 2
+    },
+    {
+      "id": "tour-083",
+      "title": "Урок 83: Упражнение: Обобщения",
+      "theory_html": "<h2>Урок 83: Упражнение: Обобщения</h2>\n<p>Давай применим обобщения на практике! Дополни универсальный список и добавь в него полезные методы.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype List[T comparable] struct {\n\tnext *List[T]\n\tvalue T\n}\n\nfunc (l *List[T]) PushFront(v T) *List[T] {\n\treturn &List[T]{next: l, value: v}\n}\n\nfunc main() {\n\tvar head *List[int]\n\thead = head.PushFront(3)\n\thead = head.PushFront(2)\n\thead = head.PushFront(1)\n\tfmt.Println(\"Длина:\", head.Len())\n}",
+      "task": {
+        "description": "Добавь метод Len() int к обобщённому списку List[T].",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype List[T comparable] struct {\n\tnext *List[T]\n\tvalue T\n}\n\n// TODO: добавь метод Len\n\nfunc main() {\n\tvar head *List[int]\n\thead = head.PushFront(10)\n\thead = head.PushFront(20)\n\tfmt.Println(head.Len())\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "2"
+          ]
+        }
+      },
+      "module_id": "m4",
+      "order": 3
+    }
+  ]
+}

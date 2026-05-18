@@ -1,0 +1,462 @@
+{
+  "lessons": [
+    {
+      "id": "tour-032",
+      "title": "Урок 32: Указатели",
+      "theory_html": "<h2>Урок 32: Указатели </h2>\n<p>Указатель — это переменная, которая хранит адрес другой переменной в памяти.</p>\n<p>Если обычная переменная — это коробка со значением, то указатель — это записка с адресом этой коробки.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ti := 42\n\tp := &i\n\n\tfmt.Println(\"Значение i:\", i)\n\tfmt.Println(\"Значение по указателю:\", *p)\n\n\t*p = 100\n\tfmt.Println(\"Новое значение i:\", i)\n}",
+      "task": {
+        "description": "Создай переменную number = 50. Сделай указатель на неё и измени значение через указатель на 150.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumber := 50\n\t// TODO: создай указатель и измени значение\n\tfmt.Println(number)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "150"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 1
+    },
+    {
+      "id": "tour-033",
+      "title": "Урок 33: Структуры",
+      "theory_html": "<h2>Урок 33: Структуры </h2>\n<p>Структура — это свой собственный тип данных, в котором можно объединить несколько полей разного типа.</p>\n<p>Представь, что хочешь описать человека: имя, возраст, город. Вместо трёх отдельных переменных — одна структура.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Person struct {\n\tName  string\n\tAge   int\n\tCity  string\n}\n\nfunc main() {\n\tp := Person{Name: \"Максим\", Age: 15, City: \"Москва\"}\n\tfmt.Println(p)\n}",
+      "task": {
+        "description": "Создай структуру Student с полями Name, Grade и School. Создай одного студента.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай структуру Student\n\nfunc main() {\n\t// TODO: создай студента\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "struct"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 2
+    },
+    {
+      "id": "tour-034",
+      "title": "Урок 34: Поля структур",
+      "theory_html": "<h2>Урок 34: Поля структур</h2>\n<p>Чтобы обратиться к полю структуры, используется точка: <code>структура.Поле</code>.</p>\n<p>Можно как читать значение поля, так и изменять его.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Point struct {\n\tX int\n\tY int\n}\n\nfunc main() {\n\tp := Point{X: 10, Y: 20}\n\tp.X = 50\n\tfmt.Println(\"Координаты:\", p.X, p.Y)\n}",
+      "task": {
+        "description": "Создай структуру Book с полями Title и Pages. Измени количество страниц.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Book struct {\n\tTitle string\n\tPages int\n}\n\nfunc main() {\n\tb := Book{Title: \"Гарри Поттер\", Pages: 300}\n\t// TODO: измени Pages\n\tfmt.Println(b.Pages)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "400"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 3
+    },
+    {
+      "id": "tour-035",
+      "title": "Урок 35: Указатели на структуры",
+      "theory_html": "<h2>Урок 35: Указатели на структуры</h2>\n<p>Можно создавать указатель на структуру. В Go можно обращаться к полям через указатель с помощью точки — без звёздочки. Это очень удобно!</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Person struct {\n\tName string\n\tAge  int\n}\n\nfunc main() {\n\tp := Person{Name: \"Анна\", Age: 14}\n\tptr := &p\n\tptr.Age = 15\n\tfmt.Println(p)\n}",
+      "task": {
+        "description": "Создай структуру Car и измени её поле через указатель.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype Car struct {\n\tModel string\n\tSpeed int\n}\n\nfunc main() {\n\tc := Car{Model: \"Tesla\", Speed: 100}\n\t// TODO: измени Speed через указатель\n\tfmt.Println(c.Speed)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "150"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 4
+    },
+    {
+      "id": "tour-036",
+      "title": "Урок 36: Литералы структур",
+      "theory_html": "<h2>Урок 36: Литералы структур</h2>\n<p>Самый удобный способ создать структуру — использовать **литерал**.</p>\n<p>Можно указывать поля по имени или просто по порядку.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Point struct {\n\tX, Y int\n}\n\nfunc main() {\n\tp1 := Point{10, 20}\n\tp2 := Point{X: 5, Y: 15}\n\tfmt.Println(p1, p2)\n}",
+      "task": {
+        "description": "Создай структуру User с помощью литерала двумя разными способами.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\ntype User struct {\n\tName string\n\tAge  int\n}\n\nfunc main() {\n\t// TODO: создай двух пользователей\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "User"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 5
+    },
+    {
+      "id": "tour-037",
+      "title": "Урок 37: Массивы",
+      "theory_html": "<h2>Урок 37: Массивы 📏</h2>\n<p>Массив — это набор элементов одного типа фиксированной длины.</p>\n<p>Размер массива нельзя изменить после создания.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar fruits [3]string\n\tfruits[0] = \"Яблоко\"\n\tfruits[1] = \"Банан\"\n\tfruits[2] = \"Апельсин\"\n\tfmt.Println(fruits)\n}",
+      "task": {
+        "description": "Создай массив из 4 любимых игр и выведи его.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай массив\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "[4]"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 6
+    },
+    {
+      "id": "tour-038",
+      "title": "Урок 38: Срезы",
+      "theory_html": "<h2>Урок 38: Срезы</h2>\n<p>Срез — это более удобная и гибкая версия массива. Он может менять размер.</p>\n<p>Большую часть времени в Go ты будешь работать именно со срезами.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tprimes := [6]int{2, 3, 5, 7, 11, 13}\n\ts := primes[1:4]\n\tfmt.Println(s)\n}",
+      "task": {
+        "description": "Создай массив из 5 чисел и сделай из него срез с элементами 2 по 4.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := [5]int{10, 20, 30, 40, 50}\n\t// TODO: создай срез\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "20",
+            "30"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 7
+    },
+    {
+      "id": "tour-039",
+      "title": "Урок 39: Срезы как ссылки на массивы",
+      "theory_html": "<h2>Урок 39: Срезы как ссылки</h2>\n<p>Срез не копирует данные — он просто ссылается на часть массива.</p>\n<p>Изменения в срезе меняют исходный массив.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnames := [4]string{\"Катя\", \"Маша\", \"Саша\", \"Дима\"}\n\ta := names[0:2]\n\tb := names[1:3]\n\tb[0] = \"Оля\"\n\tfmt.Println(a, b, names)\n}",
+      "task": {
+        "description": "Создай массив имён и два среза. Измени значение в одном срезе и убедись, что оно поменялось в другом.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnames := [5]string{\"A\", \"B\", \"C\", \"D\", \"E\"}\n\t// TODO: создай два среза и измени\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "B"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 8
+    },
+    {
+      "id": "tour-040",
+      "title": "Урок 40: Литералы срезов",
+      "theory_html": "<h2>Урок 40: Литералы срезов</h2>\n<p>Самый удобный способ создать срез — использовать литерал: <code>[]тип{значения}</code>.</p>\n<p>Go сам создаст массив и вернёт срез на него.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := []string{\"Go\", \"Python\", \"JavaScript\"}\n\tfmt.Println(s)\n}",
+      "task": {
+        "description": "Создай срез из 4 любимых сериалов с помощью литерала и выведи его.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай срез литералом\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "яблоко"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 9
+    },
+    {
+      "id": "tour-041",
+      "title": "Урок 41: Значения по умолчанию для срезов",
+      "theory_html": "<h2>Урок 41: Значения по умолчанию для срезов</h2>\n<p>Когда ты делаешь срез из массива или другого среза, можешь не писать нижнюю или верхнюю границу — Go подставит значения по умолчанию.</p>\n<ul>\n<li>Нижняя граница по умолчанию = 0</li>\n<li>Верхняя граница по умолчанию = длина среза</li>\n</ul>\n<p>Поэтому <code>s[:]</code> — это весь срез, <code>s[2:]</code> — от второго элемента до конца.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := []int{2, 3, 5, 7, 11, 13}\n\n\tfmt.Println(s[1:4])\n\tfmt.Println(s[:4])\n\tfmt.Println(s[2:])\n\tfmt.Println(s[:])\n}",
+      "task": {
+        "description": "Возьми срез чисел [10, 20, 30, 40, 50] и создай из него новый срез, начиная со второго элемента до конца.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{10, 20, 30, 40, 50}\n\t// TODO: создай новый срез\n\tfmt.Println(newSlice)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "30",
+            "40"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 10
+    },
+    {
+      "id": "tour-042",
+      "title": "Урок 42: Длина и ёмкость среза",
+      "theory_html": "<h2>Урок 42: Длина и ёмкость среза</h2>\n<p>У каждого среза есть две важные характеристики:</p>\n<ul>\n<li><strong>Длина (len)</strong> — сколько элементов сейчас в срезе</li>\n<li><strong>Ёмкость (cap)</strong> — сколько элементов может поместиться в базовом массиве без перевыделения памяти</li>\n</ul>\n<p>Ёмкость всегда больше или равна длине.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 3, 5)\n\tfmt.Println(len(s), cap(s))\n\n\ts = append(s, 10, 20)\n\tfmt.Println(len(s), cap(s))\n}",
+      "task": {
+        "description": "Создай срез make([]int, 2, 6), добавь в него 3 элемента с помощью append и выведи длину и ёмкость.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 2, 6)\n\t// TODO: добавь элементы\n\tfmt.Println(len(s), cap(s))\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "5",
+            "6"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 11
+    },
+    {
+      "id": "tour-043",
+      "title": "Урок 43: Нулевые срезы",
+      "theory_html": "<h2>Урок 43: Нулевые срезы</h2>\n<p>Нулевой срез — это срез со значением <code>nil</code>. У него длина и ёмкость равны 0.</p>\n<p>Его можно спокойно использовать в append, range и т.д.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar s []int\n\tfmt.Println(s == nil, len(s), cap(s))\n\n\ts = append(s, 42)\n\tfmt.Println(s)\n}",
+      "task": {
+        "description": "Создай нулевой срез (var s []int) и добавь в него 3 числа с помощью append.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar s []int\n\t// TODO: добавь числа\n\tfmt.Println(s)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 12
+    },
+    {
+      "id": "tour-044",
+      "title": "Урок 44: Создание среза с помощью make",
+      "theory_html": "<h2>Урок 44: Создание среза с помощью make</h2>\n<p>Функция <code>make</code> позволяет создать срез с заданной длиной и ёмкостью.</p>\n<p>Это основной способ заранее зарезервировать память.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 3, 10)\n\tfmt.Println(\"Длина:\", len(s), \"Ёмкость:\", cap(s))\n}",
+      "task": {
+        "description": "Создай срез из 5 строк с помощью make и заполни его.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай срез с помощью make\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "make"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 13
+    },
+    {
+      "id": "tour-045",
+      "title": "Урок 45: Срезы срезов",
+      "theory_html": "<h2>Урок 45: Срезы срезов</h2>\n<p>Срезы могут содержать другие срезы. Получается двумерная структура — как таблица или игровое поле.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tmatrix := [][]int{\n\t\t{1, 2, 3},\n\t\t{4, 5, 6},\n\t\t{7, 8, 9},\n\t}\n\tfmt.Println(matrix[1][2])\n}",
+      "task": {
+        "description": "Создай двумерный срез 3×3 и заполни его числами.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай [][]int 3x3\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "[][]int"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 14
+    },
+    {
+      "id": "tour-046",
+      "title": "Урок 46: Добавление в срез (append)",
+      "theory_html": "<h2>Урок 46: Добавление в срез (append) 🔥</h2>\n<p>Функция <code>append</code> добавляет элементы в срез. Если места не хватает — Go автоматически создаёт новый массив большего размера.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := []string{\"Go\", \"Python\"}\n\ts = append(s, \"JavaScript\", \"Rust\")\n\tfmt.Println(s)\n}",
+      "task": {
+        "description": "Создай срез с двумя числами и добавь в него ещё три с помощью append.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{10, 20}\n\t// TODO: добавь элементы\n\tfmt.Println(nums)\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "30",
+            "40"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 15
+    },
+    {
+      "id": "tour-047",
+      "title": "Урок 47: Оператор range",
+      "theory_html": "<h2>Урок 47: Оператор range</h2>\n<p><code>for index, value := range срез</code> — удобный способ пройтись по всем элементам.</p>\n<p>Если индекс не нужен — используй <code>_</code>.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnames := []string{\"Катя\", \"Саша\", \"Маша\"}\n\tfor i, name := range names {\n\t\tfmt.Println(i+1, name)\n\t}\n}",
+      "task": {
+        "description": "Пройдись по срезу чисел с помощью range и выведи каждое число, умноженное на 2.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{1, 2, 3, 4}\n\t// TODO: range и умножение\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "8"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 16
+    },
+    {
+      "id": "tour-048",
+      "title": "Урок 48: Range, продолжение",
+      "theory_html": "<h2>Урок 48: Range, продолжение</h2>\n<p>Можно использовать только индекс или только значение. Для пропуска используй нижнее подчёркивание <code>_</code>.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tlanguages := []string{\"Go\", \"Python\", \"JavaScript\", \"Rust\"}\n\tfor _, lang := range languages {\n\t\tfmt.Println(\"Я люблю\", lang)\n\t}\n}",
+      "task": {
+        "description": "Пройдись по срезу только по значениям (без индекса) и выведи их.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tgames := []string{\"Minecraft\", \"Roblox\", \"CS2\"}\n\t// TODO: range только по значениям\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "_"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 17
+    },
+    {
+      "id": "tour-049",
+      "title": "Урок 49: Упражнение: Срезы",
+      "theory_html": "<h2>Урок 49: Упражнение: Срезы</h2>\n<p>Давай закрепим работу со срезами! В задании к уроку создай функцию, которая возвращает двумерный срез (матрицу) с размерами dx × dy и заполняет его по формуле (например, x * y).</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc Pic(dx, dy int) [][]uint8 {\n\tpic := make([][]uint8, dy)\n\tfor y := 0; y < dy; y++ {\n\t\tpic[y] = make([]uint8, dx)\n\t\tfor x := 0; x < dx; x++ {\n\t\t\tpic[y][x] = uint8(x * y)\n\t\t}\n\t}\n\treturn pic\n}\n\nfunc main() {\n\tp := Pic(4, 3)\n\tfmt.Println(len(p), len(p[0]))\n}",
+      "task": {
+        "description": "Реализуй функцию Pic(dx, dy int) [][]uint8, которая создаёт матрицу и заполняет её по формуле x*y.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc Pic(dx, dy int) [][]uint8 {\n\t// TODO: создай матрицу\n\treturn nil\n}\n\nfunc main() {\n\tp := Pic(3, 2)\n\tfmt.Println(p[1][2])\n}",
+        "check": {
+          "type": "contains",
+          "contains": [
+            "2"
+          ]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 18
+    },
+    {
+      "id": "tour-050",
+      "title": "Урок 50: Карты (Maps)",
+      "theory_html": "<h2>Урок 50: Карты (Maps) </h2>\n<p>Карта — это структура данных, которая хранит пары «ключ — значение».</p>\n<p>Очень похожа на словарь: ключ — слово, значение — перевод.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := make(map[string]int)\n\n\tscores[\"Алексей\"] = 95\n\tscores[\"Маша\"] = 87\n\tscores[\"Данил\"] = 100\n\n\tfmt.Println(\"Оценка Маши:\", scores[\"Маша\"])\n}",
+      "task": {
+        "description": "Создай карту, где ключ — имя друга, значение — его любимое число.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай map[string]int\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["map[string]"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 19
+    },
+    {
+      "id": "tour-051",
+      "title": "Урок 51: Литералы карт",
+      "theory_html": "<h2>Урок 51: Литералы карт </h2>\n<p>Создавать карты можно не только через make, но и сразу с помощью литерала — как со срезами.</p>\n<p>Это очень удобно, когда нужно сразу заполнить карту значениями.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := map[string]int{\n\t\t\"Алексей\": 95,\n\t\t\"Маша\":    87,\n\t\t\"Данил\":   100,\n\t}\n\n\tfmt.Println(scores)\n\tfmt.Println(\"Оценка Данила:\", scores[\"Данил\"])\n}",
+      "task": {
+        "description": "Создай карту с помощью литерала, где ключ — название предмета, значение — твоя оценка.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай map с помощью литерала\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["map[string]"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 20
+    },
+    {
+      "id": "tour-052",
+      "title": "Урок 52: Литералы карт — продолжение",
+      "theory_html": "<h2>Урок 52: Литералы карт — продолжение</h2>\n<p>Если тип значения уже известен, можно не писать его название при создании карты.</p>\n<p>Go сам поймёт, о чём речь.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\ntype Coordinates struct {\n\tLat, Long float64\n}\n\nfunc main() {\n\tlocations := map[string]Coordinates{\n\t\t\"Москва\":     {55.7558, 37.6173},\n\t\t\"Санкт-Петербург\": {59.9343, 30.3351},\n\t}\n\tfmt.Println(locations)\n}",
+      "task": {
+        "description": "Создай карту с помощью литерала, где ключ — имя, значение — возраст (используй сокращённую запись).",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// TODO: создай карту с сокращённой записью\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["map[string]"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 21
+    },
+    {
+      "id": "tour-053",
+      "title": "Урок 53: Изменение карт",
+      "theory_html": "<h2>Урок 53: Изменение карт</h2>\n<p>С картами можно делать три основные вещи:</p>\n<ul>\n<li>Добавить или изменить значение: <code>map[key] = value</code></li>\n<li>Удалить значение: <code>delete(map, key)</code></li>\n<li>Проверить наличие ключа: <code>value, ok := map[key]</code></li>\n</ul>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := make(map[string]int)\n\n\tscores[\"Алексей\"] = 85\n\tfmt.Println(\"Алексей:\", scores[\"Алексей\"])\n\n\tdelete(scores, \"Алексей\")\n\tfmt.Println(\"После удаления:\", scores)\n}",
+      "task": {
+        "description": "Создай карту, добавь 3 записи, одну удали и проверь наличие ключа.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tm := make(map[string]int)\n\t// TODO: добавь, удали и проверь\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["delete"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 22
+    },
+    {
+      "id": "tour-054",
+      "title": "Урок 54: Упражнение — Карты",
+      "theory_html": "<h2>Урок 54: Упражнение — Карты</h2>\n<p>Давай применим карты на практике! Напиши функцию, которая считает, сколько раз каждое слово встречается в строке.</p>",
+      "demo_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc WordCount(s string) map[string]int {\n\twords := strings.Fields(s)\n\tcount := make(map[string]int)\n\n\tfor _, w := range words {\n\t\tcount[w]++\n\t}\n\treturn count\n}\n\nfunc main() {\n\ttext := \"go go go lang lang\"\n\tfmt.Println(WordCount(text))\n}",
+      "task": {
+        "description": "Реализуй функцию WordCount, которая считает количество каждого слова в строке.",
+        "starter_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc WordCount(s string) map[string]int {\n\t// TODO: посчитай слова\n\treturn nil\n}\n\nfunc main() {\n\tfmt.Println(WordCount(\"hello go hello world go\"))\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["hello", "go", "world"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 23
+    },
+    {
+      "id": "tour-055",
+      "title": "Урок 55: Функции как значения",
+      "theory_html": "<h2>Урок 55: Функции как значения</h2>\n<p>В Go функции — это тоже значения! Их можно присваивать переменным, передавать в другие функции и возвращать из функций.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc add(a, b int) int { return a + b }\nfunc multiply(a, b int) int { return a * b }\n\nfunc main() {\n\tvar operation func(int, int) int\n\n\toperation = add\n\tfmt.Println(operation(5, 3))\n\n\toperation = multiply\n\tfmt.Println(operation(5, 3))\n}",
+      "task": {
+        "description": "Создай переменную типа func(int, int) int и присвой ей функцию сложения.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай переменную operation\n\nfunc add(a, b int) int {\n\treturn a + b\n}\n\nfunc main() {\n\tfmt.Println(operation(10, 5))\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["func(int, int) int"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 24
+    },
+    {
+      "id": "tour-056",
+      "title": "Урок 56: Замыкания",
+      "theory_html": "<h2>Урок 56: Замыкания</h2>\n<p>Замыкание — это функция, которая «запоминает» переменные из внешней области видимости.</p>\n<p>Каждая такая функция имеет свою собственную копию этих переменных.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc createCounter() func() int {\n\tcount := 0\n\treturn func() int {\n\t\tcount++\n\t\treturn count\n\t}\n}\n\nfunc main() {\n\tcounter1 := createCounter()\n\tcounter2 := createCounter()\n\n\tfmt.Println(counter1(), counter1(), counter1())\n\tfmt.Println(counter2(), counter2())\n}",
+      "task": {
+        "description": "Создай функцию createMultiplier(factor int), которая возвращает функцию-умножитель.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\n// TODO: создай функцию createMultiplier\n\nfunc main() {\n\tdouble := createMultiplier(2)\n\ttriple := createMultiplier(3)\n\tfmt.Println(double(5), triple(5))\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["createMultiplier"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 25
+    },
+    {
+      "id": "tour-057",
+      "title": "Урок 57: Упражнение — Замыкание Фибоначчи",
+      "theory_html": "<h2>Урок 57: Упражнение — Замыкание Фибоначчи</h2>\n<p>Напиши функцию, которая возвращает генератор чисел Фибоначчи с помощью замыкания.</p>",
+      "demo_code": "package main\n\nimport \"fmt\"\n\nfunc fibonacci() func() int {\n\ta, b := 0, 1\n\treturn func() int {\n\t\ta, b = b, a+b\n\t\treturn a\n\t}\n}\n\nfunc main() {\n\tf := fibonacci()\n\tfor i := 0; i < 10; i++ {\n\t\tfmt.Print(f(), \" \")\n\t}\n}",
+      "task": {
+        "description": "Реализуй функцию fibonacci(), которая возвращает следующее число последовательности Фибоначчи при каждом вызове.",
+        "starter_code": "package main\n\nimport \"fmt\"\n\nfunc fibonacci() func() int {\n\t// TODO: реализуй замыкание\n\treturn func() int { return 0 }\n}\n\nfunc main() {\n\tf := fibonacci()\n\tfor i := 0; i < 8; i++ {\n\t\tfmt.Print(f(), \" \")\n\t}\n}",
+        "check": {
+          "type": "contains",
+          "contains": ["0 1 1 2 3 5 8 13"]
+        }
+      },
+      "module_id": "m2_3",
+      "order": 26
+    }
+  ]
+}
