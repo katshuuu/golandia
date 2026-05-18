@@ -1,0 +1,115 @@
+@font-face {
+  font-family: 'AKONY';
+  src: url('/fonts/AKONY.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NAURYZREDKEDS';
+  src: url('/fonts/NAURYZREDKEDS.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dudu';
+  src: url('/fonts/DuduCyrillic-BrWw.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dudu';
+  src: url('/fonts/DuduCyrillic-BrWw.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Krona One';
+  src: url('/fonts/KronaOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unageo-Black-Italic';
+  src: url('/fonts/Unageo-Black-Italic.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unageo-Black';
+  src: url('/fonts/Unageo-Black.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unageo-Light';
+  src: url('/fonts/Unageo-Light.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unageo-Medium';
+  src: url('/fonts/Unageo-Medium.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Unageo-Black-Italic';
+  src: url('/fonts/Unageo-Black-Italic.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ifkica-light';
+  src: url('/fonts/ifkica-light.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BBHBartle-Regular';
+  src: url('/fonts/BBHBartle-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Literature Decor';
+  src: url('/fonts/Literature-Decor.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Santa Catarina';
+  src: url('/fonts/SantaCatarina.otf') format('opentype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Unageo-Light', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fff;
+  color: #5b2330;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+:root {
+  color-scheme: light;
+}

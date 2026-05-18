@@ -1,0 +1,606 @@
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+[data-theme='dark'] body {
+  background: #111622;
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .mainpage-page {
+  --mainpage-border: #442727;
+  --mainpage-page-bg: #111622;
+  --mainpage-header-bg: #d2c6b2;
+  --mainpage-sidebar-bg: #442727;
+  --mainpage-text: #fffbd5;
+  --mainpage-card-bg: #fffbd5;
+  --mainpage-card-shadow: rgba(17, 22, 34, 0.45);
+  --mainpage-content-bg: #111622;
+  --mainpage-content-border: #fffbd5;
+  --mainpage-content-text: #d2c6b2;
+  --mainpage-lessons-header-bg: #d2c6b2;
+  --mainpage-lessons-panel-bg: #111622;
+  --mainpage-lessons-panel-header-bg: #d2c6b2;
+  --mainpage-lessons-title-color: #442727;
+  --mainpage-lessons-title-font: 'NAURYZREDKEDS', 'Unageo-Light', system-ui, sans-serif;
+  background: var(--mainpage-page-bg);
+  color: var(--mainpage-text);
+}
+
+[data-theme='dark'] .app-site-header {
+  --app-site-header-border: #5b2330;
+  --app-site-header-card-bg: #ffffff;
+  --app-site-header-card-shadow: rgba(91, 35, 48, 0.16);
+  --app-site-header-text: #5b2330;
+  background-color: rgba(247, 247, 247, 0.42);
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+  color: var(--app-site-header-text);
+}
+
+[data-theme='dark'] .app-site-header__link {
+  background: var(--app-site-header-card-bg);
+  border-color: var(--app-site-header-border);
+  color: var(--app-site-header-text);
+}
+
+[data-theme='dark'] .app-site-header {
+  --app-site-header-active-ring: rgba(91, 35, 48, 0.65);
+  --app-site-header-active-glow: rgba(91, 35, 48, 0.38);
+  --app-site-header-active-glow-wide: rgba(126, 184, 232, 0.5);
+}
+
+[data-theme='dark'] .app-site-header__link.is-active {
+  background: #ffffff;
+}
+
+[data-theme='dark'] .mainpage-page > .app-site-header.mainpage-header {
+  background-color: #d2c6b2 !important;
+  border-left-color: var(--mainpage-border);
+  border-bottom-color: rgba(68, 39, 39, 0.35);
+  --app-site-header-border: #442727;
+  --app-site-header-card-bg: #fffbd5;
+  --app-site-header-text: #442727;
+  color: #442727;
+}
+
+[data-theme='dark'] .mainpage-page > .app-site-header.mainpage-header .app-site-header__link {
+  background: #fffbd5;
+  border-color: #442727;
+  color: #442727;
+}
+
+[data-theme='dark'] .mainpage-page > .app-site-header.mainpage-header .app-site-header__link.is-active {
+  background: #111622;
+  color: #fffbd5;
+  border-color: #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-sidebar {
+  background: #442727;
+  border-color: #442727;
+}
+
+[data-theme='dark'] .mainpage-module-card {
+  background: #fffbd5;
+  border-color: #fffbd5;
+  color: #442727;
+}
+
+[data-theme='dark'] .mainpage-module-card .mainpage-module-text {
+  color: #442727;
+}
+
+[data-theme='dark'] .mainpage-module-card .mainpage-module-number {
+  color: #442727;
+  text-shadow:
+    -1px -1px 0 #fffbd5,
+    1px -1px 0 #fffbd5,
+    -1px 1px 0 #fffbd5,
+    1px 1px 0 #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-module-card.is-active {
+  background: #111622;
+  border-color: #fffbd5;
+  box-shadow: 0 0 0 2px #fffbd5;
+  color: #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-module-card.is-active .mainpage-module-text,
+[data-theme='dark'] .mainpage-module-card.is-active .mainpage-module-number {
+  color: #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-module-card.is-active .mainpage-module-number {
+  text-shadow:
+    -1px -1px 0 #442727,
+    1px -1px 0 #442727,
+    -1px 1px 0 #442727,
+    1px 1px 0 #442727;
+}
+
+[data-theme='dark'] .mainpage-theme-toggle {
+  border-color: #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-theme-toggle-thumb {
+  background: #fffbd5;
+}
+
+[data-theme='dark'] .mainpage-lessons-panel {
+  background: var(--mainpage-lessons-panel-bg);
+  border-right-color: var(--mainpage-border);
+  box-shadow: 10px 0 36px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme='dark'] .mainpage-lessons-panel-header {
+  background: var(--mainpage-lessons-panel-header-bg);
+  border-bottom-color: rgba(68, 39, 39, 0.25);
+}
+
+[data-theme='dark'] .mainpage-lessons-panel-body {
+  background: #111622;
+}
+
+[data-theme='dark'] .mainpage-lessons-title {
+  color: #442727;
+  text-shadow: none;
+}
+
+[data-theme='dark'] .mainpage-lesson-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .mainpage-lesson-item:has(.mainpage-lesson-link.is-active) {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: rgba(169, 193, 241, 0.65);
+}
+
+[data-theme='dark'] .mainpage-lesson-pass-dot {
+  background: color-mix(in srgb, #8a9aad 52%, #2a3958 48%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 0 2px rgba(138, 154, 173, 0.18);
+}
+
+[data-theme='dark'] .mainpage-lesson-pass-dot--done {
+  background: #34d399;
+  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.38);
+}
+
+[data-theme='dark'] .mainpage-lesson-section-title {
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .mainpage-lesson-item {
+  background: transparent;
+  border-left-color: transparent;
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .mainpage-lesson-link.is-active {
+  background: transparent;
+}
+
+[data-theme='dark'] .mainpage-panel-note {
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .mainpage-panel-error {
+  color: #ff9db0;
+}
+
+[data-theme='dark'] .mainpage-workspace {
+  background: #111622;
+  border-color: #442727;
+}
+
+[data-theme='dark'] .lesson-workspace-scope {
+  --lesson-bg-app: #111622;
+  --lesson-bg-surface: #111622;
+  --lesson-border-color: rgba(255, 251, 213, 0.22);
+  --lesson-text-primary: #ffffff;
+  --lesson-text-secondary: rgba(255, 255, 255, 0.92);
+  --lesson-text-muted: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html p,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html li,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html h2,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html h2.lesson-welcome-title,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html h2.lesson-welcome-title i,
+[data-theme='dark'] .lesson-workspace-scope .lesson-theory-html h3 {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .lesson-theory-scroll {
+  background: #111622;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .lesson-chrome-toolbar {
+  background: #111622;
+  border-bottom-color: rgba(255, 251, 213, 0.18);
+}
+
+[data-theme='dark'] .lesson-chrome-tab-group {
+  background: #0d121c;
+}
+
+[data-theme='dark'] .lesson-chrome-tab.is-active {
+  background: #111622;
+  color: #fffbd5;
+}
+
+[data-theme='dark'] .lesson-chrome-ai-btn.is-on {
+  border-color: rgba(34, 211, 238, 0.45);
+  background: rgba(34, 211, 238, 0.1);
+  color: #67e8f9;
+}
+
+[data-theme='dark'] .lesson-task-header-icon {
+  background: rgba(34, 211, 238, 0.12);
+  border-color: rgba(34, 211, 238, 0.35);
+  color: #67e8f9;
+}
+
+[data-theme='dark'] .lesson-run-bar-btn--run {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #6ee7b7;
+}
+
+[data-theme='dark'] .lesson-run-bar-btn--check {
+  background: rgba(34, 211, 238, 0.12);
+  border-color: rgba(34, 211, 238, 0.35);
+  color: #67e8f9;
+}
+
+[data-theme='dark'] .tutor-chat-dock:not(.tutor-chat-dock--fullscreen) {
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme='dark'] .tutor-chat-dock {
+  --lesson-bg-app: #1a2238;
+  --lesson-bg-surface: #171e33;
+  --lesson-border-color: rgba(129, 160, 220, 0.26);
+  --lesson-text-primary: #dce8ff;
+  --lesson-text-secondary: rgba(226, 235, 255, 0.88);
+  --lesson-text-muted: rgba(169, 193, 241, 0.7);
+}
+
+[data-theme='dark'] .tutor-chat-send-btn {
+  color: #0f172a;
+}
+
+[data-theme='dark'] .profile-screen {
+  background: #121932 !important;
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook):not(.app-page--achievements) {
+  --app-page-nav-border: #2a3f6d;
+  --app-page-nav-card-bg: #eaf2ff;
+  --app-page-nav-card-shadow: rgba(18, 32, 58, 0.35);
+  background: #121932;
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .app-page-banner-error {
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.25);
+}
+
+[data-theme='dark'] .profile-card {
+  background: rgba(28, 40, 68, 0.72) !important;
+  box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.28) !important;
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .profile-greeting-title,
+[data-theme='dark'] .profile-greeting-subtitle,
+[data-theme='dark'] .profile-progress-title,
+[data-theme='dark'] .profile-progress-num,
+[data-theme='dark'] .profile-progress-label,
+[data-theme='dark'] .profile-circle-percent,
+[data-theme='dark'] .profile-goal-text,
+[data-theme='dark'] .profile-questions-title {
+  color: #f1f7ff !important;
+}
+
+[data-theme='dark'] .profile-questions-subtitle,
+[data-theme='dark'] .profile-user-id-footnote {
+  color: #9eb6e8 !important;
+}
+
+[data-theme='dark'] .profile-progress-lead {
+  color: #9eb6e8 !important;
+}
+
+[data-theme='dark'] .profile-circle-wrap {
+  --profile-progress-ring-color: #7ab8ff;
+}
+
+[data-theme='dark'] .profile-circle-inner {
+  background: rgba(180, 215, 255, 0.18);
+}
+
+[data-theme='dark'] .profile-progress-ring-svg > circle:first-of-type {
+  fill: rgba(90, 105, 130, 0.55);
+}
+
+[data-theme='dark'] .profile-inline-name {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(169, 193, 241, 0.35);
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .profile-question-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(169, 193, 241, 0.35);
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook) .student-profile__pill--white,
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook) .student-profile__pill--input,
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook) .student-profile__chat-form {
+  background: rgba(20, 30, 55, 0.85);
+  color: #e8f0ff;
+  border-color: rgba(169, 193, 241, 0.25);
+}
+
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook) .student-profile__chat-input {
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .app-page:not(.app-page--profile-scrapbook) .student-profile__chat-input::placeholder {
+  color: rgba(200, 216, 255, 0.45);
+}
+
+[data-theme='dark'] .student-profile__donut-track {
+  stroke: rgba(120, 140, 180, 0.45);
+}
+
+[data-theme='dark'] .quote-strip-reveal {
+  background: linear-gradient(180deg, rgba(40, 54, 90, 0.95) 0%, rgba(28, 40, 68, 0.98) 100%);
+  border-color: rgba(169, 193, 241, 0.25);
+}
+
+[data-theme='dark'] .quote-strip-reveal__text {
+  color: #e8f0ff;
+}
+
+[data-theme='dark'] .quote-strip-reveal__cite {
+  color: #9eb6e8;
+}
+
+[data-theme='dark'] .quote-strip-hint {
+  color: #9eb6e8;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook,
+[data-theme='dark'] .app-page--achievements {
+  --sp-brown: #442727;
+  --sp-brown-soft: #d2c6b2;
+  --sp-page-bg: #111622;
+  --sp-sky: #1a2238;
+  --sp-blue-card: #243049;
+  --sp-blue-deep: #7eb8e8;
+  --sp-yellow: #2a2418;
+  --sp-pill-blue: #cfe8fb;
+  --sp-shadow: rgba(0, 0, 0, 0.35);
+  background: #111622 !important;
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile {
+  background: #111622 !important;
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-screen {
+  background: #111622 !important;
+  color: #d2c6b2;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .app-site-header,
+[data-theme='dark'] .app-page--profile-scrapbook .app-site-header.app-site-header--with-back,
+[data-theme='dark'] .app-page--achievements .app-site-header,
+[data-theme='dark'] .app-page--achievements .app-site-header.app-site-header--with-back {
+  background-color: #d2c6b2 !important;
+  border-bottom-color: rgba(68, 39, 39, 0.35);
+  --app-site-header-border: #442727;
+  --app-site-header-card-bg: #fffbd5;
+  --app-site-header-text: #442727;
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .app-site-header__link,
+[data-theme='dark'] .app-page--achievements .app-site-header__link {
+  background: #fffbd5;
+  border-color: #442727;
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .app-site-header__link.is-active,
+[data-theme='dark'] .app-page--achievements .app-site-header__link.is-active {
+  background: #111622;
+  border-color: #fffbd5;
+  color: #fffbd5;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .app-site-header__back-link,
+[data-theme='dark'] .app-page--achievements .app-site-header__back-link {
+  color: #442727;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__hello,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__progress-title,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__lessons-count,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__lessons-caption,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__panel-lead,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-title,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-sub,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-sidebar-title {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__hello-pill {
+  color: #442727;
+  background: #fffbd5;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__progress-card,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__panel--blue,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__panel--yellow {
+  background: var(--sp-sky);
+  border-color: rgba(255, 251, 213, 0.12);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__donut-label {
+  fill: #ffffff;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__id-card-img {
+  opacity: 0.95;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__pill--white,
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__pill--input {
+  background: #ffffff;
+  border-color: rgba(68, 39, 39, 0.18);
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-form {
+  background: #ffffff;
+  border-color: rgba(68, 39, 39, 0.15);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-input {
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-input::placeholder {
+  color: rgba(68, 39, 39, 0.45);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__paper-banner {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(#111622 0%, #0d121c 100%);
+  background-size: auto, 8px 8px, auto;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-body {
+  background: rgba(17, 22, 34, 0.55);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__chat-sidebar {
+  border-color: rgba(255, 251, 213, 0.12);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .quote-strip-reveal {
+  background: linear-gradient(180deg, #1a2238 0%, #111622 100%);
+  border-color: rgba(255, 251, 213, 0.2);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .quote-strip-reveal__text {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .quote-strip-hint {
+  color: #d2c6b2;
+}
+
+/* Достижения — та же палитра, что у профиля */
+[data-theme='dark'] .app-page--achievements .achievements-character-role {
+  --achievements-role-glow-near: rgba(255, 251, 213, 0.55);
+  --achievements-role-glow-mid: rgba(255, 251, 213, 0.35);
+  --achievements-role-glow-far: rgba(17, 22, 34, 0.5);
+  color: #fffbd5 !important;
+  -webkit-text-stroke: 1px #fffbd5;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-character-message {
+  background-color: rgba(26, 34, 56, 0.85);
+  border-color: rgba(255, 251, 213, 0.15);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-character-message p {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-character-message__progress {
+  color: #d2c6b2 !important;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-column-title {
+  color: #ffffff !important;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot {
+  background-color: #fffbd5;
+  border-color: #172032;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot span {
+  color: #442727 !important;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot--completed {
+  background: linear-gradient(180deg, rgba(137, 229, 186, 0.55) 0%, rgba(117, 208, 171, 0.7) 100%);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot--current {
+  background: #d7f8db;
+  border-color: #d5d8ff;
+  box-shadow: 0 0 0 2px #fffbd5;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot--current span {
+  color: #172032 !important;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-level-slot--locked {
+  opacity: 0.45;
+  background-color: #d6d5ff;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-panel {
+  background-color: #ffffff;
+  border-color: rgba(68, 39, 39, 0.15);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-item {
+  background-color: #ffffff;
+  border-color: rgba(68, 39, 39, 0.2);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-item span,
+[data-theme='dark'] .app-page--achievements .achievements-progress-line {
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-item strong {
+  color: #442727;
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-progress-group {
+  background-color: rgba(255, 251, 213, 0.35);
+  border-color: rgba(68, 39, 39, 0.15);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-progress-bar {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(68, 39, 39, 0.2);
+}
+
+[data-theme='dark'] .app-page--achievements .achievements-page-hint {
+  color: #d2c6b2 !important;
+}
