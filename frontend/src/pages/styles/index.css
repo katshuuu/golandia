@@ -1,0 +1,3 @@
+/* Стили экранов приложения (профиль, достижения) */
+@import './profile-page.css';
+@import './achievements-page.css';
