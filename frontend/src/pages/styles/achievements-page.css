@@ -1,64 +1,5 @@
-
-.goal-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  background: rgba(15, 23, 42, 0.38);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.goal-modal-card {
-  width: min(560px, 100%);
-  border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.25);
-  padding: 24px;
-}
-
-.goal-modal-card h2 {
-  margin: 0;
-  color: #5b2330;
-}
-
-.goal-modal-card p {
-  margin: 8px 0 0;
-  color: #7a4c58;
-}
-
-.goal-modal-card form {
-  margin-top: 14px;
-}
-
-.goal-modal-card input {
-  width: 100%;
-  height: 46px;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  padding: 0 14px;
-  outline: none;
-}
-
-.goal-modal-card button {
-  margin-top: 12px;
-  width: 100%;
-  height: 44px;
-  border-radius: 14px;
-  border: 0;
-  background: #5b2330;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.goal-modal-card button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
 .achievements-screen {
-  background-color: #ffffff;
+  background-color: var(--golia-bg);
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
@@ -172,15 +113,15 @@
   --achievements-role-glow-near: rgba(245, 159, 165, 0.7);
   --achievements-role-glow-mid: rgba(245, 194, 202, 0.95);
   --achievements-role-glow-far: rgba(35, 72, 91, 0.18);
-  font-family: 'Dudu', 'Unageo Light', 'Inter', system-ui, sans-serif;
+  font-family: var(--golia-font-display);
   font-size: clamp(60px, 3.2vw + 1.25rem, 72px);
-  color: #5b2330;
+  color: var(--golia-brand);
   margin: -30px 0 20px;
   z-index: 3;
   position: relative;
   font-weight: 700;
   text-align: center;
-  -webkit-text-stroke: 1px #5b2330;
+  -webkit-text-stroke: 1px var(--golia-brand);
   text-shadow:
     0 0 6px var(--achievements-role-glow-near),
     0 0 19px var(--achievements-role-glow-mid),
@@ -190,9 +131,9 @@
 .achievements-character-message {
   margin-top: auto;
   flex-shrink: 0;
-  background-color: rgba(159, 171, 180, 0.1);
-  border-radius: 38px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--golia-neutral-message);
+  border-radius: var(--golia-radius-panel);
+  border: 1px solid var(--golia-border);
   padding: 30px 40px;
   text-align: center;
   width: 100%;
@@ -201,8 +142,9 @@
 
 .achievements-character-message p {
   margin: 0;
-  color: #000000;
+  color: var(--golia-text);
   font-size: 22px;
+  font-family: var(--golia-font-body);
   line-height: 1.4;
 }
 
@@ -229,7 +171,8 @@
 
 .achievements-column-title {
   font-size: clamp(22px, 1.6vw + 0.85rem, 32px);
-  color: #000000;
+  color: var(--golia-text);
+  font-family: var(--golia-font-body);
   text-align: center;
   margin: 0 0 clamp(20px, 2.5vw, 30px);
   font-weight: 400;
@@ -255,12 +198,12 @@
 .achievements-level-slot {
   width: 100%;
   min-height: 72px;
-  background-color: rgba(159, 171, 180, 0.45);
-  border-radius: 53px;
+  background-color: var(--golia-neutral-panel);
+  border-radius: var(--golia-radius-slot);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(91, 35, 48, 0.2);
+  border: 1px solid var(--golia-border);
   font: inherit;
   cursor: default;
   transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
@@ -268,31 +211,31 @@
 }
 
 .achievements-level-slot span {
-  color: #000000;
+  color: var(--golia-text);
   font-size: 18px;
   line-height: 1.2;
   text-align: center;
 }
 
 .achievements-level-slot--completed {
-  background: linear-gradient(180deg, rgba(137, 229, 186, 0.65) 0%, rgba(117, 208, 171, 0.8) 100%);
+  background: var(--golia-success-gradient);
   opacity: 0.95;
 }
 
 .achievements-level-slot--current {
-  background: #d6ffd6;
+  background: var(--golia-success-soft);
   opacity: 1;
-  box-shadow: 0 0 10px 1px rgba(91, 35, 48, 0.22);
+  box-shadow: 0 0 10px 1px var(--golia-shadow-card);
 }
 
 .achievements-level-slot--current span {
-  color: #000000;
+  color: var(--golia-text);
   font-weight: 700;
 }
 
 .achievements-level-slot--locked {
   opacity: 0.4;
-  background-color: rgba(159, 171, 180, 0.45);
+  background-color: var(--golia-neutral-panel);
 }
 
 .achievements-progress-group {
@@ -306,8 +249,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #000000;
+  color: var(--golia-text);
   font-size: 15px;
+  font-family: var(--golia-font-body);
   margin-bottom: 8px;
 }
 
@@ -327,11 +271,11 @@
 
 .achievements-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #8d1b35 0%, #e66186 100%);
+  background: var(--golia-progress-brand);
 }
 
 .achievements-progress-fill--lessons {
-  background: linear-gradient(90deg, #2f8e5a 0%, #71dba2 100%);
+  background: var(--golia-progress-lessons);
 }
 
 .achievements-col-achievements {
@@ -348,9 +292,9 @@
   margin-top: 0;
   flex: 0 1 auto;
   min-height: 0;
-  background-color: #f0faff;
-  border-radius: 38px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--golia-surface-panel);
+  border-radius: var(--golia-radius-panel);
+  border: 1px solid var(--golia-border);
   padding: 38px 40px;
   display: flex;
   flex-direction: column;
@@ -363,13 +307,14 @@
   min-height: 84px;
   background-color: rgba(255, 255, 255, 0.81);
   border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 53px;
+  border-radius: var(--golia-radius-slot);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 16px 24px;
-  color: #000000;
+  color: var(--golia-text);
+  font-family: var(--golia-font-body);
   font-size: clamp(16px, 1.15vw, 18px);
   line-height: 1.35;
 }
@@ -398,7 +343,7 @@
 .achievements-final-check input {
   width: 22px;
   height: 22px;
-  accent-color: #8d1b35;
+  accent-color: var(--golia-brand);
   cursor: pointer;
 }
 
@@ -406,7 +351,8 @@
   margin-top: 12px;
   font-size: 13px;
   line-height: 1.35;
-  color: #5c5c5c;
+  color: var(--golia-text-muted);
+  font-family: var(--golia-font-body);
   text-align: center;
   max-width: 440px;
   padding-inline: 8px;

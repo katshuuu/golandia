@@ -1,11 +1,11 @@
 .app-page {
-  --app-page-nav-border: #5b2330;
-  --app-page-nav-card-bg: #ffffff;
-  --app-page-nav-card-shadow: rgba(91, 35, 48, 0.16);
+  --app-page-nav-border: var(--golia-border-strong);
+  --app-page-nav-card-bg: var(--golia-bg);
+  --app-page-nav-card-shadow: var(--golia-shadow-card);
   min-height: 100vh;
   min-height: 100dvh;
-  color: var(--mainpage-text, #5b2330);
-  background: var(--mainpage-page-bg, #fff);
+  color: var(--mainpage-text, var(--golia-text));
+  background: var(--mainpage-page-bg, var(--golia-bg));
   display: flex;
   flex-direction: column;
 }
@@ -64,7 +64,7 @@
   min-height: var(--app-page-header-control-height, 2.375rem);
   padding: 0.5rem 1rem;
   border: 1px solid var(--app-page-nav-border);
-  border-radius: 999px;
+  border-radius: var(--golia-radius-pill);
   background: var(--app-page-nav-card-bg);
   color: inherit;
   text-decoration: none;
