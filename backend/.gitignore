@@ -1,0 +1,6 @@
+# Локальные секреты (шаблон: .env.example)
+.env
+
+# Артефакты локальной сборки go build -o server
+/server
+*.exe
