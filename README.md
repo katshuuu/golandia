@@ -1,119 +1,410 @@
 # Golandia
 
-Информационная система для изучения Go: React (Vite) + Go REST API + PostgreSQL + песочница для кода.
+**Golandia** — веб-платформа для изучения языка Go: интерактивные уроки, песочница для кода, автоматическая проверка заданий, профиль студента, система уровней героя и чат-репетитор на базе LLM.
 
-## Быстрый запуск
+Проект реализован как **распределённый монолит**: React SPA, Go REST API, PostgreSQL и изолированная среда выполнения Go-кода. Контент курса хранится в JSON и версионируется в Git; персональные данные — в базе данных.
+
+---
+
+## Содержание
+
+- [Возможности](#возможности)
+- [Технологический стек](#технологический-стек)
+- [Архитектура](#архитектура)
+- [Требования](#требования)
+- [Быстрый запуск (Docker)](#быстрый-запуск-docker)
+- [Локальная разработка](#локальная-разработка)
+- [Переменные окружения](#переменные-окружения)
+- [Структура репозитория](#структура-репозитория)
+- [REST API](#rest-api)
+- [Контент курса](#контент-курса)
+- [Иллюстрации в теории уроков](#иллюстрации-в-теории-уроков)
+- [Валидация данных](#валидация-данных)
+- [Тестирование](#тестирование)
+- [Документация курсовой](#документация-курсовой)
+- [Сопровождение](#сопровождение)
+- [История коммитов](#история-коммитов)
+
+---
+
+## Возможности
+
+| Область | Описание |
+|---------|----------|
+| **Курс** | 7 модулей, уроки по мотивам [A Tour of Go](https://go.dev/tour/): теория (HTML), демо-код, практические задания |
+| **Редактор** | Встроенный редактор на главной странице: запуск кода в песочнице и автопроверка результата |
+| **Песочница** | Выполнение Go в Docker-контейнере или локально (`SANDBOX_MODE=local`) |
+| **Автопроверка** | Стратегии: точное совпадение вывода, подстроки, regex, запрещённые конструкции |
+| **Профиль** | Имя, аватар (JPEG data URL), кольцо прогресса по урокам, архив чатов с репетитором |
+| **Достижения** | Уровни героя (от «Новичка» до «Легенды») по числу полностью пройденных модулей |
+| **Чат-репетитор** | `POST /api/chat/tutor` — ответы OpenAI в контексте текущего урока |
+| **Темы оформления** | Светлая и тёмная тема, единая дизайн-система на CSS-переменных |
+
+Маршруты фронтенда:
+
+| URL | Экран |
+|-----|--------|
+| `/` | Главная: модули, урок, теория / задание, AI-помощник |
+| `/profile` | Профиль студента (scrapbook-макет) |
+| `/achievements` | Достижения и уровень героя |
+
+---
+
+## Технологический стек
+
+| Слой | Технологии |
+|------|------------|
+| **Frontend** | React 18, TypeScript, Vite 4, React Router 7, Vitest, Testing Library |
+| **Backend** | Go 1.22, Gin, pgx/v5, godotenv |
+| **БД** | PostgreSQL 16 (профиль, прогресс, аудит) |
+| **Контент** | JSON (`backend/data/lessons/`) |
+| **Песочница** | Docker-образ `go-llm-sandbox` или локальный `go run` |
+| **LLM** | OpenAI API (опционально, для чата) |
+| **Инфраструктура** | Docker Compose |
+
+---
+
+## Архитектура
+
+```mermaid
+flowchart LR
+  subgraph client [Браузер]
+    SPA[React SPA\nlocalhost:5173]
+  end
+  subgraph server [Backend Go]
+    API[Gin REST\n:8080]
+    Course[Загрузчик курса\nJSON]
+    Checker[Стратегии проверки]
+    Sandbox[Песочница Go]
+    Hero[Расчёт уровня героя]
+  end
+  subgraph data [Данные]
+    PG[(PostgreSQL)]
+    Files[module_*.json\ncourse_manifest.json]
+  end
+  LLM[OpenAI API]
+
+  SPA -->|/api/* proxy| API
+  API --> Course
+  API --> Files
+  API --> Checker
+  API --> Sandbox
+  API --> Hero
+  API --> PG
+  API --> LLM
+```
+
+**Паттерны проектирования** (подробнее в [docs/03-design-patterns.md](docs/03-design-patterns.md)):
+
+- **Стратегия** — автопроверка заданий (`internal/checker`)
+- **Фабрика** — выбор режима песочницы Docker / local (`internal/sandbox`)
+- **Repository** — доступ к профилю и прогрессу в PostgreSQL
+
+---
+
+## Требования
+
+**Для Docker (рекомендуется):**
+
+- Docker Engine и Docker Compose v2
+- ~4 ГБ свободной RAM (сборка sandbox-образа)
+
+**Для локальной разработки:**
+
+| Компонент | Версия |
+|-----------|--------|
+| Node.js | 20+ |
+| Go | 1.22+ |
+| PostgreSQL | 16 (или контейнер `postgres` из Compose) |
+| Docker | только если `SANDBOX_MODE=docker` |
+
+---
+
+## Быстрый запуск (Docker)
+
+Из **корня репозитория**:
 
 ```bash
 docker compose up --build
 ```
 
-| Сервис    | URL |
-|-----------|-----|
-| Frontend  | http://localhost:5173 |
-| Backend   | http://localhost:8080/api/health |
-| PostgreSQL| `localhost:5432` (user/db: `golandia`) |
+| Сервис | URL / параметры |
+|--------|-----------------|
+| **Frontend** | http://localhost:5173 |
+| **Backend** | http://localhost:8080/api/health |
+| **PostgreSQL** | `localhost:5432`, user/db/password: `golandia` |
 
-Локально без Docker:
+Сервисы: `postgres`, `backend`, `frontend` (Vite dev), `sandbox` (образ для запуска кода).
+
+Остановка: `Ctrl+C` в терминале или `docker compose down`.
+
+Для чата-репетитора создайте `backend/.env` (см. [`.env.example`](backend/.env.example)) и задайте `OPENAI_API_KEY` — Compose подхватывает переменные из окружения хоста.
+
+---
+
+## Локальная разработка
+
+### 1. База данных
+
+Вариант A — только PostgreSQL в Docker:
 
 ```bash
-# Бэкенд (нужен PostgreSQL и переменные из backend/.env.example)
-cd backend && go run ./cmd/server
-
-# Фронтенд
-cd frontend && npm install && npm run dev
+docker compose up -d postgres
 ```
+
+Вариант B — локальный PostgreSQL с БД `golandia` и пользователем `golandia`.
+
+Схема применяется автоматически при первом старте контейнера из [`db/migrations/001_init.sql`](db/migrations/001_init.sql).
+
+### 2. Backend
+
+```bash
+cp backend/.env.example backend/.env
+# Отредактируйте backend/.env: DATABASE_URL, SANDBOX_MODE=local для работы без Docker-песочницы
+
+cd backend
+go run ./cmd/server
+```
+
+Ожидаемый вывод: `listening on :8080`.
+
+Проверка: http://localhost:8080/api/health → `{"ok":true}`.
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Откройте http://localhost:5173. Запросы к `/api/*` проксируются на `http://127.0.0.1:8080` ([`frontend/vite.config.ts`](frontend/vite.config.ts)).
+
+### Перезагрузка после изменений кода
+
+| Что изменили | Действие |
+|--------------|----------|
+| `frontend/src/**`, CSS | Обычно достаточно обновить страницу (F5 / Cmd+Shift+R); при сбое — перезапуск `npm run dev` |
+| `backend/data/lessons/**` | Перезапуск backend (`Ctrl+C` → `go run ./cmd/server`) |
+| Go-код в `backend/**` | Перезапуск backend |
+| Изменения в Docker/backend-образе | `docker compose up --build backend` |
+
+---
+
+## Переменные окружения
+
+Файл-образец: [`backend/.env.example`](backend/.env.example).
+
+| Переменная | Назначение | По умолчанию |
+|------------|------------|--------------|
+| `OPENAI_API_KEY` | Ключ OpenAI для чата-репетитора | — (чат недоступен без ключа) |
+| `SANDBOX_MODE` | `local` или `docker` | `docker` в Compose |
+| `SANDBOX_IMAGE` | Образ для docker-песочницы | `go-llm-sandbox:latest` |
+| `PORT` | HTTP-порт API | `:8080` |
+| `COURSE_DATA_DIR` | Каталог с `course_manifest.json` | `backend/data/lessons` |
+| `DATABASE_URL` | PostgreSQL | `postgres://golandia:golandia@localhost:5432/golandia?sslmode=disable` |
+
+При недоступной БД маршруты `/api/users/:id/*` не регистрируются; курс, песочница и проверка заданий работают.
+
+---
 
 ## Структура репозитория
 
 ```
 kursovaya/
-├── backend/                 # Go API
-│   ├── cmd/server/          # точка входа, маршруты
+├── backend/
+│   ├── cmd/server/           # Точка входа, маршруты Gin
 │   ├── internal/
-│   │   ├── course/        # загрузка манифеста и уроков (JSON)
-│   │   ├── checker/       # стратегии автопроверки заданий
-│   │   ├── handlers/      # HTTP-обработчики
-│   │   ├── validation/    # валидация полей сущностей
-│   │   ├── hero/          # расчёт уровня героя
-│   │   ├── sandbox/       # запуск Go в контейнере
-│   │   └── repository/    # профиль и прогресс в PostgreSQL
-│   └── data/lessons/      # контент курса (см. ниже)
-├── frontend/              # React SPA
-│   ├── public/theory_html/  # картинки для HTML теории уроков
-│   └── src/               # страницы, формы, хуки, тесты Vitest
-├── db/migrations/         # схема PostgreSQL
-├── docs/                  # материалы курсовой
-└── docker-compose.yml     # postgres + backend + frontend + sandbox
+│   │   ├── course/           # Загрузка манифеста и модулей
+│   │   ├── checker/          # Стратегии автопроверки
+│   │   ├── handlers/         # HTTP-обработчики
+│   │   ├── hero/             # Уровень героя по прогрессу
+│   │   ├── sandbox/          # Запуск Go-кода
+│   │   ├── validation/       # Валидация полей API
+│   │   ├── repository/       # PostgreSQL: users, progress
+│   │   ├── middleware/       # Логирование latency
+│   │   └── llm/              # Клиент OpenAI
+│   ├── data/lessons/         # Контент курса (JSON)
+│   └── docker/               # Dockerfile backend и sandbox
+├── frontend/
+│   ├── public/theory_html/   # Статические иллюстрации для HTML теории
+│   ├── src/
+│   │   ├── pages/            # MainPage, ProfilePage, AchievementsPage
+│   │   ├── components/       # UI: урок, чат, шапка, профиль
+│   │   ├── forms/            # Формы с валидацией
+│   │   ├── hooks/            # Логика страниц
+│   │   ├── lib/              # API-клиенты, прогресс, валидация
+│   │   └── theme/            # Токены, тёмная тема, scrapbook
+│   └── package.json
+├── db/
+│   ├── migrations/           # Схема PostgreSQL
+│   └── backup.sh             # Резервное копирование
+├── docs/                     # Материалы курсовой работы
+├── scripts/
+│   └── rebuild-git-history.sh
+└── docker-compose.yml
 ```
 
-Папка **`golandia/`** в корне (если есть локально) — старая копия проекта, **не входит в сдачу** (см. `.gitignore`).
+> Папка `golandia/` в корне (если присутствует локально) — устаревшая копия, **не входит в репозиторий** (см. `.gitignore`).
 
-## Редактирование уроков (JSON)
+---
 
-Контент курса лежит в `backend/data/lessons/`:
+## REST API
+
+Базовый URL: `http://localhost:8080`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/api/health` | Проверка работоспособности |
+| `GET` | `/api/course` | Манифест курса (модули, уроки) |
+| `GET` | `/api/lessons/:id` | Полный урок по id |
+| `POST` | `/api/sandbox/run` | Запуск кода в песочнице |
+| `POST` | `/api/lessons/check` | Автопроверка задания |
+| `POST` | `/api/chat/tutor` | Сообщение чат-репетитору |
+| `POST` | `/api/hero-level/compute` | Расчёт уровня героя |
+| `GET/PUT` | `/api/users/:id/profile` | Профиль (имя, аватар; поле `goal` в API сохраняется) |
+| `GET/PUT` | `/api/users/:id/progress` | Прогресс по урокам |
+
+Ошибки валидации: HTTP 400, тело `{ "error": "…", "fields": [{ "field", "message" }] }`.
+
+---
+
+## Контент курса
+
+Каталог: [`backend/data/lessons/`](backend/data/lessons/).
 
 | Файл | Назначение |
 |------|------------|
-| `course_manifest.json` | оглавление: модули, список уроков, итоговый проект |
-| `module_01.json` … `module_07.json` | полные уроки: теория, демо-код, задание |
-| `theory_html/*.html` | опционально: HTML теории по id урока (перекрывает поле в JSON) |
+| `course_manifest.json` | Оглавление: модули, список id уроков, итоговый проект |
+| `module_01.json` … `module_07.json` | Уроки: теория, демо-код, задание, проверка |
+| `theory_html/<lesson-id>.html` | Опционально: HTML теории, перекрывает поле `theory_html` в JSON |
 
-Пример урока в `module_01.json`:
+Пример фрагмента урока:
 
 ```json
 {
-  "lessons": [
-    {
-      "id": "tour-001",
-      "title": "Урок 1: Добро пожаловать!",
-      "theory_html": "<p>Текст теории…</p><img src=\"/theory_html/hello.png\" alt=\"\">",
-      "task": {
-        "description": "Описание задания",
-        "starter_code": "package main\n\nfunc main() {\n}",
-        "check": {
-          "type": "contains",
-          "contains": ["ожидаемая подстрока в выводе"]
-        }
-      },
-      "module_id": "m1",
-      "order": 1
+  "id": "tour-001",
+  "title": "Урок 1: Добро пожаловать!",
+  "theory_html": "<p>Текст теории…</p><img class='lesson-welcome-gif' src='/theory_html/hello.gif' alt='hello'>",
+  "demo_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"demo\")\n}\n",
+  "task": {
+    "description": "Описание задания",
+    "starter_code": "package main\n\nfunc main() {\n}",
+    "check": {
+      "type": "contains",
+      "contains": ["ожидаемая подстрока в stdout"]
     }
-  ]
+  }
 }
 ```
 
-Типы проверки (`check.type`): `output`, `contains`, `regex`, `forbidden`.
+**Типы проверки** (`task.check.type`):
 
-**Картинки в теории:** файлы — в `frontend/public/theory_html/`, в HTML — путь `/theory_html/имя.png` (раздаёт Vite/nginx).
+| Тип | Описание |
+|-----|----------|
+| `output` | Точное совпадение stdout |
+| `contains` | Все подстроки из `contains` присутствуют в выводе |
+| `regex` | Вывод соответствует регулярному выражению |
+| `forbidden` | В коде нет запрещённых фрагментов |
 
-После правок JSON перезапустите backend (`docker compose restart backend`).
+После правок JSON **перезапустите backend**.
 
-## Валидация профиля
+---
 
-На фронтенде и бэкенде согласованы ограничения:
+## Иллюстрации в теории уроков
 
-| Поле | Ограничение | Сообщение пользователю |
-|------|-------------|------------------------|
-| Имя | 1–48 символов, буквы/цифры/`. _ -` | под полем имени, `role="alert"` |
-| Цель | ≤ 500 символов | под полем цели |
-| Аватар | только `image/*`, ≤ 2 МБ | при выборе файла; не-изображения отклоняются с текстом |
+Два способа подключения медиа в `theory_html`:
 
-Формы: `maxLength` на input/textarea, проверка на `blur` и при сохранении на сервер. API при ошибке возвращает `{ "error": "…", "fields": [{ "field", "message" }] }`.
+1. **Статика из `public/`** — файл в `frontend/public/theory_html/`, в HTML путь `/theory_html/имя.png` (раздаёт Vite в dev и попадает в `dist` при сборке).
 
-## Тесты
+2. **Сборка через Vite** — ассет в `frontend/src/assets/images/`, путь в JSON вида `/theory_html/hello.gif`; при рендере [`resolveTheoryHtmlAssets`](frontend/src/lib/theoryHtmlAssets.ts) подменяет URL на bundled-версию (удобно для GIF и оптимизации).
+
+Добавление нового bundled-ассета: импорт в `theoryHtmlAssets.ts` и запись в `THEORY_HTML_ASSET_URLS`.
+
+---
+
+## Валидация данных
+
+Согласованные правила на фронтенде ([`frontend/src/lib/validation.ts`](frontend/src/lib/validation.ts)) и бэкенде ([`backend/internal/validation/`](backend/internal/validation/)).
+
+| Поле | Ограничение | Где отображается ошибка |
+|------|-------------|-------------------------|
+| **Имя** (`display_name`) | 1–48 символов; буквы, цифры, пробел, `._-` | Под полем имени в профиле |
+| **Аватар** | Только `image/*`, ≤ 2 МБ; сохранение как JPEG data URL | При выборе файла |
+| **Цель** (`goal`) | ≤ 500 символов | Только API (поле в UI профиля не выводится) |
+
+Формы используют `maxLength`, проверку на `blur` и разбор ответа API с `fields[]`.
+
+---
+
+## Тестирование
 
 ```bash
-cd backend && go test ./...    # unit + HTTP (checker, course, handlers, hero, validation, middleware)
-cd frontend && npm test        # Vitest: validation, progressMap, формы
+# Backend — unit- и HTTP-тесты
+cd backend && go test ./...
+
+# Frontend — Vitest
+cd frontend && npm test
+
+# Production-сборка фронтенда
+cd frontend && npm run build
 ```
 
-В бэкенде более 20 тест-кейсов в пакетах `internal/checker`, `course`, `handlers`, `hero`, `validation`, `middleware`.
+| Пакет / область | Что покрыто |
+|-----------------|-------------|
+| `internal/checker` | Стратегии автопроверки |
+| `internal/course` | Загрузка манифеста |
+| `internal/handlers` | HTTP course, hero, check, user validation |
+| `internal/hero` | Расчёт уровня |
+| `internal/validation` | Правила полей |
+| `frontend/src/lib` | validation, progressMap, profileLessonOrder |
+| `frontend/src/forms` | ProfileDisplayNameForm |
+
+Примеры вывода тестов для отчёта: [`docs/screenshots/`](docs/screenshots/).
+
+---
 
 ## Документация курсовой
 
-См. [docs/KURSOVAYA.md](docs/KURSOVAYA.md) — паттерны, БД, тестирование, руководство пользователя.
+Полный комплект материалов — в каталоге [`docs/`](docs/):
+
+| Документ | Тема |
+|----------|------|
+| [KURSOVAYA.md](docs/KURSOVAYA.md) | Оглавление курсовой |
+| [03-design-patterns.md](docs/03-design-patterns.md) | Паттерны, распределённый монолит |
+| [04-database.md](docs/04-database.md) | PostgreSQL, запросы, аудит |
+| [05-frontend-testing.md](docs/05-frontend-testing.md) | Тестирование React |
+| [06-backend-testing.md](docs/06-backend-testing.md) | Тестирование Go |
+| [07-manual.md](docs/07-manual.md) | Руководство пользователя |
+| [08-ui-design.md](docs/08-ui-design.md) | Дизайн-система и токены |
+| [CONCLUSION.md](docs/CONCLUSION.md) | Заключение |
+
+---
+
+## Сопровождение
+
+| Задача | Команда / действие |
+|--------|-------------------|
+| Резервная копия БД | `./db/backup.sh` |
+| Обновление уроков | Правка `backend/data/lessons/*.json` → перезапуск backend |
+| Ключ OpenAI | `OPENAI_API_KEY` в `backend/.env` |
+| Логи backend | stdout процесса `go run` или `docker compose logs backend` |
+| Пересборка sandbox | `docker compose build sandbox` |
+
+---
 
 ## История коммитов
 
-В ветке `main` — **35+ тематических коммитов** (backend по слоям, frontend по экранам, docs, docker). Восстановление: `scripts/rebuild-git-history.sh`.
+В ветке `main` — **тематическая история** (backend по слоям, frontend по экранам, docs, docker). Для пересборки линейной истории из текущего состояния:
+
+```bash
+./scripts/rebuild-git-history.sh
+```
+
+> Скрипт выполняет `git reset` и создаёт ~35 коммитов заново. Используйте только на копии репозитория или когда история может быть переписана.
+
+---
+
+## Лицензия и авторство
+
+Учебный проект (курсовая работа). Исходный код и документация предназначены для демонстрации архитектуры веб-ИС для обучения программированию на Go.
