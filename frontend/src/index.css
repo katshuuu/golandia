@@ -104,12 +104,8 @@ body,
 }
 
 body {
-  font-family: 'Unageo-Light', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #fff;
-  color: #5b2330;
+  font-family: var(--golia-font-body);
+  background: var(--golia-bg);
+  color: var(--golia-text);
   transition: background-color 0.35s ease, color 0.35s ease;
-}
-
-:root {
-  color-scheme: light;
 }
