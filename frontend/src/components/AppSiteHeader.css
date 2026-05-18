@@ -1,0 +1,173 @@
+.app-site-header {
+  --app-site-header-border: #5b2330;
+  --app-site-header-bg: rgba(247, 247, 247, 0.42);
+  --app-site-header-card-bg: #ffffff;
+  --app-site-header-card-shadow: rgba(91, 35, 48, 0.16);
+  --app-site-header-text: #5b2330;
+  --app-site-header-active-glow: rgba(91, 35, 48, 0.32);
+  --app-site-header-active-glow-wide: rgba(108, 46, 46, 0.42);
+
+  position: relative;
+  z-index: 30;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 106px;
+  display: flex;
+  align-items: center;
+  padding: 0 43px;
+  background-color: rgba(247, 247, 247, 0.42);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  color: var(--app-site-header-text);
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+}
+
+.app-site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+}
+
+.app-site-header__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.app-site-header--with-back {
+  height: auto;
+  min-height: 106px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.app-site-header--with-back .app-site-header__inner {
+  align-items: center;
+}
+
+.app-site-header--with-back .app-site-header__nav {
+  align-self: center;
+}
+
+.app-site-header__back-link {
+  align-self: center;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: inherit;
+  text-decoration: none;
+  opacity: 72%;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.app-site-header__back-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.app-site-header__logo-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.app-site-header .brand-logo {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.app-site-header__nav {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+}
+
+.app-site-header__link {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--app-site-header-border);
+  border-radius: 999px;
+  background: var(--app-site-header-card-bg);
+  color: inherit;
+  text-decoration: none;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, color 0.35s ease, background-color 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.app-site-header__link:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--app-site-header-card-shadow);
+}
+
+.app-site-header__link.is-active {
+  background: #f8f8e9;
+  box-shadow:
+    0 0 0 1px var(--app-site-header-active-glow),
+    0 0 20px 2px var(--app-site-header-active-glow-wide),
+    0 0 36px 10px var(--app-site-header-active-glow-wide);
+}
+
+.app-site-header__link.is-active:active {
+  transform: translateY(0);
+  box-shadow:
+    0 0 0 3px var(--app-site-header-active-ring),
+    0 0 0 10px var(--app-site-header-active-glow),
+    0 0 28px 12px var(--app-site-header-active-glow-wide),
+    0 0 48px 20px var(--app-site-header-active-glow-wide);
+}
+
+/* Главная: шапка во 2-й колонке сетки */
+.mainpage-page > .app-site-header.mainpage-header {
+  grid-column: 2;
+  grid-row: 1;
+  border-left: 1px solid var(--mainpage-border, #5b2330);
+}
+
+/* Профиль / достижения — тот же фон, что на главной */
+.app-page > .app-site-header {
+  background-color: rgba(247, 247, 247, 0.42);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 960px) {
+  .app-site-header,
+  .mainpage-page > .app-site-header.mainpage-header {
+    grid-column: auto;
+    grid-row: auto;
+    height: auto;
+    min-height: 82px;
+    border-left: 0;
+    padding: 16px 20px;
+  }
+
+  .app-site-header--with-back {
+    min-height: 88px;
+  }
+
+  .app-site-header__inner {
+    justify-content: flex-start;
+  }
+}
