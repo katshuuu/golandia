@@ -1,5 +1,6 @@
 import { BookOpen, CheckCircle2, ChevronRight, Code2, MessageSquare } from 'lucide-react'
 import type { BackendLesson } from '../../lib/courseApi'
+import { resolveTheoryHtmlAssets } from '../../lib/theoryHtmlAssets'
 import { LessonTheoryDemoCode } from '../lesson/LessonTheoryDemoCode'
 import { LessonSandboxForm } from '../../forms/LessonSandboxForm'
 
@@ -82,7 +83,9 @@ export function MainPageLessonWorkspace({
                 <div className="lesson-theory-scroll">
                   <div
                     className="lesson-theory-html"
-                    dangerouslySetInnerHTML={{ __html: selectedLesson.theory_html }}
+                    dangerouslySetInnerHTML={{
+                      __html: resolveTheoryHtmlAssets(selectedLesson.theory_html),
+                    }}
                   />
                   <LessonTheoryDemoCode code={selectedLesson.demo_code ?? ''} lessonId={selectedLesson.id} />
                   {!selectedLesson.theory_html?.trim() && !selectedLesson.demo_code?.trim() ? (
