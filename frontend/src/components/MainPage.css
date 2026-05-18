@@ -1,19 +1,19 @@
 .mainpage-page {
   --mainpage-sidebar-width: 260px;
-  --mainpage-border: #5b2330;
-  --mainpage-page-bg: #ffffff;
-  --mainpage-header-bg: #f6f6f6;
-  --mainpage-sidebar-bg: #e0f3fc;
-  --mainpage-text: #5b2330;
-  --mainpage-card-bg: #ffffff;
-  --mainpage-card-shadow: rgba(91, 35, 48, 0.16);
-  --mainpage-content-bg: rgba(214, 243, 255, 0.2);
-  --mainpage-content-border: rgba(91, 35, 48, 0.3);
-  --mainpage-content-text: rgba(91, 35, 48, 0.9);
-  --mainpage-lessons-header-bg: #f6f2cf;
-  --mainpage-lessons-panel-bg: #f6f6f6;
-  --mainpage-lessons-panel-header-bg: linear-gradient(180deg, #f0f7ff 0%, #ffffff 55%);
-  --mainpage-lessons-title-font: 'NAURYZREDKEDS', 'Unageo-Light', system-ui, sans-serif;
+  --mainpage-border: var(--golia-border-strong);
+  --mainpage-page-bg: var(--golia-bg);
+  --mainpage-header-bg: var(--golia-bg-muted);
+  --mainpage-sidebar-bg: var(--golia-sidebar-sky);
+  --mainpage-text: var(--golia-text);
+  --mainpage-card-bg: var(--golia-bg);
+  --mainpage-card-shadow: var(--golia-shadow-card);
+  --mainpage-content-bg: var(--golia-content-tint);
+  --mainpage-content-border: var(--golia-border);
+  --mainpage-content-text: rgba(var(--golia-brand-rgb), 0.9);
+  --mainpage-lessons-header-bg: var(--golia-surface-lessons-header);
+  --mainpage-lessons-panel-bg: var(--golia-bg-muted);
+  --mainpage-lessons-panel-header-bg: linear-gradient(180deg, var(--golia-surface-panel) 0%, var(--golia-bg) 55%);
+  --mainpage-lessons-title-font: var(--golia-font-module);
   --mainpage-lessons-title-size: clamp(1.05rem, 2.1vw, 1.35rem);
   /* Кнопки номеров модулей в сайдбаре (.mainpage-module-card) */
   --mainpage-module-card-min-height: 100px;
@@ -27,7 +27,7 @@
   --mainpage-lesson-pass-dot-margin-top: 0.65rem;
   display: grid;
   grid-template-columns: var(--mainpage-sidebar-width) 1fr;
-  grid-template-rows: 106px minmax(0, 1fr);
+  grid-template-rows: var(--golia-header-height) minmax(0, 1fr);
   height: 100vh;
   max-height: 100vh;
   min-height: 0;
@@ -390,11 +390,11 @@
 
 /* ─── Урок: теория / практика / песочница / чат — по макету golandia/LessonPage ─── */
 .lesson-workspace-scope {
-  --lesson-bg-app: #f6f6f6;
-  --lesson-bg-surface: #ffffff;
-  --lesson-border-color: rgba(91, 35, 48, 0.12);
-  --lesson-text-primary: #5b2330;
-  --lesson-text-secondary: #6b3f4f;
+  --lesson-bg-app: var(--golia-bg-muted);
+  --lesson-bg-surface: var(--golia-bg);
+  --lesson-border-color: var(--golia-border-subtle);
+  --lesson-text-primary: var(--golia-text);
+  --lesson-text-secondary: var(--golia-brand-soft);
   --lesson-text-muted: #856e75;
   /* Блок прокрутки теории (.lesson-theory-scroll): отступы и ширина колонки текста */
   --lesson-theory-scroll-padding: 2rem 0.5rem;
@@ -610,6 +610,15 @@
 
 .lesson-theory-html p {
   margin: 0.52rem 0;
+}
+
+/* Приветственная GIF в tour-001: ширина через max-width, не растягивать на всю колонку */
+.lesson-theory-html img.lesson-welcome-gif {
+  display: block;
+  width: 100%;
+  max-width: min(52rem, 68%);
+  height: auto;
+  margin: 1rem auto;
 }
 
 .lesson-theory-html h2:not(.lesson-welcome-title),
