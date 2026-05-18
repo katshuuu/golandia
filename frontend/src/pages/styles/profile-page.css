@@ -444,6 +444,21 @@
   display: block;
 }
 
+/* Обводки по внешнему (r=59) и внутреннему (r=45) краю кольца при stroke-width: 14 */
+.student-profile__donut-outline {
+  stroke: rgba(var(--golia-brand-rgb), 0.32);
+  stroke-width: 1.25;
+  pointer-events: none;
+}
+
+.student-profile__donut-outline--outer {
+  stroke: rgba(var(--golia-brand-rgb), 0.38);
+}
+
+.student-profile__donut-outline--inner {
+  stroke: rgba(var(--golia-brand-rgb), 0.28);
+}
+
 .student-profile__donut-track {
   stroke: #ffffff;
   stroke-width: 14;

@@ -33,6 +33,22 @@ export function ProfileProgressSection({
               totalCount ? `Пройдено ${progressPercent} процентов уроков` : 'Прогресс по урокам загружается'
             }
           >
+            <circle
+              className="student-profile__donut-outline student-profile__donut-outline--outer"
+              cx="60"
+              cy="60"
+              r="59"
+              fill="none"
+              aria-hidden
+            />
+            <circle
+              className="student-profile__donut-outline student-profile__donut-outline--inner"
+              cx="60"
+              cy="60"
+              r="45"
+              fill="none"
+              aria-hidden
+            />
             <circle className="student-profile__donut-track" cx="60" cy="60" r="52" fill="none" />
             <circle
               className="student-profile__donut-fill"

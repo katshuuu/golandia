@@ -363,6 +363,14 @@
   stroke: rgba(120, 140, 180, 0.45);
 }
 
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__donut-outline {
+  stroke: rgba(255, 251, 213, 0.35);
+}
+
+[data-theme='dark'] .app-page--profile-scrapbook .student-profile__donut-outline--outer {
+  stroke: rgba(255, 251, 213, 0.45);
+}
+
 [data-theme='dark'] .quote-strip-reveal {
   background: linear-gradient(180deg, rgba(40, 54, 90, 0.95) 0%, rgba(28, 40, 68, 0.98) 100%);
   border-color: rgba(169, 193, 241, 0.25);
@@ -533,11 +541,6 @@
 
 [data-theme='dark'] .app-page--achievements .achievements-character-message p {
   color: #ffffff !important;
-}
-
-[data-theme='dark'] .app-page--achievements .achievements-character-message__progress {
-  color: #d2c6b2 !important;
-  opacity: 0.9;
 }
 
 [data-theme='dark'] .app-page--achievements .achievements-column-title {

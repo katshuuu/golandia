@@ -615,7 +615,7 @@
 /* Приветственная GIF в tour-001: ширина через max-width, не растягивать на всю колонку */
 .lesson-theory-html img.lesson-welcome-gif {
   display: block;
-  width: 100%;
+  width: 50%;
   max-width: min(52rem, 68%);
   height: auto;
   margin: 1rem auto;

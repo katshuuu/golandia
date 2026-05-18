@@ -161,22 +161,12 @@ export function AchievementsPage() {
 
   const heroLevel = hero?.level ?? 0
   const heroPortrait = useMemo(() => heroPortraitForLevel(heroLevel), [heroLevel])
-  const { role: roleTitle, next: nextTitle } = hero ? heroDisplayTitles(hero.level) : { role: '…', next: '' }
+  const { role: roleTitle } = hero ? heroDisplayTitles(hero.level) : { role: '…', next: '' }
 
   const motivationText = useMemo(
     () => (hero ? levelMotivationText(hero.level) : ''),
     [hero],
   )
-
-  const progressLine = useMemo(() => {
-    if (!hero) return 'Загружаем твой прогресс…'
-    if (!nextTitle) {
-      return hero.boss_golang_defeated
-        ? 'Все модули и финальное задание закрыты.'
-        : `Текущий ранг: «${roleTitle}». Продолжай проходить модули по порядку.`
-    }
-    return `До уровня «${nextTitle}» — прогресс текущего шага: ${hero.progress_to_next_pct}%`
-  }, [hero, nextTitle, roleTitle])
 
   return (
     <div className="app-page app-page--full app-page--achievements">
@@ -193,12 +183,11 @@ export function AchievementsPage() {
                 <img src={shadowImage} alt="" className="achievements-character-shadow" />
               </div>
               <h1 className="achievements-character-role">{roleTitle}</h1>
-              <div className="achievements-character-message">
-                {motivationText ? (
+              {motivationText ? (
+                <div className="achievements-character-message">
                   <p className="achievements-character-message__motivation">{motivationText}</p>
-                ) : null}
-                <p className="achievements-character-message__progress">{progressLine}</p>
-              </div>
+                </div>
+              ) : null}
             </div>
 
             <div className="achievements-col-level">
