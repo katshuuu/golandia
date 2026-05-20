@@ -29,6 +29,12 @@
   --golia-stagger-step: 0.12s;
 }
 
+.app-page--profile-scrapbook .student-profile__max.golia-stagger-children > .student-profile__hero,
+.app-page--profile-scrapbook .student-profile__hero.golia-stagger-children > .student-profile__banner-wrap {
+  animation-name: golia-fade-opacity;
+  transform: none;
+}
+
 .student-profile {
   flex: 1;
   min-height: 0;

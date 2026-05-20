@@ -2,6 +2,7 @@ import './QuoteTearStrip.css'
 
 import gsap from 'gsap'
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { createPortal } from 'react-dom'
 import {
   createTearEngine,
   drawStrip,
@@ -87,7 +88,9 @@ export function QuoteTearStrip({ getQuote, className }: QuoteTearStripProps) {
     if (hint) hint.style.opacity = '0'
 
     const rect = deformCvs.getBoundingClientRect()
-    spawnParticles(engine, rect)
+    const particleCvs = particleCanvasRef.current
+    const canvasRect = particleCvs?.getBoundingClientRect()
+    spawnParticles(engine, rect, canvasRect)
 
     const prx = { scroll: engine.scroll, curl: engine.curlAmt }
     gsap
@@ -248,44 +251,49 @@ export function QuoteTearStrip({ getQuote, className }: QuoteTearStripProps) {
     .join(' ')
 
   return (
-    <div className={rootClass} ref={rootRef}>
-      <div
-        className={`quote-strip-reveal${revealVisible ? ' quote-strip-reveal--visible' : ''}`}
-        role="status"
-        aria-live="polite"
-      >
-        <blockquote className="quote-strip-reveal__text">{revealedQuote || ' '}</blockquote>
-      </div>
+    <>
+      <div className={rootClass} ref={rootRef}>
+        <div
+          className={`quote-strip-reveal${revealVisible ? ' quote-strip-reveal--visible' : ''}`}
+          role="status"
+          aria-live="polite"
+        >
+          <blockquote className="quote-strip-reveal__text">{revealedQuote || ' '}</blockquote>
+        </div>
 
-      <canvas className="quote-strip-particle-canvas" ref={particleCanvasRef} aria-hidden />
-
-      <div className="quote-strip-outer" ref={stripOuterRef}>
-        <canvas
-          ref={deformCanvasRef}
-          className="quote-strip-canvas"
-          tabIndex={0}
-          role="button"
-          aria-label="Оторвать ленту: потяните влево или нажмите"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onClick={onCanvasClick}
-          onKeyDown={(ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') {
-              ev.preventDefault()
-              if (engineRef.current.state === 'idle') {
-                engineRef.current.hideStripChrome = true
-                triggerPeel()
+        <div className="quote-strip-outer" ref={stripOuterRef}>
+          <canvas
+            ref={deformCanvasRef}
+            className="quote-strip-canvas"
+            tabIndex={0}
+            role="button"
+            aria-label="Оторвать ленту: потяните влево или нажмите"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            onClick={onCanvasClick}
+            onKeyDown={(ev) => {
+              if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault()
+                if (engineRef.current.state === 'idle') {
+                  engineRef.current.hideStripChrome = true
+                  triggerPeel()
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
+        </div>
+
+        <p className="quote-strip-hint" ref={hintRef}>
+          нажми на стрелочку
+        </p>
       </div>
 
-      <p className="quote-strip-hint" ref={hintRef}>
-        нажми на стрелочку
-      </p>
-    </div>
+      {createPortal(
+        <canvas className="quote-strip-particle-canvas" ref={particleCanvasRef} aria-hidden />,
+        document.body,
+      )}
+    </>
   )
 }

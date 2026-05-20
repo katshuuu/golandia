@@ -500,9 +500,11 @@ export function drawStub(ctx: CanvasRenderingContext2D, engine: TearEngine, prog
   ctx.restore()
 }
 
-export function spawnParticles(engine: TearEngine, deformRect: DOMRect) {
-  const spawnY = deformRect.bottom
-  const spawnX0 = deformRect.left
+export function spawnParticles(engine: TearEngine, deformRect: DOMRect, canvasRect?: DOMRect) {
+  const offsetX = canvasRect?.left ?? 0
+  const offsetY = canvasRect?.top ?? 0
+  const spawnY = deformRect.bottom - offsetY
+  const spawnX0 = deformRect.left - offsetX
   const spawnW = deformRect.width
   const H = deformRect.height
 
