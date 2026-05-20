@@ -17,6 +17,18 @@
   color: var(--sp-brown);
 }
 
+.app-page--profile-scrapbook .student-profile__max {
+  --golia-stagger-step: 0.11s;
+}
+
+.app-page--profile-scrapbook .student-profile__hero {
+  --golia-stagger-step: 0.1s;
+}
+
+.app-page--profile-scrapbook .student-profile__top {
+  --golia-stagger-step: 0.12s;
+}
+
 .student-profile {
   flex: 1;
   min-height: 0;

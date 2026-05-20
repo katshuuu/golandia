@@ -580,6 +580,16 @@
   flex-direction: column;
 }
 
+.lesson-chrome--enter {
+  animation: golia-fade-rise 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-chrome--enter {
+    animation: none !important;
+  }
+}
+
 .lesson-theory-scroll {
   flex: 1;
   overflow-y: auto;
@@ -588,6 +598,61 @@
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Плавное появление теории: контейнер + каскад абзацев и блоков HTML */
+.lesson-theory-scroll--enter {
+  --theory-enter-duration: 0.64s;
+  --theory-stagger-base: 0.1s;
+  --theory-stagger-step: 0.07s;
+
+  animation: golia-fade-rise 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *,
+.lesson-theory-scroll--enter .lesson-theory-demo,
+.lesson-theory-scroll--enter .lesson-theory-placeholder {
+  animation: golia-fade-rise var(--theory-enter-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(1) {
+  animation-delay: calc(var(--theory-stagger-base) + 0 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(2) {
+  animation-delay: calc(var(--theory-stagger-base) + 1 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(3) {
+  animation-delay: calc(var(--theory-stagger-base) + 2 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(4) {
+  animation-delay: calc(var(--theory-stagger-base) + 3 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(5) {
+  animation-delay: calc(var(--theory-stagger-base) + 4 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(6) {
+  animation-delay: calc(var(--theory-stagger-base) + 5 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(7) {
+  animation-delay: calc(var(--theory-stagger-base) + 6 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-html > *:nth-child(8) {
+  animation-delay: calc(var(--theory-stagger-base) + 7 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-demo {
+  animation-delay: calc(var(--theory-stagger-base) + 8 * var(--theory-stagger-step));
+}
+
+.lesson-theory-scroll--enter .lesson-theory-placeholder {
+  animation-delay: var(--theory-stagger-base);
 }
 
 .lesson-theory-placeholder {

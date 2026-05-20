@@ -42,7 +42,7 @@ export function MainPageLessonWorkspace({
       <section className="mainpage-workspace lesson-workspace-scope" aria-label="Рабочая область">
         {isLoadingLesson && <p className="mainpage-panel-note mainpage-panel-note--pad">Загрузка урока...</p>}
         {!isLoadingLesson && selectedLesson && (
-          <article className="lesson-chrome">
+          <article key={selectedLesson.id} className="lesson-chrome lesson-chrome--enter">
             <div className="lesson-chrome-toolbar">
               <div className="lesson-chrome-title-block">
                 <span className="lesson-chrome-breadcrumb-muted">Урок</span>
@@ -80,7 +80,7 @@ export function MainPageLessonWorkspace({
             </div>
             <div className="lesson-chrome-body">
               {activeLessonTab === 'theory' ? (
-                <div className="lesson-theory-scroll">
+                <div key={`theory-${selectedLesson.id}`} className="lesson-theory-scroll lesson-theory-scroll--enter">
                   <div
                     className="lesson-theory-html"
                     dangerouslySetInnerHTML={{

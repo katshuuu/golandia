@@ -161,7 +161,7 @@ export function AchievementsPage() {
 
   const heroLevel = hero?.level ?? 0
   const heroPortrait = useMemo(() => heroPortraitForLevel(heroLevel), [heroLevel])
-  const { role: roleTitle } = hero ? heroDisplayTitles(hero.level) : { role: '…', next: '' }
+  const { role: roleTitle } = hero ? heroDisplayTitles(hero.level) : { role: '…' }
 
   const motivationText = useMemo(
     () => (hero ? levelMotivationText(hero.level) : ''),
@@ -176,8 +176,8 @@ export function AchievementsPage() {
 
       <section className="achievements-screen">
         <div className="achievements-grid-outer">
-          <div className="achievements-grid">
-            <div className="achievements-col-character">
+          <div className="achievements-grid golia-stagger-children">
+            <div className="achievements-col-character golia-stagger-children">
               <div className="achievements-character-image-wrapper">
                 <AchievementHeroViewer key={heroLevel} src={heroPortrait} alt={roleTitle} />
                 <img src={shadowImage} alt="" className="achievements-character-shadow" />
@@ -190,9 +190,9 @@ export function AchievementsPage() {
               ) : null}
             </div>
 
-            <div className="achievements-col-level">
+            <div className="achievements-col-level golia-stagger-children">
               <h2 className="achievements-column-title">Мой уровень</h2>
-              <div className="achievements-level-slots">
+              <div className="achievements-level-slots golia-stagger-children">
                 {LEVEL_ROWS.map((level) => (
                   <div
                     key={level.title}
@@ -206,9 +206,9 @@ export function AchievementsPage() {
               </div>
             </div>
 
-            <div className="achievements-col-achievements">
+            <div className="achievements-col-achievements golia-stagger-children">
               <h2 className="achievements-column-title">Мои достижения</h2>
-              <div className="achievements-panel">
+              <div className="achievements-panel golia-stagger-children">
                 <div className="achievements-item">
                   <span>Пройдено уроков (успешная автопроверка)</span>
                   <strong>

@@ -32,9 +32,9 @@ export function ProfilePage() {
       <AppSiteHeader />
 
       <section className="student-profile" aria-label="Профиль студента">
-        <div className="student-profile__max">
-          <div className="student-profile__hero">
-            <div className="student-profile__top">
+        <div className="student-profile__max golia-stagger-children">
+          <div className="student-profile__hero golia-stagger-children">
+            <div className="student-profile__top golia-stagger-children">
               <ProfileHeroSection
                 greetingLine={profile.greetingLine}
                 displayName={profile.displayName}

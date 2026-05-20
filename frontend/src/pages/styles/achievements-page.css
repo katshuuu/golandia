@@ -34,6 +34,21 @@
   align-items: start;
 }
 
+.achievements-grid.golia-stagger-children {
+  --golia-stagger-step: 0.14s;
+}
+
+.achievements-col-character.golia-stagger-children,
+.achievements-col-level.golia-stagger-children,
+.achievements-col-achievements.golia-stagger-children {
+  --golia-stagger-step: 0.08s;
+}
+
+.achievements-level-slots.golia-stagger-children,
+.achievements-panel.golia-stagger-children {
+  --golia-stagger-step: 0.06s;
+}
+
 .achievements-col-character {
   display: flex;
   flex-direction: column;

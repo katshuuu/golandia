@@ -1,0 +1,92 @@
+/* Плавное появление блоков сверху вниз (урок, профиль, достижения). */
+
+@keyframes golia-fade-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.golia-fade-rise {
+  --golia-enter-duration: 0.68s;
+  --golia-enter-delay: 0s;
+
+  animation: golia-fade-rise var(--golia-enter-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--golia-enter-delay);
+}
+
+.golia-stagger-children {
+  --golia-enter-duration: 0.62s;
+  --golia-stagger-base: 0.05s;
+  --golia-stagger-step: 0.09s;
+}
+
+.golia-stagger-children > * {
+  animation: golia-fade-rise var(--golia-enter-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.golia-stagger-children > *:nth-child(1) {
+  animation-delay: calc(var(--golia-stagger-base) + 0 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(2) {
+  animation-delay: calc(var(--golia-stagger-base) + 1 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(3) {
+  animation-delay: calc(var(--golia-stagger-base) + 2 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(4) {
+  animation-delay: calc(var(--golia-stagger-base) + 3 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(5) {
+  animation-delay: calc(var(--golia-stagger-base) + 4 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(6) {
+  animation-delay: calc(var(--golia-stagger-base) + 5 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(7) {
+  animation-delay: calc(var(--golia-stagger-base) + 6 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(8) {
+  animation-delay: calc(var(--golia-stagger-base) + 7 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(9) {
+  animation-delay: calc(var(--golia-stagger-base) + 8 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(10) {
+  animation-delay: calc(var(--golia-stagger-base) + 9 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(11) {
+  animation-delay: calc(var(--golia-stagger-base) + 10 * var(--golia-stagger-step));
+}
+
+.golia-stagger-children > *:nth-child(12) {
+  animation-delay: calc(var(--golia-stagger-base) + 11 * var(--golia-stagger-step));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .golia-fade-rise,
+  .golia-stagger-children > *,
+  .lesson-theory-scroll--enter,
+  .lesson-theory-scroll--enter .lesson-theory-html > *,
+  .lesson-theory-scroll--enter .lesson-theory-demo,
+  .lesson-theory-scroll--enter .lesson-theory-placeholder {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
