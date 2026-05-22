@@ -13,9 +13,9 @@
 .tutor-chat-dock:not(.tutor-chat-dock--fullscreen):not(.tutor-chat-dock--inline) {
   right: 1rem;
   bottom: 1rem;
-  width: min(352px, calc(100vw - 2rem));
-  height: min(452px, calc(100dvh - 5.75rem));
-  border-radius: 1rem;
+  width: min(480px, calc(100vw - 2rem));
+  height: min(640px, calc(100dvh - 4.5rem));
+  border-radius: 1.125rem;
 }
 
 @media (max-width: 639.98px) {
@@ -62,16 +62,16 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--lesson-border-color, rgba(91, 35, 48, 0.12));
   background: var(--lesson-bg-app, #f6f6f6);
 }
 
 .tutor-chat-avatar-bot {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.875rem;
   background: var(--lesson-accent-soft);
   border: 1px solid var(--lesson-accent-border);
   display: flex;
@@ -87,14 +87,14 @@
 
 .tutor-chat-name {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-weight: 600;
   color: var(--lesson-text-primary, #5b2330);
 }
 
 .tutor-chat-tagline {
-  margin: 0;
-  font-size: 10px;
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
   color: var(--lesson-text-muted, #856e75);
 }
 
@@ -106,10 +106,10 @@
 }
 
 .tutor-chat-online {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  margin-right: 0.35rem;
+  margin-right: 0.45rem;
   background: var(--golia-success);
   box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.28);
 }
@@ -117,8 +117,8 @@
 .tutor-chat-icon-btn {
   border: none;
   background: transparent;
-  border-radius: 0.45rem;
-  padding: 0.35rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   color: var(--lesson-text-muted, #856e75);
   cursor: pointer;
   display: flex;
@@ -135,10 +135,15 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 0.75rem;
+  padding: 1.125rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+}
+
+.tutor-chat-dock--fullscreen .tutor-chat-thread {
+  padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem);
+  gap: 1.125rem;
 }
 
 .tutor-chat-empty {
@@ -155,9 +160,9 @@
 
 .tutor-chat-empty p {
   margin: 0;
-  font-size: 12px;
-  max-width: 16rem;
-  line-height: 1.45;
+  font-size: 1rem;
+  max-width: 22rem;
+  line-height: 1.5;
 }
 
 .tutor-chat-empty svg {
@@ -166,7 +171,8 @@
 
 .tutor-chat-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .tutor-chat-row--user {
@@ -174,11 +180,11 @@
 }
 
 .tutor-chat-bubble-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 0.45rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -196,11 +202,17 @@
 }
 
 .tutor-chat-bubble-msg {
-  max-width: 80%;
-  padding: 0.5rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.8125rem;
-  line-height: 1.5;
+  max-width: 86%;
+  padding: 0.875rem 1.125rem;
+  border-radius: 1.125rem;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.tutor-chat-dock--fullscreen .tutor-chat-bubble-msg {
+  max-width: min(42rem, 82%);
+  font-size: 1.0625rem;
+  padding: 1rem 1.25rem;
 }
 
 .tutor-chat-bubble-msg--user {
@@ -208,6 +220,46 @@
   border: 1px solid var(--lesson-accent-border);
   color: var(--lesson-text-primary, #5b2330);
   border-top-right-radius: 4px;
+}
+
+.tutor-chat-bubble-msg .tutor-chat-msg-text {
+  margin: 0 0 0.45rem;
+}
+
+.tutor-chat-bubble-msg .tutor-chat-msg-text:last-child {
+  margin-bottom: 0;
+}
+
+.tutor-chat-inline-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+  background: rgba(91, 35, 48, 0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+}
+
+.tutor-chat-bubble-msg--assistant .tutor-chat-inline-code {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tutor-chat-code-block {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.92);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+}
+
+.tutor-chat-code-line {
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.tutor-chat-code-kw {
+  color: #7dd3fc;
+  font-weight: 600;
 }
 
 .tutor-chat-bubble-msg--assistant {
@@ -220,8 +272,8 @@
 .tutor-chat-typing {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.75rem 1rem;
+  gap: 0.3rem;
+  padding: 1rem 1.25rem;
   background: var(--lesson-bg-app, #f6f6f6);
   border: 1px solid var(--lesson-border-color, rgba(91, 35, 48, 0.12));
   border-radius: 1rem;
@@ -229,8 +281,8 @@
 }
 
 .tutor-chat-typing span {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--lesson-text-muted, #856e75);
   animation: tutor-chat-bounce 1.2s ease-in-out infinite;
@@ -257,18 +309,22 @@
 
 .tutor-chat-composer-wrap {
   flex-shrink: 0;
-  padding: 0.75rem;
+  padding: 1rem 1.25rem 1.125rem;
   border-top: 1px solid var(--lesson-border-color, rgba(91, 35, 48, 0.12));
+}
+
+.tutor-chat-dock--fullscreen .tutor-chat-composer-wrap {
+  padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem) 1.5rem;
 }
 
 .tutor-chat-composer {
   display: flex;
-  gap: 0.45rem;
+  gap: 0.65rem;
   align-items: flex-end;
-  padding: 0.45rem;
+  padding: 0.65rem 0.75rem;
   background: var(--lesson-bg-app, #f6f6f6);
   border: 1px solid var(--lesson-border-color, rgba(91, 35, 48, 0.12));
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
   transition: border-color 0.15s ease;
 }
 
@@ -282,11 +338,12 @@
   border: none;
   resize: none;
   font-family: inherit;
-  font-size: 0.8125rem;
-  line-height: 1.4;
+  font-size: 1rem;
+  line-height: 1.5;
   color: var(--lesson-text-primary, #5b2330);
-  max-height: 6rem;
-  min-height: 1.35rem;
+  max-height: 9rem;
+  min-height: 2.5rem;
+  padding: 0.15rem 0;
 }
 
 .tutor-chat-composer-input:focus {
@@ -298,8 +355,8 @@
 }
 
 .tutor-chat-send-btn {
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   flex-shrink: 0;
   border: none;
   border-radius: var(--lesson-send-radius);
@@ -332,8 +389,8 @@
 }
 
 .tutor-chat-composer-hint {
-  margin: 0.4rem 0 0;
-  font-size: 10px;
+  margin: 0.55rem 0 0;
+  font-size: 0.8125rem;
   text-align: center;
   color: var(--lesson-text-muted, #856e75);
 }

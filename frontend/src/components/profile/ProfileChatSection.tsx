@@ -20,6 +20,7 @@ type ProfileChatSectionProps = {
   onOpenFromArchive: (session: ProfileChatArchiveSession) => void
   onOpenFullscreen: () => void
   onCloseSnapshot: (messages: TutorChatMessage[]) => void
+  onPersistMessages: (messages: TutorChatMessage[]) => void
   onClose: () => void
 }
 
@@ -38,6 +39,7 @@ export function ProfileChatSection({
   onOpenFromArchive,
   onOpenFullscreen,
   onCloseSnapshot,
+  onPersistMessages,
   onClose,
 }: ProfileChatSectionProps) {
   return (
@@ -70,6 +72,7 @@ export function ProfileChatSection({
                   >
                     <span className="student-profile__chat-sidebar-item-title">{s.title}</span>
                     <span className="student-profile__chat-sidebar-item-meta">
+                      {s.lessonTitle && s.lessonTitle !== 'Личный кабинет' ? `${s.lessonTitle} · ` : ''}
                       {new Date(s.updatedAt).toLocaleString('ru-RU', {
                         day: 'numeric',
                         month: 'short',
@@ -98,6 +101,7 @@ export function ProfileChatSection({
               openingAssistantBubble="Привет! Открылась страница профиля — отвечу на вопросы по курсу и обучению."
               inputPlaceholder="Непонятен один момент..."
               onCloseSnapshot={onCloseSnapshot}
+              onPersistMessages={onPersistMessages}
               onClose={onClose}
             />
           ) : (

@@ -6,15 +6,18 @@ type CodeEditorProps = {
   value: string
   onChange: (val: string) => void
   starterCode: string
+  /** Номера строк (с 1) для подсветки репетитором. */
+  highlightLines?: number[]
 }
 
-export function CodeEditor({ value, onChange, starterCode }: CodeEditorProps) {
+export function CodeEditor({ value, onChange, starterCode, highlightLines = [] }: CodeEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const lineNumbersRef = useRef<HTMLDivElement>(null)
   const [lineCount, setLineCount] = useState(1)
+  const [scrollTop, setScrollTop] = useState(0)
 
   useEffect(() => {
-    setLineCount(value.split('\n').length)
+    setLineCount(Math.max(1, value.split('\n').length))
   }, [value])
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -49,8 +52,12 @@ export function CodeEditor({ value, onChange, starterCode }: CodeEditorProps) {
   }
 
   function syncScroll() {
-    if (lineNumbersRef.current && textareaRef.current) {
-      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop
+    const ta = textareaRef.current
+    if (!ta) return
+    const top = ta.scrollTop
+    setScrollTop(top)
+    if (lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = top
     }
   }
 
@@ -58,8 +65,10 @@ export function CodeEditor({ value, onChange, starterCode }: CodeEditorProps) {
     onChange(starterCode)
   }
 
+  const highlightSet = new Set(highlightLines.filter((n) => n >= 1 && n <= lineCount))
+
   return (
-    <div className="lesson-code-editor">
+    <div className={`lesson-code-editor${highlightSet.size ? ' lesson-code-editor--tutor-highlight' : ''}`}>
       <div className="lesson-code-editor-toolbar">
         <div className="lesson-code-editor-toolbar-start">
           <div className="lesson-code-window-dots" aria-hidden="true">
@@ -81,26 +90,45 @@ export function CodeEditor({ value, onChange, starterCode }: CodeEditorProps) {
       </div>
 
       <div className="lesson-code-editor-main">
-        <div
-          ref={lineNumbersRef}
-          className="lesson-code-line-numbers"
-          style={{ userSelect: 'none', lineHeight: '1.5rem' }}
-        >
+        <div ref={lineNumbersRef} className="lesson-code-line-numbers" aria-hidden>
           {Array.from({ length: lineCount }, (_, i) => (
-            <div key={i + 1}>{i + 1}</div>
+            <div
+              key={i + 1}
+              className={highlightSet.has(i + 1) ? 'lesson-code-line-num--highlight' : undefined}
+            >
+              {i + 1}
+            </div>
           ))}
         </div>
 
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onScroll={syncScroll}
-          spellCheck={false}
-          className="lesson-code-textarea"
-          style={{ lineHeight: '1.5rem', tabSize: 4 }}
-        />
+        <div className="lesson-code-editor-pane">
+          <div className="lesson-code-editor-canvas" aria-hidden>
+            <div
+              className="lesson-code-editor-canvas-inner"
+              style={{ transform: `translateY(-${scrollTop}px)` }}
+            >
+              {Array.from({ length: lineCount }, (_, i) => (
+                <div
+                  key={i + 1}
+                  className={
+                    'lesson-code-highlight-band' +
+                    (highlightSet.has(i + 1) ? ' lesson-code-highlight-band--on' : '')
+                  }
+                />
+              ))}
+            </div>
+          </div>
+
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onScroll={syncScroll}
+            spellCheck={false}
+            className="lesson-code-textarea"
+          />
+        </div>
       </div>
     </div>
   )

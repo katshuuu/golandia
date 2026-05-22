@@ -84,6 +84,7 @@ export function ProfilePage() {
               onOpenFromArchive={chat.openProfileChatFromArchive}
               onOpenFullscreen={chat.openProfileChatFullscreen}
               onCloseSnapshot={chat.handleProfileChatCloseSnapshot}
+              onPersistMessages={chat.persistProfileMessages}
               onClose={chat.handleProfileChatClosed}
             />
           </div>

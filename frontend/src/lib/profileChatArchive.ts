@@ -4,6 +4,8 @@ export type ProfileChatArchiveSession = {
   id: string
   title: string
   updatedAt: number
+  lessonId?: string
+  lessonTitle?: string
   messages: ArchivedChatMessage[]
 }
 
@@ -23,6 +25,8 @@ function isValidSession(x: unknown): x is ProfileChatArchiveSession {
   if (!x || typeof x !== 'object') return false
   const o = x as Record<string, unknown>
   if (typeof o.id !== 'string' || typeof o.title !== 'string' || typeof o.updatedAt !== 'number') return false
+  if (o.lessonId != null && typeof o.lessonId !== 'string') return false
+  if (o.lessonTitle != null && typeof o.lessonTitle !== 'string') return false
   if (!Array.isArray(o.messages)) return false
   return o.messages.every(isMessage)
 }

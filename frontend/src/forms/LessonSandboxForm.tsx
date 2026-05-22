@@ -6,6 +6,7 @@ type LessonSandboxFormProps = {
   description: string
   starterCode: string
   editorCode: string
+  highlightLines?: number[]
   onEditorChange: (value: string) => void
   runStdout: string
   runStderr: string
@@ -20,6 +21,7 @@ export function LessonSandboxForm({
   description,
   starterCode,
   editorCode,
+  highlightLines = [],
   onEditorChange,
   runStdout,
   runStderr,
@@ -47,7 +49,12 @@ export function LessonSandboxForm({
       </div>
       <div className="lesson-editor-stack">
         <div className="lesson-editor-grow">
-          <CodeEditor value={editorCode} onChange={onEditorChange} starterCode={starterCode} />
+          <CodeEditor
+            value={editorCode}
+            onChange={onEditorChange}
+            starterCode={starterCode}
+            highlightLines={highlightLines}
+          />
         </div>
         <div className="lesson-run-bar">
           <button

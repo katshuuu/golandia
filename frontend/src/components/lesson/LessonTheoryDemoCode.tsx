@@ -7,9 +7,10 @@ import { OutputPanel } from './OutputPanel'
 type LessonTheoryDemoCodeProps = {
   code: string
   lessonId: string
+  highlightLines?: number[]
 }
 
-export function LessonTheoryDemoCode({ code, lessonId }: LessonTheoryDemoCodeProps) {
+export function LessonTheoryDemoCode({ code, lessonId, highlightLines = [] }: LessonTheoryDemoCodeProps) {
   const starter = code.trim()
   const [demoCode, setDemoCode] = useState(starter)
   const [runStdout, setRunStdout] = useState('')
@@ -47,7 +48,12 @@ export function LessonTheoryDemoCode({ code, lessonId }: LessonTheoryDemoCodePro
   return (
     <section className="lesson-theory-demo" aria-label="Демонстрационный код">
       <div className="lesson-theory-demo-editor">
-        <CodeEditor value={demoCode} onChange={setDemoCode} starterCode={starter} />
+        <CodeEditor
+          value={demoCode}
+          onChange={setDemoCode}
+          starterCode={starter}
+          highlightLines={highlightLines}
+        />
       </div>
 
       <div className="lesson-run-bar lesson-theory-demo-run-bar">

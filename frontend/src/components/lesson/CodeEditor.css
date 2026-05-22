@@ -1,4 +1,7 @@
 .lesson-code-editor {
+  --code-pad-y: 1rem;
+  --code-pad-x: 1rem;
+  --code-line-h: 1.5rem;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -66,37 +69,87 @@
 }
 
 .lesson-code-editor-main {
-  position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   overflow: hidden;
 }
 
 .lesson-code-line-numbers {
   flex-shrink: 0;
-  min-width: 3rem;
-  padding: 1rem 0.65rem;
+  min-width: 2.75rem;
+  padding: var(--code-pad-y) 0.65rem var(--code-pad-y) 0.75rem;
   background: var(--lesson-bg-app, #f6f6f6);
   color: var(--lesson-text-muted, #856e75);
   font-size: 0.875rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: var(--code-line-h);
   text-align: right;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   user-select: none;
+  scrollbar-width: none;
+}
+
+.lesson-code-line-numbers::-webkit-scrollbar {
+  display: none;
+}
+
+.lesson-code-editor-pane {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.lesson-code-editor-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.lesson-code-editor-canvas-inner {
+  padding: var(--code-pad-y) var(--code-pad-x);
+  will-change: transform;
+}
+
+.lesson-code-highlight-band {
+  height: var(--code-line-h);
+  line-height: var(--code-line-h);
+}
+
+.lesson-code-highlight-band--on {
+  background: rgba(250, 204, 21, 0.38);
+  box-shadow: inset 3px 0 0 rgba(234, 179, 8, 0.85);
+}
+
+.lesson-code-line-num--highlight {
+  color: #b45309;
+  font-weight: 700;
+}
+
+.lesson-code-editor--tutor-highlight .lesson-code-textarea {
+  position: relative;
+  z-index: 1;
+  background: transparent;
 }
 
 .lesson-code-textarea {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   background: var(--lesson-bg-app, #f6f6f6);
   color: var(--lesson-text-primary, #5b2330);
   font-size: 0.875rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  padding: 1rem;
+  line-height: var(--code-line-h);
+  padding: var(--code-pad-y) var(--code-pad-x);
   border: none;
   resize: none;
   caret-color: #06b6d4;
+  tab-size: 4;
 }
 
 .lesson-code-textarea:focus {

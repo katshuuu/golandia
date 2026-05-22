@@ -2,6 +2,7 @@ import { BookOpen, CheckCircle2, ChevronRight, Code2, MessageSquare } from 'luci
 import type { BackendLesson } from '../../lib/courseApi'
 import { resolveTheoryHtmlAssets } from '../../lib/theoryHtmlAssets'
 import { LessonTheoryDemoCode } from '../lesson/LessonTheoryDemoCode'
+import { TheoryHtmlTutorMarks } from '../lesson/TheoryHtmlTutorMarks'
 import { LessonSandboxForm } from '../../forms/LessonSandboxForm'
 
 type MainPageLessonWorkspaceProps = {
@@ -12,6 +13,10 @@ type MainPageLessonWorkspaceProps = {
   lessonDone: boolean
   chatOpen: boolean
   onToggleChat: () => void
+  sandboxHighlightLines: number[]
+  theoryDemoHighlightLines: number[]
+  theorySnippets: string[]
+  theoryMarkKey: number
   editorCode: string
   onEditorChange: (value: string) => void
   runStdout: string
@@ -29,6 +34,10 @@ export function MainPageLessonWorkspace({
   lessonDone,
   chatOpen,
   onToggleChat,
+  sandboxHighlightLines,
+  theoryDemoHighlightLines,
+  theorySnippets,
+  theoryMarkKey,
   editorCode,
   onEditorChange,
   runStdout,
@@ -87,7 +96,12 @@ export function MainPageLessonWorkspace({
                       __html: resolveTheoryHtmlAssets(selectedLesson.theory_html),
                     }}
                   />
-                  <LessonTheoryDemoCode code={selectedLesson.demo_code ?? ''} lessonId={selectedLesson.id} />
+                  <TheoryHtmlTutorMarks snippets={theorySnippets} markKey={theoryMarkKey} />
+                  <LessonTheoryDemoCode
+                    code={selectedLesson.demo_code ?? ''}
+                    lessonId={selectedLesson.id}
+                    highlightLines={theoryDemoHighlightLines}
+                  />
                   {!selectedLesson.theory_html?.trim() && !selectedLesson.demo_code?.trim() ? (
                     <p className="lesson-theory-placeholder">Теория для этого урока пока пустая.</p>
                   ) : null}
@@ -97,6 +111,7 @@ export function MainPageLessonWorkspace({
                   description={selectedLesson.task.description}
                   starterCode={selectedLesson.task.starter_code}
                   editorCode={editorCode}
+                  highlightLines={sandboxHighlightLines}
                   onEditorChange={onEditorChange}
                   runStdout={runStdout}
                   runStderr={runStderr}

@@ -1,3 +1,6 @@
+import type { TutorCodeHighlight } from './tutorCodeHighlight'
+import { parseTutorCodeHighlights } from './tutorCodeHighlight'
+
 export type LessonRef = {
   id: string
   title: string
@@ -135,6 +138,11 @@ export type TutorChatResponse = {
   ok?: boolean
   reply?: string
   error?: string
+  code_highlights?: TutorCodeHighlight[]
+}
+
+export function tutorHighlightsFromResponse(data: TutorChatResponse): TutorCodeHighlight[] {
+  return parseTutorCodeHighlights(data.code_highlights)
 }
 
 export async function tutorChat(payload: {

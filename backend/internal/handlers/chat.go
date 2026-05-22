@@ -89,7 +89,7 @@ func (h *ChatHandler) Tutor(c *gin.Context) {
 		hist = append(hist, llm.HistoryTurn{Role: m.Role, Content: m.Content})
 	}
 
-	reply, err := h.client.TutorReply(c.Request.Context(), llm.TutorInput{
+	result, err := h.client.TutorReply(c.Request.Context(), llm.TutorInput{
 		LessonID:         strings.TrimSpace(req.LessonID),
 		LessonTitle:      title,
 		UserMessage:      msg,
@@ -102,5 +102,10 @@ func (h *ChatHandler) Tutor(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"ok": false, "reply": "", "error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"ok": true, "reply": reply, "error": ""})
+	c.JSON(http.StatusOK, gin.H{
+		"ok":              true,
+		"reply":           result.Reply,
+		"code_highlights": result.Highlights,
+		"error":           "",
+	})
 }
